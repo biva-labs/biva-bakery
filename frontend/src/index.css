@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@keyframes slide-in {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+  }
+  @keyframes slide-out {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+  }
+  
+  .DialogContent[data-state="open"] {
+    animation: slide-in 500ms ease-out forwards;
+  }
+  .DialogContent[data-state="closed"] {
+    animation: slide-out 500ms ease-in forwards;
+  }
