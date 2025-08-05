@@ -1,4 +1,4 @@
-import { Home, Calendar, Settings, BookOpen, HelpCircle, Hotel, UtensilsCrossed, Cake } from "lucide-react"
+import { Home, Calendar, Settings, LucideMenu ,BookOpen, HelpCircle, Hotel, UtensilsCrossed, Cake } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -10,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar"
 
 
@@ -114,7 +114,6 @@ export function AppSidebar() {
 export default function ResponsiveNavigation({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider defaultOpen={false}>
-
       <div className="lg:hidden">
         <AppSidebar />
       </div>
@@ -127,7 +126,8 @@ export default function ResponsiveNavigation({ children }: { children: React.Rea
             <div className="flex items-center justify-between h-12 px-2 sm:px-4">
   
               <div className="flex items-center">
-                <SidebarTrigger className="text-white p-2 rounded-md transition-colors" />
+                <CustomInlineTrigger />
+                {/* <SidebarTrigger className="text-white p-2 rounded-md transition-colors" /> */}
               </div>
               
    
@@ -179,3 +179,16 @@ export default function ResponsiveNavigation({ children }: { children: React.Rea
     </SidebarProvider>
   )
 } 
+
+function CustomInlineTrigger({ className = '' }) {
+  const { toggleSidebar, open } = useSidebar();
+  return (
+    <button
+      onClick={toggleSidebar}
+      aria-label={open ? 'Close menu' : 'Open menu'}
+      className={`text-white p-2 rounded-md transition-colors ${className}`}
+    >
+      <LucideMenu size={20} />
+    </button>
+  );
+}
