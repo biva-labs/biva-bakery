@@ -1,7 +1,6 @@
 import GalleryMasonry from "../components/GalleryMasonry";
 import HeroBanner from "../components/HeroBanner";
 import Navbar from "../components/Navbar";
-import RoomCard from "../components/RoomCard";
 import RoomCardCarousel from "../components/RoomCardCarousal";
 
 const rooms = [
@@ -23,7 +22,36 @@ const rooms = [
     desc: "Essential comfort and amenities at the heart of the city.",
     onAction: () => alert("Clicked Suite"),
   },
-  // ... more rooms
+  {
+    imgurl: "https://i.pinimg.com/1200x/af/f2/69/aff26915501df944db3732592df0d06e.jpg",
+    title: "Standard",
+    desc: `Essential comfort and amenities at the heart of the city.`,
+    onAction: () => alert("Clicked Standard"),
+  },
+  {
+    imgurl: "https://i.pinimg.com/1200x/af/f2/69/aff26915501df944db3732592df0d06e.jpg",
+    title: "Standard",
+    desc: `Essential comfort and amenities at the heart of the city.`,
+    onAction: () => alert("Clicked Standard"),
+  },
+  {
+    imgurl: "https://i.pinimg.com/1200x/af/f2/69/aff26915501df944db3732592df0d06e.jpg",
+    title: "Standard",
+    desc: `Essential comfort and amenities at the heart of the city.`,
+    onAction: () => alert("Clicked Standard"),
+  },
+  {
+    imgurl: "https://i.pinimg.com/1200x/af/f2/69/aff26915501df944db3732592df0d06e.jpg",
+    title: "Standard",
+    desc: `Essential comfort and amenities at the heart of the city.`,
+    onAction: () => alert("Clicked Standard"),
+  },
+  {
+    imgurl: "https://i.pinimg.com/1200x/af/f2/69/aff26915501df944db3732592df0d06e.jpg",
+    title: "Standard",
+    desc: `Essential comfort and amenities at the heart of the city.`,
+    onAction: () => alert("Clicked Standard"),
+  },
 ];
 
 const gallery = [
@@ -49,18 +77,6 @@ export default function Hotel() {
           <p>Explore our range of elegant and comfortable rooms.</p>
         </div>
       </div>
-      {/* <div className="mt-10 ml-5">
-        <RoomCard
-          imgurl={
-            "https://i.pinimg.com/1200x/af/f2/69/aff26915501df944db3732592df0d06e.jpg"
-          }
-          title={"Standard"}
-          desc={
-            "The most basic and affordable accomodation option, offering essential comfort and amenities."
-          }
-        />
-      </div> */}
-
       <RoomCardCarousel rooms={rooms} />
       <div className="px-4 py-8">
         <GalleryMasonry  allImages={gallery} batchSize={4} />

@@ -1,49 +1,39 @@
-import * as ScrollArea from "@radix-ui/react-scroll-area";
+
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import RoomCard from "./RoomCard";
-import { useRef } from "react";
+import { ScrollArea } from "./ui/scroll-area";
+
 
 export default function RoomCardCarousel({ rooms }) {
-  const viewportRef = useRef();
-
-  const scrollBy = (delta) => {
-    viewportRef.current?.scrollBy({ left: delta, behavior: "smooth" });
-  };
-
   return (
-    <div className="mt-10 ml-5 relative">
-      <button
-        onClick={() => scrollBy(-300)}
-        className="absolute z-20 left-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-2 shadow"
-      >
-        ◀
-      </button>
-      <ScrollArea.Root
-        type="always"
-        scrollbars="horizontal"
-        className="w-full overflow-hidden"
-      >
-        <ScrollArea.Viewport
-          ref={viewportRef}
-          className="whitespace-normal overflow-x-auto scroll-smooth px-8"
-        >
-          <div className="inline-flex space-x-4 px-2">
+    <div className="px-4 md:px-6 lg:px-8 py-4"> {/* Adds spacing from all sides */}
+      <Carousel className="relative w-full">
+        <ScrollArea>
+          <CarouselContent>
             {rooms.map((room, i) => (
-              <div key={i} className="inline-block w-[280px] flex-none">
-                <RoomCard {...room} />
-              </div>
+              <CarouselItem
+                key={i}
+                className="basis-1/3 md:basis-1/4 lg:basis-1/5"
+              >
+                <div className="p-1 h-full flex items-stretch">
+                  <RoomCard {...room} />
+                </div>
+              </CarouselItem>
             ))}
-          </div>
-        </ScrollArea.Viewport>
+          </CarouselContent>
+        </ScrollArea>
 
-        <ScrollArea.Scrollbar orientation="horizontal" />
-        <ScrollArea.Corner />
-      </ScrollArea.Root>
-      <button
-        onClick={() => scrollBy(300)}
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-80 rounded-full p-2 shadow"
-      >
-        ▶
-      </button>
+        <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-black/60 text-white p-2 rounded-full hover:bg-black" />
+        <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-black/60 text-white p-2 rounded-full hover:bg-black" />
+      </Carousel>
     </div>
   );
 }
+
+

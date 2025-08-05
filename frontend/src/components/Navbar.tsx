@@ -1,5 +1,4 @@
 import { Box, Flex, Strong, TabNav } from "@radix-ui/themes";
-import * as Dialog from "@radix-ui/react-dialog";
 import { MobileSidebar } from "./MobileSidebar";
 
 export default function Navbar() {
