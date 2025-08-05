@@ -1,8 +1,10 @@
-import GalleryMasonry from "../components/GalleryMasonry";
-import HeroBanner from "../components/HeroBanner";
-import Navbar from "../components/Navbar";
-import RoomCard from "../components/RoomCard";
-import RoomCardCarousel from "../components/RoomCardCarousal";
+import GalleryMasonry from "../components/mansory";
+import HeroBanner from "../components/hero";
+import ResponsiveNavigation from "../components/responsiveNavigation";
+import RoomCardCarousel from "../components/roomCardCarousal";
+import Navbar from "@/components/navbar";
+
+
 
 const rooms = [
   {
@@ -23,7 +25,36 @@ const rooms = [
     desc: "Essential comfort and amenities at the heart of the city.",
     onAction: () => alert("Clicked Suite"),
   },
-  // ... more rooms
+  {
+    imgurl: "https://i.pinimg.com/1200x/af/f2/69/aff26915501df944db3732592df0d06e.jpg",
+    title: "Standard",
+    desc: `Essential comfort and amenities at the heart of the city.`,
+    onAction: () => alert("Clicked Standard"),
+  },
+  {
+    imgurl: "https://i.pinimg.com/1200x/af/f2/69/aff26915501df944db3732592df0d06e.jpg",
+    title: "Standard",
+    desc: `Essential comfort and amenities at the heart of the city.`,
+    onAction: () => alert("Clicked Standard"),
+  },
+  {
+    imgurl: "https://i.pinimg.com/1200x/af/f2/69/aff26915501df944db3732592df0d06e.jpg",
+    title: "Standard",
+    desc: `Essential comfort and amenities at the heart of the city.`,
+    onAction: () => alert("Clicked Standard"),
+  },
+  {
+    imgurl: "https://i.pinimg.com/1200x/af/f2/69/aff26915501df944db3732592df0d06e.jpg",
+    title: "Standard",
+    desc: `Essential comfort and amenities at the heart of the city.`,
+    onAction: () => alert("Clicked Standard"),
+  },
+  {
+    imgurl: "https://i.pinimg.com/1200x/af/f2/69/aff26915501df944db3732592df0d06e.jpg",
+    title: "Standard",
+    desc: `Essential comfort and amenities at the heart of the city.`,
+    onAction: () => alert("Clicked Standard"),
+  },
 ];
 
 const gallery = [
@@ -36,35 +67,32 @@ const gallery = [
     
 ]
 
+
 export default function Hotel() {
   return (
-    <>
-      <Navbar />
-      <HeroBanner />
-      <div className="ml-5 lg:ml-10">
-        <div className="font-extrabold text-4xl mt-4 ">
-          <h1>Our Rooms</h1>
-        </div>
-        <div>
-          <p>Explore our range of elegant and comfortable rooms.</p>
-        </div>
-      </div>
-      {/* <div className="mt-10 ml-5">
-        <RoomCard
-          imgurl={
-            "https://i.pinimg.com/1200x/af/f2/69/aff26915501df944db3732592df0d06e.jpg"
-          }
-          title={"Standard"}
-          desc={
-            "The most basic and affordable accomodation option, offering essential comfort and amenities."
-          }
-        />
-      </div> */}
+    <ResponsiveNavigation>
+      <div className="min-h-screen bg-gray-50">
+        <Navbar/>
+        <HeroBanner />
+        <div className="container mx-auto px-4 py-8 mt-10">
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-center text-green-950 mb-2">
+              Our Premium Rooms
+            </h2>
+            <p className="text-gray-600 text-center">
+              Experience luxury and comfort in the heart of the city
+            </p>
+          </div>
+          <RoomCardCarousel rooms={rooms} />
 
-      <RoomCardCarousel rooms={rooms} />
-      <div className="px-4 py-8">
-        <GalleryMasonry  allImages={gallery} batchSize={4} />
+          <div className="mt-16">
+            <h2 className="text-3xl font-bold text-center text-green-950 mb-8">
+              Gallery
+            </h2>
+            <GalleryMasonry allImages={gallery} />
+          </div>
+        </div>
       </div>
-    </>
+    </ResponsiveNavigation>
   );
 }
