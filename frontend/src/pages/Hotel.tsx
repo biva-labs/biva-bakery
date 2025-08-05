@@ -1,7 +1,8 @@
 import GalleryMasonry from "../components/mansory";
 import HeroBanner from "../components/hero";
-import ResponsiveNavigation from "../components/ResponsiveNavigation";
+import ResponsiveNavigation from "../components/responsiveNavigation";
 import RoomCardCarousel from "../components/roomCardCarousal";
+import Navbar from "@/components/navbar";
 
 
 
@@ -71,6 +72,7 @@ export default function Hotel() {
   return (
     <ResponsiveNavigation>
       <div className="min-h-screen bg-gray-50">
+        <Navbar/>
         <HeroBanner />
         <div className="container mx-auto px-4 py-8 mt-10">
           <div className="mb-8">

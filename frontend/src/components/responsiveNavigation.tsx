@@ -120,44 +120,45 @@ export default function ResponsiveNavigation({ children }: { children: React.Rea
       </div>
       
       <div className="min-h-screen w-full">
-        {/* Always visible navbar/header */}
-        <header className="bg-green-950 backdrop-blur-md sticky top-0 left-0 w-full z-50">
-          {/* Mobile Header - With sidebar functionality */}
+
+        <header className="bg-black backdrop-blur-md sticky top-0 left-0 w-full z-50">
+
           <div className="lg:hidden">
             <div className="flex items-center justify-between h-12 px-2 sm:px-4">
-              {/* Sidebar trigger - only on mobile */}
+  
               <div className="flex items-center">
-                <SidebarTrigger className="text-white hover:bg-green-800 p-2 rounded-md transition-colors" />
+                <SidebarTrigger className="text-white p-2 rounded-md transition-colors" />
               </div>
               
-              {/* Logo centered */}
+   
               <div className="flex-1 flex justify-center">
                 <h2 className="text-lg sm:text-xl font-bold text-white">THE BIVA</h2>
               </div>
               
-              {/* Right spacer to balance the layout */}
+  
               <div className="w-10 sm:w-12" />
             </div>
           </div>
 
-          {/* Desktop Header - No sidebar, just horizontal navigation */}
+          
           <div className="hidden lg:block">
             <div className="container mx-auto px-4">
-              {/* Top section with logo and navigation */}
-              <div className="h-16 flex items-center justify-between border-b border-green-800">
-                {/* Logo only - no sidebar trigger */}
+
+              <div className="h-16 flex items-center justify-between border-b ">
+
                 <div className="flex items-center">
                   <h1 className="text-3xl font-bold text-white tracking-wider">THE BIVA</h1>
                 </div>
                 
-                {/* Main navigation items */}
+    
+                
                 <nav>
                   <ul className="flex items-center space-x-8">
                     {mainNavItems.map((item) => (
                       <li key={item.title}>
                         <a
                           href={item.url}
-                          className="text-white hover:text-green-200 transition-colors duration-200 font-medium tracking-wide"
+                          className="text-white  font-medium tracking-wide"
                         >
                           {item.title}
                         </a>
@@ -169,8 +170,6 @@ export default function ResponsiveNavigation({ children }: { children: React.Rea
             </div>
           </div>
         </header>
-
-
 
 
         <main className="flex-1">

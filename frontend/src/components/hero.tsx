@@ -29,7 +29,7 @@ export default function HeroBanner() {
         <div className="text-white text-sm md:text-xl">
           Available at just ₹4999/-
         </div>
-        <Button >
+        <Button variant="orange">
           Contact Us
         </Button>
       </div>
