@@ -1,4 +1,5 @@
-import { Button } from '@radix-ui/themes';
+import { Button } from './ui/button';
+
 
 export default function HeroBanner() {
   return (
@@ -28,7 +29,7 @@ export default function HeroBanner() {
         <div className="text-white text-sm md:text-xl">
           Available at just ₹4999/-
         </div>
-        <Button variant="solid" color="gold" radius='full'>
+        <Button >
           Contact Us
         </Button>
       </div>
