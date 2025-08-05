@@ -1,7 +1,9 @@
 import GalleryMasonry from "../components/GalleryMasonry";
 import HeroBanner from "../components/HeroBanner";
-import Navbar from "../components/Navbar";
+import ResponsiveNavigation from "../components/ResponsiveNavigation";
 import RoomCardCarousel from "../components/RoomCardCarousal";
+import { Home, Calendar, Settings, BookOpen, HelpCircle, UtensilsCrossed, Cake } from "lucide-react"
+
 
 const rooms = [
   {
@@ -64,23 +66,67 @@ const gallery = [
     
 ]
 
+
+const businessSections = [
+  {
+    title: "HOTEL",
+    url: "#",
+    icon: Cake,
+  },
+  {
+    title: "FOOD COURT",
+    url: "#",
+    icon: UtensilsCrossed,
+  },
+  {
+    title: "BAKERY",
+    url: "#",
+    icon: Cake,
+  },
+]
 export default function Hotel() {
   return (
-    <>
-      <Navbar />
-      <HeroBanner />
-      <div className="ml-5 lg:ml-10">
-        <div className="font-extrabold text-4xl mt-4 ">
-          <h1>Our Rooms</h1>
-        </div>
-        <div>
-          <p>Explore our range of elegant and comfortable rooms.</p>
+    <ResponsiveNavigation>
+      <div className=" lg:block bg-gradient-to-r from-yellow-50 to-amber-50 border-b border-gray-200">
+        <div className="container mx-auto px-4">
+          <nav className="h-16 flex items-center justify-center">
+            <ul className="flex items-center space-x-12">
+              {businessSections.map((item) => (
+                <li key={item.title}>
+                  <a
+                    href={item.url}
+                    className="flex items-center gap-2 text-green-950 hover:text-green-700 transition-colors duration-200 font-bold text-lg tracking-wide"
+                  >
+                    <item.icon className="h-5 w-5" />
+                    {item.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
       </div>
-      <RoomCardCarousel rooms={rooms} />
-      <div className="px-4 py-8">
-        <GalleryMasonry  allImages={gallery} batchSize={4} />
+      <div className="min-h-screen bg-gray-50">
+        <HeroBanner />
+        <div className="container mx-auto px-4 py-8 mt-10">
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-center text-green-950 mb-2">
+              Our Premium Rooms
+            </h2>
+            <p className="text-gray-600 text-center">
+              Experience luxury and comfort in the heart of the city
+            </p>
+          </div>
+          <RoomCardCarousel rooms={rooms} />
+
+          <div className="mt-16">
+            <h2 className="text-3xl font-bold text-center text-green-950 mb-8">
+              Gallery
+            </h2>
+            <GalleryMasonry allImages={gallery} />
+          </div>
+        </div>
       </div>
-    </>
+    </ResponsiveNavigation>
   );
 }
