@@ -1,4 +1,14 @@
-import { Home, Calendar, Settings, LucideMenu ,BookOpen, HelpCircle, Hotel, UtensilsCrossed, Cake } from "lucide-react"
+import {
+  Home,
+  Calendar,
+  Settings,
+  LucideMenu,
+  BookOpen,
+  HelpCircle,
+  Hotel,
+  UtensilsCrossed,
+  Cake,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -11,8 +21,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   useSidebar,
-} from "@/components/ui/sidebar"
-
+} from "@/components/ui/sidebar";
 
 const mainNavItems = [
   {
@@ -26,7 +35,7 @@ const mainNavItems = [
     icon: Calendar,
   },
   {
-    title: "SERVICE", 
+    title: "SERVICE",
     url: "#",
     icon: Settings,
   },
@@ -40,8 +49,7 @@ const mainNavItems = [
     url: "#",
     icon: HelpCircle,
   },
-]
-
+];
 
 const businessSections = [
   {
@@ -59,9 +67,7 @@ const businessSections = [
     url: "#",
     icon: Cake,
   },
-]
-
-
+];
 
 export function AppSidebar() {
   return (
@@ -87,7 +93,7 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        
+
         <SidebarGroup>
           <SidebarGroupLabel>Business Sections</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -107,51 +113,47 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }
 
-
-export default function ResponsiveNavigation({ children }: { children: React.ReactNode }) {
+export default function ResponsiveNavigation({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <SidebarProvider defaultOpen={false}>
       <div className="lg:hidden">
         <AppSidebar />
       </div>
-      
+
       <div className="min-h-screen w-full">
-
         <header className="bg-black backdrop-blur-md sticky top-0 left-0 w-full z-50">
-
           <div className="lg:hidden">
             <div className="flex items-center justify-between h-12 px-2 sm:px-4">
-  
               <div className="flex items-center">
                 <CustomInlineTrigger />
-                {/* <SidebarTrigger className="text-white p-2 rounded-md transition-colors" /> */}
               </div>
-              
-   
+
               <div className="flex-1 flex justify-center">
-                <h2 className="text-lg sm:text-xl font-bold text-white">THE BIVA</h2>
+                <h2 className="text-lg sm:text-xl font-bold text-white">
+                  THE BIVA
+                </h2>
               </div>
-              
-  
+
               <div className="w-10 sm:w-12" />
             </div>
           </div>
 
-          
           <div className="hidden lg:block">
             <div className="container mx-auto px-4">
-
               <div className="h-16 flex items-center justify-between border-b ">
-
                 <div className="flex items-center">
-                  <h1 className="text-3xl font-bold text-white tracking-wider">THE BIVA</h1>
+                  <h1 className="text-3xl font-bold text-white tracking-wider">
+                    THE BIVA
+                  </h1>
                 </div>
-                
-    
-                
+
                 <nav>
                   <ul className="flex items-center space-x-8">
                     {mainNavItems.map((item) => (
@@ -171,21 +173,18 @@ export default function ResponsiveNavigation({ children }: { children: React.Rea
           </div>
         </header>
 
-
-        <main className="flex-1">
-          {children}
-        </main>
+        <main className="flex-1">{children}</main>
       </div>
     </SidebarProvider>
-  )
-} 
+  );
+}
 
-function CustomInlineTrigger({ className = '' }) {
+function CustomInlineTrigger({ className = "" }) {
   const { toggleSidebar, open } = useSidebar();
   return (
     <button
       onClick={toggleSidebar}
-      aria-label={open ? 'Close menu' : 'Open menu'}
+      aria-label={open ? "Close menu" : "Open menu"}
       className={`text-white p-2 rounded-md transition-colors ${className}`}
     >
       <LucideMenu size={20} />
