@@ -1,12 +1,17 @@
 import { useState } from "react";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
-export default function GalleryMasonry({ allImages, batchSize = 2 }) {
-  const [visibleImages, setVisibleImages] = useState(allImages.slice(0, batchSize));
+export default function GalleryMasonry({ allImages, batchSize = 4 }) {
+  const [visibleImages, setVisibleImages] = useState(
+    allImages.slice(0, batchSize),
+  );
 
   const handleShowMore = () => {
-    const next = allImages.slice(visibleImages.length, visibleImages.length + batchSize);
-    setVisibleImages(prev => [...prev, ...next]);
+    const next = allImages.slice(
+      visibleImages.length,
+      visibleImages.length + batchSize,
+    );
+    setVisibleImages((prev) => [...prev, ...next]);
   };
 
   const hasMore = visibleImages.length < allImages.length;
@@ -14,7 +19,7 @@ export default function GalleryMasonry({ allImages, batchSize = 2 }) {
   return (
     <div className="px-4 py-8">
       <ResponsiveMasonry
-        columnsCountBreakPoints={{ 320: 1, 640: 2, 1024: 3 }}
+        columnsCountBreakPoints={{ 320: 2, 640: 3, 1024: 4 }}
         gutterBreakpoints={{ 320: "12px", 640: "16px", 1024: "20px" }}
       >
         <Masonry gap="16px">
