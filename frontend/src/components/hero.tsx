@@ -24,15 +24,15 @@ export default function HeroBanner() {
           <br />
           Luxury
         </h1>
-        <p className="mt-2 text-xs md:text-lg lg:text-xl text-gray-200 max-w-md leading-snug">
-          Experience luxury and comfort in the
+        <p className="mt-2 text-xs md:text-lg lg:text-xl text-gray-200 max-w-md  leading-snug">
+          Experience luxury and
           <br />
-          heart of the city.
+          comfort in the heart of the city.
         </p>
       </div>
 
       {/* Bottom-right price and button */}
-      <div className="absolute bottom-0 right-0 p-6 md:p-10 z-20 flex flex-col items-end space-y-2">
+      <div className="absolute bottom-0 right-0 p-3 md:p-10 z-20 flex flex-col items-end space-y-2">
         <div className="text-white text-sm md:text-xl">
           Available at just ₹4999/-
         </div>

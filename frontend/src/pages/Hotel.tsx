@@ -81,17 +81,17 @@ export default function Hotel() {
         <HeroBanner />
         <div className="container mx-auto px-4 py-8 mt-10">
           <div className="mb-8">
-            <h2 className="text-3xl font-bold text-center text-green-950 mb-2">
+            <h2 className="text-3xl font-bold text-center lg:text-start lg:ml-6 text-green-950 mb-2">
               Our Premium Rooms
             </h2>
-            <p className="text-gray-600 text-center">
+            <p className="text-gray-600 text-center lg:text-start lg:ml-6">
               Experience luxury and comfort in the heart of the city
             </p>
           </div>
           <RoomCardCarousel rooms={rooms} />
 
           <div className="mt-16">
-            <h2 className="text-3xl font-bold text-center text-green-950 mb-8">
+            <h2 className="text-3xl font-bold lg:text-start lg:ml-6 text-center text-green-950 mb-8">
               Gallery
             </h2>
             <GalleryMasonry allImages={gallery} />
