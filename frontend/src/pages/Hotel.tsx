@@ -3,6 +3,7 @@ import HeroBanner from "../components/hero";
 import ResponsiveNavigation from "../components/responsiveNavigation";
 import RoomCardCarousel from "../components/roomCardCarousal";
 import Navbar from "@/components/navbar";
+import Map from "@/components/map";
 
 const rooms = [
   {
@@ -94,6 +95,13 @@ export default function Hotel() {
               Gallery
             </h2>
             <GalleryMasonry allImages={gallery} />
+          </div>
+
+          <div>
+            <h2 className="text-3xl font-bold text-center text-green-950 mt-10 mb-8">
+              We're located here
+            </h2>
+            <Map />
           </div>
         </div>
       </div>
