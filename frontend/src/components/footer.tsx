@@ -2,10 +2,10 @@ import { Button } from "./ui/button";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#fff8f0] text-[#5c3d2e] py-10">
+    <footer className="bg-[#fff8f0] text-[#5c3d2e] py-10 ">
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Logo & About */}
-        <div>
+        <div className="lg:ml-24 justify-center items-center">
           <h2 className="text-2xl font-bold mb-3">Biva Bakery</h2>
           <p className="text-sm">
             Freshly baked happiness every day! Visit us for cakes, pastries, and
@@ -14,7 +14,7 @@ export default function Footer() {
         </div>
 
         {/* Quick Links */}
-        <div>
+        <div className="lg:ml-20">
           <h3 className="text-lg font-semibold mb-3">Quick Links</h3>
           <ul className="space-y-2 text-sm">
             <li>

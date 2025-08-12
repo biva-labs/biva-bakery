@@ -97,9 +97,9 @@ export default function Hotel() {
             <GalleryMasonry allImages={gallery} />
           </div>
 
-          <div>
-            <h2 className="text-3xl font-bold text-center text-green-950 mt-10 mb-8">
-              We're located here
+          <div className="mt-10">
+            <h2 className="text-3xl font-bold lg:text-start lg:ml-6 text-center text-green-950">
+              We're Located Here
             </h2>
             <Map />
           </div>

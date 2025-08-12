@@ -29,7 +29,7 @@ export default function GalleryMasonry({ allImages, batchSize = 4 }) {
               src={src}
               alt={`img-${idx}`}
               loading="lazy"
-              className="w-full object-cover rounded-lg mb-4 shadow-2xl shadow-gray-800 max-h-[300px]"
+              className="w-full object-cover rounded-lg mb-4  max-h-[300px]"
               style={{ display: "block" }}
             />
           ))}

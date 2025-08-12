@@ -35,7 +35,7 @@ export default function RoomCardCarousel({ rooms }: RoomCardCarouselProps) {
                 key={index}
                 className="pl-4 sm:pl-2 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
               >
-                <div className="h-full shadow-lg rounded-xl overflow-hidden bg-white">
+                <div className="h-full  rounded-xl overflow-hidden bg-white">
                   <RoomCard {...room} />
                 </div>
               </CarouselItem>
@@ -43,8 +43,8 @@ export default function RoomCardCarousel({ rooms }: RoomCardCarouselProps) {
           </CarouselContent>
 
           {/* Arrows always visible now */}
-          <CarouselPrevious className="absolute -left-4 top-1/2 -translate-y-1/2 h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-black/80 backdrop-blur-md shadow-md border border-gray-200 hover:bg-black" />
-          <CarouselNext className="absolute -right-4 top-1/2 -translate-y-1/2 h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-black/80 backdrop-blur-md shadow-md border border-gray-200 hover:bg-black" />
+          <CarouselPrevious className="absolute -left-4 top-1/2 -translate-y-1/2 h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-black/80 backdrop-blur-md  border border-gray-200 hover:bg-black" />
+          <CarouselNext className="absolute -right-4 top-1/2 -translate-y-1/2 h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-black/80 backdrop-blur-md border border-gray-200 hover:bg-black" />
         </Carousel>
 
         {/* Optional: Keep the swipe hint on mobile */}

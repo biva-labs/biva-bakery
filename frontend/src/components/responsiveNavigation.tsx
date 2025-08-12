@@ -7,6 +7,7 @@ import {
   HelpCircle,
   Hotel,
   UtensilsCrossed,
+  X,
   Cake,
 } from "lucide-react";
 import {
@@ -70,10 +71,19 @@ const businessSections = [
 ];
 
 export function AppSidebar() {
+  const { toggleSidebar } = useSidebar();
+
   return (
-    <Sidebar collapsible="offcanvas" className="lg:hidden">
+    <Sidebar collapsible="offcanvas" className="relative lg:hidden">
       <SidebarHeader className="border-b border-border p-4">
         <h2 className="text-xl font-bold text-green-950">THE BIVA</h2>
+        <button
+          onClick={toggleSidebar}
+          aria-label="Close sidebar"
+          className="absolute top-3 right-3 p-1 rounded hover:bg-gray-100 z-50"
+        >
+          <X size={20} className="text-green-950" />
+        </button>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -128,7 +138,7 @@ export default function ResponsiveNavigation({
       </div>
 
       <div className="min-h-screen w-full">
-        <header className="bg-black backdrop-blur-md sticky top-0 left-0 w-full z-50">
+        <header className="bg-black backdrop-blur-3xl sticky top-0 left-0 w-full z-50">
           <div className="lg:hidden">
             <div className="flex items-center justify-between h-12 px-2 sm:px-4">
               <div className="flex items-center">
@@ -160,7 +170,7 @@ export default function ResponsiveNavigation({
                       <li key={item.title}>
                         <a
                           href={item.url}
-                          className="text-white  font-medium tracking-wide"
+                          className="text-white font-medium tracking-wide"
                         >
                           {item.title}
                         </a>

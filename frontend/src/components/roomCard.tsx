@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 
 export default function RoomCard({ imgurl, title, desc, onAction }) {
   return (
-    <Card className="relative max-w-full md:max-w-[280px] flex flex-col shadow-gray-600 shadow-xl mb-10 overflow-hidden p-0">
+    <Card className="relative max-w-full md:max-w-[280px] flex flex-col  mb-10 overflow-hidden p-0">
  
       <img
         src={imgurl}
