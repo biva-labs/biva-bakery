@@ -1,4 +1,4 @@
-export default function Map(props) {
+export default function Map() {
   return (
     <div className="w-full max-w-6xl mx-auto aspect-[16/9]">
       <iframe

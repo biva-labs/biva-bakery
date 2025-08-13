@@ -1,7 +1,7 @@
-import Navbar from "./navbar";
-import { Button } from "./ui/button";
+import { SecondNavbar } from "./secondNav";
+import { Button } from "@/components/ui/button";
 
-export default function HeroBanner() {
+export default function Hero() {
   return (
     <div
       className="relative w-full
@@ -14,10 +14,9 @@ export default function HeroBanner() {
     >
       <div className="absolute inset-0 bg-black/40 z-10" />
       <div className="relative z-20">
-        <Navbar />
+        <SecondNavbar />
       </div>
 
-      {/* Bottom-left text */}
       <div className="absolute bottom-0 left-0 p-6 md:p-10 z-20">
         <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
           Experience
@@ -31,12 +30,14 @@ export default function HeroBanner() {
         </p>
       </div>
 
-      {/* Bottom-right price and button */}
       <div className="absolute bottom-0 right-0 p-3 md:p-10 z-20 flex flex-col items-end space-y-2">
         <div className="text-white text-sm md:text-xl">
           Available at just ₹4999/-
         </div>
-        <Button variant="orange">Contact Us</Button>
+
+        <Button variant="orange" className="hover:cursor-pointer">
+          Contact Us
+        </Button>
       </div>
     </div>
   );

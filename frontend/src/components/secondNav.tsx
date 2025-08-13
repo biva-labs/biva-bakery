@@ -1,4 +1,4 @@
-const businessSections = [
+const secondNavItems = [
   {
     title: "HOTEL",
     url: "#",
@@ -13,14 +13,14 @@ const businessSections = [
   },
 ];
 
-export default function Navbar() {
+export function SecondNavbar() {
   return (
     <div className="relative bg-transparent">
       <div className="container px-4 mx-auto">
         <nav className="h-12 md:h-14 flex items-center justify-center">
           <ul className="flex w-full max-w-3xl justify-between items-center gap-4">
-            {businessSections.map((item) => (
-              <li key={item.title} className="flex-1">
+            {secondNavItems.map((item, key) => (
+              <li key={key} className="flex-1">
                 <a
                   href={item.url}
                   className="
