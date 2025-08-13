@@ -71,7 +71,7 @@ const gallery = [
   "https://i.pinimg.com/736x/66/30/c6/6630c6a18475e11eb9c431f89de4698c.jpg",
 ];
 
-export default function NewHotel() {
+export default function Hotel() {
   return (
     <div className="gap-3">
       <div className="container mx-auto px-4 py-8 mt-10">
