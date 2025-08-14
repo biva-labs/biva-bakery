@@ -5,7 +5,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import RoomCard from "./roomCard";
+import RoomCard from "./room-card";
 
 interface Room {
   imgurl: string;

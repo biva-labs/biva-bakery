@@ -17,10 +17,11 @@ export default function GalleryMasonry({ allImages, batchSize = 4 }) {
   const hasMore = visibleImages.length < allImages.length;
 
   return (
-    <div className="px-4 py-8">
+    <div className="px-4 py-8 ">
       <ResponsiveMasonry
         columnsCountBreakPoints={{ 320: 2, 640: 3, 1024: 4 }}
         gutterBreakpoints={{ 320: "12px", 640: "16px", 1024: "20px" }}
+        className="bg-gray-200 p-2.5 lg:pt-5 lg:pr-5 lg:pl-5  rounded-2xl"
       >
         <Masonry gap="16px">
           {visibleImages.map((src, idx) => (

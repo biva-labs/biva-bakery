@@ -1,15 +1,17 @@
+import { Link } from "react-router-dom";
+
 const secondNavItems = [
   {
     title: "HOTEL",
-    url: "#",
+    url: "/",
   },
   {
     title: "FOOD COURT",
-    url: "#",
+    url: "/food",
   },
   {
     title: "BAKERY",
-    url: "#",
+    url: "/bakery",
   },
 ];
 
@@ -21,8 +23,8 @@ export function SecondNavbar() {
           <ul className="flex w-full max-w-3xl justify-between items-center gap-4">
             {secondNavItems.map((item, key) => (
               <li key={key} className="flex-1">
-                <a
-                  href={item.url}
+                <Link
+                  to={item.url}
                   className="
                     w-full block text-center whitespace-nowrap
                     bg-white/30 backdrop-blur-3xl
@@ -32,7 +34,7 @@ export function SecondNavbar() {
                   "
                 >
                   {item.title}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

@@ -1,7 +1,6 @@
+import FoodCourtHero from "@/components/food-court-hero";
 import GalleryMasonry from "../components/mansory";
-import RoomCardCarousel from "../components/roomCardCarousal";
-
-import Map from "@/components/map";
+import RoomCardCarousel from "../components/room-card-carousal";
 
 const rooms = [
   {
@@ -71,16 +70,17 @@ const gallery = [
   "https://i.pinimg.com/736x/66/30/c6/6630c6a18475e11eb9c431f89de4698c.jpg",
 ];
 
-export default function Hotel() {
+export default function FoodCourt() {
   return (
     <div className="gap-3">
       <div className="container mx-auto px-4 py-8 mt-10">
+        <FoodCourtHero />
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-center lg:text-start lg:ml-6 text-green-950 mb-2">
-            Our Premium Rooms
+            Upcoming Events
           </h2>
           <p className="text-gray-600 text-center lg:text-start lg:ml-6">
-            Experience luxury and comfort in the heart of the city
+            Book your table for the best experience
           </p>
         </div>
         <RoomCardCarousel rooms={rooms} />
@@ -90,13 +90,6 @@ export default function Hotel() {
             Gallery
           </h2>
           <GalleryMasonry allImages={gallery} />
-        </div>
-
-        <div className="mt-10">
-          <h2 className="text-3xl font-bold lg:text-start lg:ml-6 text-center text-green-950">
-            We're Located Here
-          </h2>
-          <Map />
         </div>
       </div>
     </div>

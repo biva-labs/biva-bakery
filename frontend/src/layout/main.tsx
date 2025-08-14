@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { X } from "lucide-react";
+import { X, House, Calendar, Notebook, Settings, HandFist } from "lucide-react";
 
 import { SidebarGroup, SidebarGroupContent } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
@@ -21,22 +21,27 @@ const data = {
     {
       title: "HOME",
       url: "/",
+      icon: <House />,
     },
     {
       title: "EVENTS",
-      url: "/test",
+      url: "/food",
+      icon: <Calendar />,
     },
     {
       title: "SERVICE",
       url: "#",
+      icon: <Settings />,
     },
     {
       title: "BOOKINGS",
       url: "#",
+      icon: <Notebook />,
     },
     {
       title: "SUPPORT",
       url: "#",
+      icon: <HandFist />,
     },
   ],
 };
@@ -47,6 +52,7 @@ export function NavMain({
   items: {
     title: string;
     url: string;
+    icon: React.ReactNode;
   }[];
 }) {
   return (
@@ -57,6 +63,7 @@ export function NavMain({
             <SidebarMenuItem key={item.title}>
               <Link to={item.url}>
                 <SidebarMenuButton tooltip={item.title}>
+                  {item.icon}
                   <span>{item.title}</span>
                 </SidebarMenuButton>
               </Link>
