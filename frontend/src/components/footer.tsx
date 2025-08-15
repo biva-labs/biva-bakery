@@ -1,5 +1,3 @@
-import { Button } from "./ui/button";
-
 export default function Footer() {
   return (
     <footer className="bg-[#fff8f0] text-[#5c3d2e] py-10 ">
