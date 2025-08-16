@@ -1,6 +1,6 @@
 import GalleryMasonry from "../components/mansory";
 import RoomCardCarousel from "../components/room-card-carousal";
-import HotelHero from "@/components/hotel-hero";
+import HotelHero from "@/components/hero";
 
 import Map from "@/components/map";
 
@@ -76,7 +76,12 @@ export default function Hotel() {
   return (
     <div>
       <div className="mx-auto px-4 lg:mr-0 ">
-        <HotelHero />
+        <HotelHero
+          title={"Experience Luxury"}
+          description={"Experience luxury and comfort in the heart of the city"}
+          buttonText={"Contact Us"}
+          buttonDescription={"Available at just ₹4999/-"}
+        />
         <div className="mb-8 text-center lg:text-left mt-10">
           <h2 className="text-2xl lg:text-4xl font-light text-center lg:text-start lg:ml-6 text-green-950 mb-2">
             Our Premium Rooms
