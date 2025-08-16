@@ -7,15 +7,15 @@ const images = [
   "https://i.pinimg.com/1200x/af/f2/69/aff26915501df944db3732592df0d06e.jpg",
 ];
 
-export default function HotelHero({
+export default function Hero({
   title,
   description,
   buttonText,
   buttonDescription,
 }: {
-  title: string;
+  title: ReactElement;
   description: ReactElement;
-  buttonText: string;
+  buttonText: ReactElement;
   buttonDescription: ReactElement;
 }) {
   const [current, setCurrent] = useState(0);
@@ -46,31 +46,7 @@ export default function HotelHero({
 
       <div className="absolute bottom-0 left-0 p-6 md:p-10 z-20">
         <h1 className="text-2xl md:text-4xl outfit font-extrabold lg:text-5xl  text-white leading-tight">
-          {(() => {
-            const words = title.split(" ");
-            if (words.length === 2) {
-              return (
-                <>
-                  {words[0]} <br /> {words[1]}
-                </>
-              );
-            }
-            if (words.length === 4) {
-              return (
-                <>
-                  {words.slice(0, 2).join(" ")} <br />
-                  {words.slice(2).join(" ")}
-                </>
-              );
-            }
-            const mid = Math.ceil(words.length / 2);
-            return (
-              <>
-                {words.slice(0, mid).join(" ")} <br />
-                {words.slice(mid).join(" ")}
-              </>
-            );
-          })()}
+          {title}
         </h1>
         <p className="mt-2 text-xs font-light md:text-lg lg:text-xl text-gray-200 max-w-xs md:max-w-sm leading-snug">
           {description || ""}

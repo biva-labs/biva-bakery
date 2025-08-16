@@ -1,7 +1,6 @@
-import Map from "@/components/map";
 import GalleryMasonry from "../components/mansory";
 import RoomCardCarousel from "../components/room-card-carousal";
-import HotelHero from "@/components/hero";
+import Hero from "@/components/hero";
 
 const rooms = [
   {
@@ -75,15 +74,20 @@ export default function FoodCourt() {
   return (
     <div>
       <div className="mx-auto px-4 lg:mr-0 ">
-        <HotelHero
-          title={"The Biva Food Court"}
+        <Hero
+          title={
+            <div className="mb-5">
+              The Biva <br />
+              Food Court
+            </div>
+          }
           description={<></>}
           buttonDescription={
             <div className="max-w-[220px] md:max-w-xs text-right">
               Book your table in advance for upcoming events
             </div>
           }
-          buttonText={"Book Now"}
+          buttonText={<>Book Now</>}
         />
 
         <div className="mt-16">
@@ -102,20 +106,6 @@ export default function FoodCourt() {
           </p>
         </div>
         <RoomCardCarousel rooms={rooms} />
-      </div>
-
-      <div className="mt-10 ">
-        <div className="flex ml-2 flex-row text-start  lg:ml-6 gap-2 md:mb-8 ">
-          <h2 className="text-3xl lg:text-4xl text-green-950 outfit ml-4 font-extrabold md:mt-6">
-            Near Biva?
-          </h2>
-          <img
-            src="/map.png"
-            alt="Location indicator"
-            className="md:h-20 md:w-20 h-8 w-8"
-          />
-        </div>
-        <Map />
       </div>
     </div>
   );

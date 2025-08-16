@@ -1,8 +1,6 @@
 import GalleryMasonry from "../components/mansory";
 import RoomCardCarousel from "../components/room-card-carousal";
-import HotelHero from "@/components/hero";
-
-import Map from "@/components/map";
+import Hero from "@/components/hero";
 
 const rooms = [
   {
@@ -76,19 +74,20 @@ export default function Hotel() {
   return (
     <div>
       <div className="mx-auto px-4 lg:mr-0 ">
-        <HotelHero
-          title={"Experience Luxury"}
+        <Hero
+          title={
+            <>
+              Experience <br /> Luxury
+            </>
+          }
           description={
             <>
               Experience luxury and
               <br /> comfort in the heart of the city
             </>
           }
-          buttonText={"Contact Us"}
-          buttonDescription={
-            <>
-            Available at just ₹4999/-
-            </>}
+          buttonText={<>Contact Us</>}
+          buttonDescription={<>Available at just ₹4999/-</>}
         />
         <div className="mb-8 text-center lg:text-left mt-10">
           <h2 className="text-4xl lg:text-4xl outfit font-extrabold ml-4 text-start lg:ml-6 text-green-950 mb-2">
@@ -105,20 +104,6 @@ export default function Hotel() {
             Gallery
           </h2>
           <GalleryMasonry allImages={gallery} />
-        </div>
-
-        <div className="mt-10 ">
-          <div className="flex ml-2 flex-row text-start  lg:ml-6 gap-2 md:mb-8 ">
-            <h2 className="text-3xl lg:text-4xl text-green-950 outfit font-extrabold md:mt-6">
-              Near Biva?
-            </h2>
-            <img
-              src="/map.png"
-              alt="Location indicator"
-              className="md:h-20 md:w-20 h-8 w-8"
-            />
-          </div>
-          <Map />
         </div>
       </div>
     </div>
