@@ -36,7 +36,7 @@ export default function RoomCard({ imgurl, title, desc, onAction }) {
           onClick={onAction}
           variant="default"
           size="sm"
-          className="rounded-full px-4 py-2 text-xs sm:text-sm font-medium"
+          className="rounded-full px-4 py-2  nexa"
         >
           Book
         </Button>
