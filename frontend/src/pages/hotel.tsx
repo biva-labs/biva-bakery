@@ -74,30 +74,37 @@ const gallery = [
 
 export default function Hotel() {
   return (
-    <div className="gap-3">
-      <div className="container mx-auto px-4 py-8 mt-10">
+    <div>
+      <div className="mx-auto px-4 lg:mr-0 ">
         <HotelHero />
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-center lg:text-start lg:ml-6 text-green-950 mb-2">
+        <div className="mb-8 text-center lg:text-left mt-10">
+          <h2 className="text-2xl lg:text-4xl font-light text-center lg:text-start lg:ml-6 text-green-950 mb-2">
             Our Premium Rooms
           </h2>
-          <p className="text-gray-600 text-center lg:text-start lg:ml-6">
+          <p className="text-gray-600 text-center lg:text-start lg:ml-6 font-medium text-lg">
             Experience luxury and comfort in the heart of the city
           </p>
         </div>
         <RoomCardCarousel rooms={rooms} />
 
         <div className="mt-16">
-          <h2 className="text-3xl font-bold lg:text-start lg:ml-6 text-center text-green-950 mb-8">
+          <h2 className="text-3xl lg:text-4xl  font-light lg:text-start lg:ml-6 text-center text-green-950 mb-8">
             Gallery
           </h2>
           <GalleryMasonry allImages={gallery} />
         </div>
 
         <div className="mt-10">
-          <h2 className="text-3xl font-bold lg:text-start lg:ml-6 text-center text-green-950">
-            We're Located Here
-          </h2>
+          <div className="flex flex-row lg:text-start text-center lg:ml-6 gap-2 md:mb-8 justify-center items-center lg:justify-start ">
+            <h2 className="text-3xl lg:text-4xl text-green-950 font-light  md:mt-6">
+              Near Biva?
+            </h2>
+            <img
+              src="/map.png"
+              alt="Location indicator"
+              className="md:h-20 md:w-20 h-8 w-8"
+            />
+          </div>
           <Map />
         </div>
       </div>

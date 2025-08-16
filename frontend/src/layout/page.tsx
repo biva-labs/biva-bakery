@@ -7,7 +7,7 @@ export default function Biva() {
   // on route change pass props to change the hero section
 
   return (
-    <div className="gap-3">
+    <div>
       <MainNav />
       <SecondNavbar />
       <Outlet />

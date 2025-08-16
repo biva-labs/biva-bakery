@@ -31,7 +31,7 @@ export default function MainNav() {
       <div className="relative flex items-center justify-center">
         {/* Sidebar Trigger - left */}
         <div className="absolute left-0 flex items-center">
-          <SidebarTrigger className="-ml-1" />
+          <SidebarTrigger className="-ml-1 lg:hidden" />
         </div>
 
         {/* Brand - always center */}

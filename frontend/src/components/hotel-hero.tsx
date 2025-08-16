@@ -1,4 +1,3 @@
-import { SecondNavbar } from "./second-nav";
 import { Button } from "@/components/ui/button";
 import {
   Carousel,
@@ -14,7 +13,7 @@ const images = [
 
 export default function HotelHero() {
   return (
-    <div className="relative w-full h-[30vh] md:h-[40vh] lg:h-[60vh] overflow-hidden">
+    <div className="relative w-screen h-[40vh] lg:h-[60vh] overflow-hidden -mt-14 left-[calc(-50vw+50%)] right-[calc(-50vw+50%)] mx-auto">
       <Carousel
         opts={{
           loop: true,
@@ -28,7 +27,7 @@ export default function HotelHero() {
               <img
                 src={src}
                 alt={`Slide ${idx + 1}`}
-                className="w-full h-[20vh] md:h-[40vh] lg:h-[60vh] object-cover"
+                className="w-full h-[40vh] lg:h-[60vh] object-cover"
               />
             </CarouselItem>
           ))}
@@ -37,17 +36,13 @@ export default function HotelHero() {
 
       <div className="absolute inset-0 bg-black/40 z-10" />
 
-      {/*<div className="relative z-20">
-        <SecondNavbar />
-      </div>*/}
-
       <div className="absolute bottom-0 left-0 p-6 md:p-10 z-20">
-        <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
+        <h1 className="text-2xl md:text-4xl lg:text-5xl font-light text-white leading-tight">
           Experience
           <br />
           Luxury
         </h1>
-        <p className="mt-2 text-xs md:text-lg lg:text-xl text-gray-200 max-w-md leading-snug">
+        <p className="mt-2 text-xs font-light md:text-lg lg:text-xl text-gray-200 max-w-md leading-snug">
           Experience luxury and
           <br />
           comfort in the heart of the city.
@@ -59,7 +54,7 @@ export default function HotelHero() {
           Available at just ₹4999/-
         </div>
 
-        <Button variant="orange" className="hover:cursor-pointer">
+        <Button variant="orange" className="hover:cursor-pointer mb-4 lg:mb-0">
           Contact Us
         </Button>
       </div>

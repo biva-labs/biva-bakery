@@ -17,8 +17,8 @@ const secondNavItems = [
 
 export function SecondNavbar() {
   return (
-    <div className="relative bg-transparent">
-      <div className="container px-4 mx-auto">
+    <div className="relative bg-transparent z-50">
+      <div className="container">
         <nav className="h-12 md:h-14 flex items-center justify-center">
           <ul className="flex w-full max-w-3xl justify-between items-center gap-4">
             {secondNavItems.map((item, key) => (
