@@ -29,17 +29,14 @@ export default function MainNav() {
   return (
     <div className="bg-[#002a3a] text-white px-6 py-4  top-0 z-50 sticky">
       <div className="container mx-auto flex items-center h-full">
-        {/* Left side - Sidebar Trigger */}
         <div className="absolute left-6 top-1/2 -translate-y-1/2 md:hidden">
           <SidebarTrigger />
         </div>
 
-        {/* Center - Brand */}
         <div className="flex-1 flex justify-center lg:justify-start">
           <div className="text-lg font-bold">THE BIVA</div>
         </div>
 
-        {/* Right side - Navigation items (lg screens only) */}
         <ul className="hidden lg:flex space-x-6">
           {mainNavItems.map((item, index) => (
             <li key={index}>

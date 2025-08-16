@@ -82,14 +82,14 @@ export default function FoodCourt() {
         />
 
         <div className="mt-16">
-          <h2 className="text-3xl lg:text-4xl  font-light lg:text-start lg:ml-6 text-center text-green-950 mb-8">
+          <h2 className="text-3xl lg:text-4xl   lg:text-start lg:ml-6 outfit font-extrabold text-center text-green-950 mb-8">
             Gallery
           </h2>
           <GalleryMasonry allImages={gallery} />
         </div>
 
         <div className="mb-8 text-center lg:text-left mt-10">
-          <h2 className="text-2xl lg:text-4xl font-light text-center lg:text-start lg:ml-6 text-green-950 mb-2">
+          <h2 className="text-2xl lg:text-4xl  text-center lg:text-start outfit font-extrabold lg:ml-6 text-green-950 mb-2">
             Upcoming Events
           </h2>
           <p className="text-gray-600 text-center lg:text-start lg:ml-6 font-medium text-lg">

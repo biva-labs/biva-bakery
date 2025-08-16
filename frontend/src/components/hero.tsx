@@ -29,7 +29,6 @@ export default function HotelHero({
 
   return (
     <div className="relative w-screen h-[40vh] lg:h-[60vh] overflow-hidden -mt-14 mx-auto right-8">
-      {/* Background slideshow */}
       <div className="absolute inset-0">
         {images.map((src, idx) => (
           <img
@@ -46,7 +45,7 @@ export default function HotelHero({
       <div className="absolute inset-0 bg-black/40 z-10" />
 
       <div className="absolute bottom-0 left-0 p-6 md:p-10 z-20">
-        <h1 className="text-2xl md:text-4xl lg:text-5xl font-light text-white leading-tight">
+        <h1 className="text-2xl md:text-4xl outfit font-extrabold lg:text-5xl  text-white leading-tight">
           {(() => {
             const words = title.split(" ");
             if (words.length === 2) {
