@@ -17,20 +17,20 @@ const secondNavItems = [
 
 export function SecondNavbar() {
   return (
-    <div className="relative bg-transparent">
-      <div className="container px-4 mx-auto">
-        <nav className="h-12 md:h-14 flex items-center justify-center">
-          <ul className="flex w-full max-w-3xl justify-between items-center gap-4">
+    <div className="bg-transparent z-50 top-18 sticky">
+      <div className="flex justify-center w-full">
+        <nav className="h-12 md:h-14 flex items-center">
+          <ul className="flex justify-center items-center gap-4">
             {secondNavItems.map((item, key) => (
-              <li key={key} className="flex-1">
+              <li key={key}>
                 <Link
                   to={item.url}
                   className="
-                    w-full block text-center whitespace-nowrap
+                    block text-center whitespace-nowrap
                     bg-white/30 backdrop-blur-3xl
                     border-2 border-black rounded-3xl
-                    px-4 py-2 font-bold text-sm
-                    hover:bg-black hover:text-white transition
+                    px-4 py-2
+                    hover:bg-black hover:text-white transition nexa
                   "
                 >
                   {item.title}

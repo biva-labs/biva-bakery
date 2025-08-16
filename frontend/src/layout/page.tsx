@@ -1,16 +1,16 @@
 import { Outlet } from "react-router-dom";
-import MainNav from "@/components/mainNav";
+import MainNav from "@/components/main-nav";
 import Footer from "@/components/footer";
 import { SecondNavbar } from "@/components/second-nav";
+import Map from "@/components/map";
 
 export default function Biva() {
-  // on route change pass props to change the hero section
-
   return (
-    <div className="gap-3">
+    <div>
       <MainNav />
       <SecondNavbar />
       <Outlet />
+      <Map />
       <Footer />
     </div>
   );

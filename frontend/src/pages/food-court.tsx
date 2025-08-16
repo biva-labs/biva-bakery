@@ -1,6 +1,6 @@
-import FoodCourtHero from "@/components/food-court-hero";
 import GalleryMasonry from "../components/mansory";
 import RoomCardCarousel from "../components/room-card-carousal";
+import Hero from "@/components/hero";
 
 const rooms = [
   {
@@ -72,25 +72,40 @@ const gallery = [
 
 export default function FoodCourt() {
   return (
-    <div className="gap-3">
-      <div className="container mx-auto px-4 py-8 mt-10">
-        <FoodCourtHero />
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-center lg:text-start lg:ml-6 text-green-950 mb-2">
-            Upcoming Events
-          </h2>
-          <p className="text-gray-600 text-center lg:text-start lg:ml-6">
-            Book your table for the best experience
-          </p>
-        </div>
-        <RoomCardCarousel rooms={rooms} />
+    <div>
+      <div className="mx-auto px-4 lg:mr-0 ">
+        <Hero
+          title={
+            <div className="mb-5">
+              The Biva <br />
+              Food Court
+            </div>
+          }
+          description={<></>}
+          buttonDescription={
+            <div className="max-w-[220px] md:max-w-xs text-right">
+              Book your table in advance for upcoming events
+            </div>
+          }
+          buttonText={<>Book Now</>}
+        />
 
         <div className="mt-16">
-          <h2 className="text-3xl font-bold lg:text-start lg:ml-6 text-center text-green-950 mb-8">
+          <h2 className="text-3xl lg:text-4xl text-start lg:ml-6 ml-4 outfit font-extrabold  text-green-950 mb-2">
             Gallery
           </h2>
           <GalleryMasonry allImages={gallery} />
         </div>
+
+        <div className="mb-8 text-center lg:text-left mt-10">
+          <h2 className="text-2xl lg:text-4xl text-start outfit font-extrabold lg:ml-6 ml-4 text-green-950 mb-2">
+            Upcoming Events
+          </h2>
+          <p className="text-muted-foreground *: text-center lg:text-start lg:ml-6 outfit font-medium text-lg">
+            Book your table for the best experience
+          </p>
+        </div>
+        <RoomCardCarousel rooms={rooms} />
       </div>
     </div>
   );

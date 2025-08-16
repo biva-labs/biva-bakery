@@ -1,8 +1,6 @@
 import GalleryMasonry from "../components/mansory";
 import RoomCardCarousel from "../components/room-card-carousal";
-import HotelHero from "@/components/hotel-hero";
-
-import Map from "@/components/map";
+import Hero from "@/components/hero";
 
 const rooms = [
   {
@@ -74,31 +72,38 @@ const gallery = [
 
 export default function Hotel() {
   return (
-    <div className="gap-3">
-      <div className="container mx-auto px-4 py-8 mt-10">
-        <HotelHero />
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-center lg:text-start lg:ml-6 text-green-950 mb-2">
+    <div>
+      <div className="mx-auto px-4 lg:mr-0 ">
+        <Hero
+          title={
+            <>
+              Experience <br /> Luxury
+            </>
+          }
+          description={
+            <>
+              Experience luxury and
+              <br /> comfort in the heart of the city
+            </>
+          }
+          buttonText={<>Contact Us</>}
+          buttonDescription={<>Available at just ₹4999/-</>}
+        />
+        <div className="mb-8 text-center lg:text-left mt-10">
+          <h2 className="text-4xl lg:text-4xl outfit font-extrabold ml-4 text-start lg:ml-6 text-green-950 mb-2">
             Our Premium Rooms
           </h2>
-          <p className="text-gray-600 text-center lg:text-start lg:ml-6">
+          <p className="text-gray-600 ml-4 text-start lg:ml-6  font-medium text-lg">
             Experience luxury and comfort in the heart of the city
           </p>
         </div>
         <RoomCardCarousel rooms={rooms} />
 
         <div className="mt-16">
-          <h2 className="text-3xl font-bold lg:text-start lg:ml-6 text-center text-green-950 mb-8">
+          <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-green-950 ">
             Gallery
           </h2>
           <GalleryMasonry allImages={gallery} />
-        </div>
-
-        <div className="mt-10">
-          <h2 className="text-3xl font-bold lg:text-start lg:ml-6 text-center text-green-950">
-            We're Located Here
-          </h2>
-          <Map />
         </div>
       </div>
     </div>
