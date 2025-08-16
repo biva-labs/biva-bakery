@@ -41,7 +41,7 @@ export default function GalleryMasonry({ allImages, batchSize = 4 }) {
         <div className="flex justify-center mt-6">
           <button
             onClick={() => handleShowMore()}
-            className="px-6 py-2 bg-green-600 text-white rounded-full hover:bg-green-700"
+            className="px-6 py-2 bg-orange-500 nexa text-white rounded-full hover:bg-green-700"
           >
             Show More
           </button>

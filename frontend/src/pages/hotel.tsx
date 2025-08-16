@@ -78,15 +78,23 @@ export default function Hotel() {
       <div className="mx-auto px-4 lg:mr-0 ">
         <HotelHero
           title={"Experience Luxury"}
-          description={"Experience luxury and comfort in the heart of the city"}
+          description={
+            <>
+              Experience luxury and
+              <br /> comfort in the heart of the city
+            </>
+          }
           buttonText={"Contact Us"}
-          buttonDescription={"Available at just ₹4999/-"}
+          buttonDescription={
+            <>
+            Available at just ₹4999/-
+            </>}
         />
         <div className="mb-8 text-center lg:text-left mt-10">
-          <h2 className="text-4xl lg:text-4xl outfit font-extrabold text-center lg:text-start lg:ml-6 text-green-950 mb-2">
+          <h2 className="text-4xl lg:text-4xl outfit font-extrabold ml-4 text-start lg:ml-6 text-green-950 mb-2">
             Our Premium Rooms
           </h2>
-          <p className="text-gray-600 text-center lg:text-start lg:ml-6 font-medium text-lg">
+          <p className="text-gray-600 ml-4 text-start lg:ml-6  font-medium text-lg">
             Experience luxury and comfort in the heart of the city
           </p>
         </div>

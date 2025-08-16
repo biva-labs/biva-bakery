@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ReactElement } from "react";
 import { Button } from "@/components/ui/button";
 
 const images = [
@@ -14,9 +14,9 @@ export default function HotelHero({
   buttonDescription,
 }: {
   title: string;
-  description: string;
+  description: ReactElement;
   buttonText: string;
-  buttonDescription: string;
+  buttonDescription: ReactElement;
 }) {
   const [current, setCurrent] = useState(0);
 
@@ -28,7 +28,7 @@ export default function HotelHero({
   }, []);
 
   return (
-    <div className="relative w-screen h-[40vh] lg:h-[60vh] overflow-hidden -mt-14 mx-auto right-8">
+    <div className="relative w-screen h-[40vh] lg:h-[60vh] -mt-14 right-4">
       <div className="absolute inset-0">
         {images.map((src, idx) => (
           <img
@@ -72,7 +72,7 @@ export default function HotelHero({
             );
           })()}
         </h1>
-        <p className="mt-2 text-xs font-light md:text-lg lg:text-xl text-gray-200 max-w-xs md:max-w-sm leading-snug pl-2">
+        <p className="mt-2 text-xs font-light md:text-lg lg:text-xl text-gray-200 max-w-xs md:max-w-sm leading-snug">
           {description || ""}
         </p>
       </div>
@@ -83,7 +83,7 @@ export default function HotelHero({
 
         <Button
           variant="orange"
-          className="hover:cursor-pointer mb-4 lg:mb-0 rounded-full"
+          className="hover:cursor-pointer mb-4 lg:mb-0 w-28 lg:w-max nexa rounded-full"
         >
           {buttonText}
         </Button>

@@ -1,3 +1,4 @@
+import Map from "@/components/map";
 import GalleryMasonry from "../components/mansory";
 import RoomCardCarousel from "../components/room-card-carousal";
 import HotelHero from "@/components/hero";
@@ -76,27 +77,45 @@ export default function FoodCourt() {
       <div className="mx-auto px-4 lg:mr-0 ">
         <HotelHero
           title={"The Biva Food Court"}
-          description={""}
-          buttonDescription={"Book your table in advance for upcoming events"}
+          description={<></>}
+          buttonDescription={
+            <div className="max-w-[220px] md:max-w-xs text-right">
+              Book your table in advance for upcoming events
+            </div>
+          }
           buttonText={"Book Now"}
         />
 
         <div className="mt-16">
-          <h2 className="text-3xl lg:text-4xl   lg:text-start lg:ml-6 outfit font-extrabold text-center text-green-950 mb-8">
+          <h2 className="text-3xl lg:text-4xl text-start lg:ml-6 ml-4 outfit font-extrabold  text-green-950 mb-2">
             Gallery
           </h2>
           <GalleryMasonry allImages={gallery} />
         </div>
 
         <div className="mb-8 text-center lg:text-left mt-10">
-          <h2 className="text-2xl lg:text-4xl  text-center lg:text-start outfit font-extrabold lg:ml-6 text-green-950 mb-2">
+          <h2 className="text-2xl lg:text-4xl text-start outfit font-extrabold lg:ml-6 ml-4 text-green-950 mb-2">
             Upcoming Events
           </h2>
-          <p className="text-gray-600 text-center lg:text-start lg:ml-6 font-medium text-lg">
+          <p className="text-muted-foreground *: text-center lg:text-start lg:ml-6 outfit font-medium text-lg">
             Book your table for the best experience
           </p>
         </div>
         <RoomCardCarousel rooms={rooms} />
+      </div>
+
+      <div className="mt-10 ">
+        <div className="flex ml-2 flex-row text-start  lg:ml-6 gap-2 md:mb-8 ">
+          <h2 className="text-3xl lg:text-4xl text-green-950 outfit ml-4 font-extrabold md:mt-6">
+            Near Biva?
+          </h2>
+          <img
+            src="/map.png"
+            alt="Location indicator"
+            className="md:h-20 md:w-20 h-8 w-8"
+          />
+        </div>
+        <Map />
       </div>
     </div>
   );
