@@ -1,6 +1,6 @@
-import FoodCourtHero from "@/components/food-court-hero";
 import GalleryMasonry from "../components/mansory";
 import RoomCardCarousel from "../components/room-card-carousal";
+import HotelHero from "@/components/hero";
 
 const rooms = [
   {
@@ -72,25 +72,31 @@ const gallery = [
 
 export default function FoodCourt() {
   return (
-    <div className="gap-3">
-      <div className="container mx-auto px-4 py-8 mt-10">
-        <FoodCourtHero />
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-center lg:text-start lg:ml-6 text-green-950 mb-2">
-            Upcoming Events
-          </h2>
-          <p className="text-gray-600 text-center lg:text-start lg:ml-6">
-            Book your table for the best experience
-          </p>
-        </div>
-        <RoomCardCarousel rooms={rooms} />
+    <div>
+      <div className="mx-auto px-4 lg:mr-0 ">
+        <HotelHero
+          title={"The Biva Food Court"}
+          description={""}
+          buttonDescription={"Book your table in advance for upcoming events"}
+          buttonText={"Book Now"}
+        />
 
         <div className="mt-16">
-          <h2 className="text-3xl font-bold lg:text-start lg:ml-6 text-center text-green-950 mb-8">
+          <h2 className="text-3xl lg:text-4xl  font-light lg:text-start lg:ml-6 text-center text-green-950 mb-8">
             Gallery
           </h2>
           <GalleryMasonry allImages={gallery} />
         </div>
+
+        <div className="mb-8 text-center lg:text-left mt-10">
+          <h2 className="text-2xl lg:text-4xl font-light text-center lg:text-start lg:ml-6 text-green-950 mb-2">
+            Upcoming Events
+          </h2>
+          <p className="text-gray-600 text-center lg:text-start lg:ml-6 font-medium text-lg">
+            Book your table for the best experience
+          </p>
+        </div>
+        <RoomCardCarousel rooms={rooms} />
       </div>
     </div>
   );

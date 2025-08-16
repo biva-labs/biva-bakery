@@ -42,12 +42,10 @@ export default function RoomCardCarousel({ rooms }: RoomCardCarouselProps) {
             ))}
           </CarouselContent>
 
-          {/* Arrows always visible now */}
           <CarouselPrevious className="absolute -left-4 top-1/2 -translate-y-1/2 h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-black/80 backdrop-blur-md  border border-gray-200 hover:bg-black" />
           <CarouselNext className="absolute -right-4 top-1/2 -translate-y-1/2 h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-black/80 backdrop-blur-md border border-gray-200 hover:bg-black" />
         </Carousel>
 
-        {/* Optional: Keep the swipe hint on mobile */}
         <div className="flex justify-center mt-6 sm:hidden">
           <p className="text-sm text-gray-500">← Swipe to see more rooms →</p>
         </div>

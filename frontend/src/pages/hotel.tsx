@@ -83,7 +83,7 @@ export default function Hotel() {
           buttonDescription={"Available at just ₹4999/-"}
         />
         <div className="mb-8 text-center lg:text-left mt-10">
-          <h2 className="text-2xl lg:text-4xl font-light text-center lg:text-start lg:ml-6 text-green-950 mb-2">
+          <h2 className="text-4xl lg:text-4xl outfit font-extrabold text-center lg:text-start lg:ml-6 text-green-950 mb-2">
             Our Premium Rooms
           </h2>
           <p className="text-gray-600 text-center lg:text-start lg:ml-6 font-medium text-lg">
@@ -93,15 +93,15 @@ export default function Hotel() {
         <RoomCardCarousel rooms={rooms} />
 
         <div className="mt-16">
-          <h2 className="text-3xl lg:text-4xl  font-light lg:text-start lg:ml-6 text-center text-green-950 mb-8">
+          <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-green-950 ">
             Gallery
           </h2>
           <GalleryMasonry allImages={gallery} />
         </div>
 
-        <div className="mt-10">
-          <div className="flex flex-row lg:text-start text-center lg:ml-6 gap-2 md:mb-8 justify-center items-center lg:justify-start ">
-            <h2 className="text-3xl lg:text-4xl text-green-950 font-light  md:mt-6">
+        <div className="mt-10 ">
+          <div className="flex ml-2 flex-row text-start  lg:ml-6 gap-2 md:mb-8 ">
+            <h2 className="text-3xl lg:text-4xl text-green-950 outfit font-extrabold md:mt-6">
               Near Biva?
             </h2>
             <img

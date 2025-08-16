@@ -1,11 +1,9 @@
 import { Outlet } from "react-router-dom";
-import MainNav from "@/components/mainNav";
+import MainNav from "@/components/main-nav";
 import Footer from "@/components/footer";
 import { SecondNavbar } from "@/components/second-nav";
 
 export default function Biva() {
-  // on route change pass props to change the hero section
-
   return (
     <div>
       <MainNav />
