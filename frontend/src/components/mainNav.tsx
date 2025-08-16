@@ -27,18 +27,20 @@ const mainNavItems = [
 
 export default function MainNav() {
   return (
-    <div className="bg-black text-white px-6 py-4">
-      <div className="relative flex items-center justify-center">
-        {/* Sidebar Trigger - left */}
-        <div className="absolute left-0 flex items-center">
-          <SidebarTrigger className="-ml-1 lg:hidden" />
+    <div className="bg-black text-white px-6 py-4 relative">
+      <div className="container mx-auto flex items-center h-full">
+        {/* Left side - Sidebar Trigger */}
+        <div className="absolute left-6 top-1/2 -translate-y-1/2 md:hidden">
+          <SidebarTrigger />
         </div>
 
-        {/* Brand - always center */}
-        <div className="text-lg font-bold">THE BIVA</div>
+        {/* Center - Brand */}
+        <div className="flex-1 flex justify-center lg:justify-start">
+          <div className="text-lg font-bold">THE BIVA</div>
+        </div>
 
-        {/* Nav items - right */}
-        <ul className="hidden md:flex absolute right-0 space-x-6">
+        {/* Right side - Navigation items (lg screens only) */}
+        <ul className="hidden lg:flex space-x-6">
           {mainNavItems.map((item, index) => (
             <li key={index}>
               <Link to={item.url} className="hover:underline">
