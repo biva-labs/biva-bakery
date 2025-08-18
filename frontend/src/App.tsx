@@ -4,6 +4,7 @@ import Main from "./layout/main";
 import Biva from "./layout/page";
 import Hotel from "./pages/hotel";
 import FoodCourt from "./pages/food-court";
+import Table from "./pages/table";
 
 const queryClient = new QueryClient();
 function App() {
@@ -16,6 +17,7 @@ function App() {
               <Route path="/" element={<Hotel />} />
               <Route path="/food" element={<FoodCourt />} />
             </Route>
+            <Route path="/test" element={<Table />} />
           </Route>
         </Routes>
       </BrowserRouter>
