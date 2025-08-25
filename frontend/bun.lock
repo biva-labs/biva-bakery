@@ -15,6 +15,7 @@
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "embla-carousel-react": "^8.6.0",
+        "imagekitio-react": "^4.3.0",
         "lucide-react": "^0.536.0",
         "prop-types": "^15.8.1",
         "radix-ui": "^1.4.2",
@@ -556,6 +557,10 @@
     "has-flag": ["has-flag@4.0.0", "", {}, "sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ=="],
 
     "ignore": ["ignore@5.3.2", "", {}, "sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g=="],
+
+    "imagekit-javascript": ["imagekit-javascript@3.1.0", "", {}, "sha512-56YmmOg6vKarIg4A41E9T08qQ2ri8862AYU/Ykhrbr9Cd8i6BIeKkroR16cmsNYFOIoLk35/O7b8o7I8DoyGaQ=="],
+
+    "imagekitio-react": ["imagekitio-react@4.3.0", "", { "dependencies": { "imagekit-javascript": "^3.0.2", "prop-types": "^15.7.2" }, "peerDependencies": { "react": "^16.13.1 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom": "^16.13.1 || ^17.0.0 || ^18.0.0 || ^19.0.0" } }, "sha512-IM9bbyJeznkMiCQyahzIj8c8r6xM9EwQj1Hddws7D62Sb9LnKdR1BqhEH/y5oc6lgvRlWDr7SoFIocZneFwfUg=="],
 
     "import-fresh": ["import-fresh@3.3.1", "", { "dependencies": { "parent-module": "^1.0.0", "resolve-from": "^4.0.0" } }, "sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ=="],
 
