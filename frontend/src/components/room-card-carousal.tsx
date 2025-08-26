@@ -7,11 +7,12 @@ import {
 } from "@/components/ui/carousel";
 import RoomCard from "./room-card";
 
-interface Room {
-  imgurl: string;
-  title: string;
-  desc: string;
-  onAction: () => void;
+export interface Room {
+  public_id: string;
+  url: string | undefined;
+  title: string | undefined;
+  desc: string | undefined;
+  onAction: () => void | undefined;
 }
 
 interface RoomCardCarouselProps {
@@ -30,13 +31,18 @@ export default function RoomCardCarousel({ rooms }: RoomCardCarouselProps) {
           className="w-full"
         >
           <CarouselContent className="-ml-4 sm:-ml-2">
-            {rooms.map((room, index) => (
+            {rooms.map((room) => (
               <CarouselItem
-                key={index}
+                key={room.public_id}
                 className="pl-4 sm:pl-2 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
               >
                 <div className="h-full  rounded-xl overflow-hidden bg-white">
-                  <RoomCard {...room} />
+                  <RoomCard
+                    url={room.url}
+                    title=""
+                    desc=""
+                    onAction={() => alert("hello")}
+                  />
                 </div>
               </CarouselItem>
             ))}

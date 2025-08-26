@@ -7,6 +7,7 @@ import FoodCourt from "./pages/food-court";
 import Table from "./pages/table";
 
 const queryClient = new QueryClient();
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>

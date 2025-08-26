@@ -7,21 +7,21 @@ import {
 import { Button } from "@/components/ui/button";
 
 export default function RoomCard({
-  imgurl,
+  url,
   title,
   desc,
   onAction,
 }: {
-  imgurl: string;
-  title: string;
-  desc: string;
-  onAction: () => void;
+  url: string | undefined;
+  title: string | undefined;
+  desc: string | undefined;
+  onAction: () => void | undefined;
 }) {
   return (
     <Card className="relative w-full max-w-sm mx-auto flex flex-col overflow-hidden p-0 transition-transform hover:scale-105 shadow-md hover:shadow-lg">
       <div className="relative w-full aspect-[4/3] overflow-hidden">
         <img
-          src={imgurl}
+          src={url}
           alt={title}
           className="w-full h-full object-cover transition-transform hover:scale-100"
         />
