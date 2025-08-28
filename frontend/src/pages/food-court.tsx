@@ -67,5 +67,7 @@ export default function FoodCourt() {
         <RoomCardCarousel rooms={hotelRooms} />
       </div>
     </div>
+
+    
   );
 }
