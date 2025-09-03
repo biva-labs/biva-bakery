@@ -5,6 +5,7 @@ import Biva from "./layout/page";
 import Hotel from "./pages/hotel";
 import FoodCourt from "./pages/food-court";
 import Table from "./pages/table";
+import SeatBookingPage from "./components/seat-booking-page";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ function App() {
               <Route path="/food" element={<FoodCourt />} />
             </Route>
             <Route path="/test" element={<Table />} />
+            <Route path="/test/:id" element={<SeatBookingPage/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

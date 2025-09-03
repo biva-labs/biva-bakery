@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/sheet";
 import SeatForm from "./seat-form";
 import { useSeatFormStore } from "@/store/seat-form-store";
+import SeatDetail from "./seat-details";
+import { useNavigate } from "react-router-dom";
 
 type SeatState = "available" | "selected" | "booked";
 type SeatShape = "square" | "rectangle" | "round";
@@ -30,6 +32,8 @@ export default function TableBlock({
 }) {
   const [seatState, setSeatState] = useState<SeatState>(initialState);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const { name, tableId } = useSeatFormStore();
 
@@ -95,16 +99,17 @@ export default function TableBlock({
         <SheetHeader>
           <SheetTitle>Seat Details</SheetTitle>
           <SheetDescription>
-            Fill the form. Click save to confirm booking.
+            Click book to confirm booking.
           </SheetDescription>
         </SheetHeader>
 
         <div className="grid flex-1 auto-rows-min gap-6 px-4">
-          <SeatForm table={label} />
+          {/* <SeatForm table={label} /> */}
+          <SeatDetail />
         </div>
 
         <SheetFooter>
-          <Button onClick={handleSave}>Save changes</Button>
+          <Button onClick={() => navigate(`${`/test/${label}`}`)}>Book Now</Button>
           <SheetClose asChild>
             <Button variant="outline">Close</Button>
           </SheetClose>
