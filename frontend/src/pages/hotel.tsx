@@ -46,6 +46,7 @@ export default function Hotel() {
             </>
           }
           buttonText={<>Contact Us</>}
+          redirect="/"
           buttonDescription={<>Available at just ₹4999/-</>}
           images={hotelHero}
         />

@@ -46,6 +46,7 @@ export default function FoodCourt() {
             </div>
           }
           buttonText={<>Book Now</>}
+          redirect="/test"
           images={foodCourtHero}
         />
 

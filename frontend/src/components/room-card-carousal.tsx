@@ -10,7 +10,7 @@ import RoomCard from "./room-card";
 export interface Room {
   public_id: string;
   url: string | undefined;
-  title: string | undefined;
+  tag: string | undefined;
   desc: string | undefined;
   onAction: () => void | undefined;
 }
@@ -39,7 +39,7 @@ export default function RoomCardCarousel({ rooms }: RoomCardCarouselProps) {
                 <div className="h-full  rounded-xl overflow-hidden bg-white">
                   <RoomCard
                     url={room.url}
-                    title=""
+                    title={room.tag}
                     desc=""
                     onAction={() => alert("hello")}
                   />

@@ -33,17 +33,23 @@ export class CloudinaryService {
 
         return resources;
     }
-    
-    async listImagesByTag(tag: string): Promise<any[]> {
-      try {
-        const result = await cloudinary.search.expression(`tags=${tag}`).max_results(500).execute();
-        
-        return result.resources;
-      }
-      catch(error) {
-        console.error('Error fetching images by tag:', error);
-        return [];
-      }
+
+    async listImagesByTags(tags: string[]): Promise<any[]> {
+        try {
+            const tagsExpression = tags.map(tag => `${tag}`).join(' OR ');
+            const expression = `tags=(${tagsExpression})`;
+
+            const result = await cloudinary.search
+                .expression(expression)
+                .with_field("tags")
+                .max_results(500)
+                .execute();
+
+            return result.resources;
+        } catch (error) {
+            console.error('Error fetching images by tags:', error);
+            return [];
+        }
     }
 
     generateUrl(publicId: string, options?: { width?: number; height?: number; crop?: string }): string {

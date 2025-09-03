@@ -12,6 +12,12 @@ const roomTypes = [
   "twin_room",
 ];
 
+type GroupedRooms = {
+  public_id: string,
+  url: string,
+  tag: string
+};
+
 export const getImage = async (c: Context) => {
   try {
     const param = c.req.param("folder") || "";
@@ -19,17 +25,31 @@ export const getImage = async (c: Context) => {
     if (param.toLowerCase().includes("hotel")) {
       const hotelHero = await cloudService.listImages("hotel-hero", true);
 
-      const groupedRoom: {
-        [key: string]: any[]
-      } = {};
-      
-      for(const roomType of roomTypes) {
-        const taggedImages = await cloudService.listImagesByTag(roomType);
-        groupedRoom[roomType] = taggedImages.map((img) => ({
-          public_id: img.public_id,
-          url: img.secure_url,
-        }));
-      }
+      const groupedRoom: GroupedRooms[] = [];
+
+
+      const taggedImages = await cloudService.listImagesByTags(roomTypes);
+
+
+      taggedImages.map((room) => {
+        const isTag = room.tags[0];
+
+
+
+        if (!isTag) {
+          return; // Skip if no tag
+        }
+
+        groupedRoom.push({
+          public_id: room.public_id,
+          url: room.secure_url,
+          tag: isTag,
+        });
+      });
+
+      console.log(groupedRoom)
+
+
 
       return c.json({
         data: {

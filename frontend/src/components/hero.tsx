@@ -1,5 +1,6 @@
 import { useState, useEffect, type ReactElement } from "react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export default function Hero({
   title,
@@ -7,14 +8,17 @@ export default function Hero({
   buttonText,
   buttonDescription,
   images,
+  redirect,
 }: {
   title: ReactElement;
   description: ReactElement;
   buttonText: ReactElement;
   buttonDescription: ReactElement;
   images: { public_id: string; url: string }[];
+  redirect: string;
 }) {
   const [current, setCurrent] = useState(0);
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!images || images.length === 0) {
@@ -60,6 +64,7 @@ export default function Hero({
 
         <Button
           variant="orange"
+          onClick={() => navigate(redirect)}
           className="hover:cursor-pointer mb-4 lg:mb-0 w-28 lg:w-max nexa rounded-full"
         >
           {buttonText}

@@ -5,11 +5,11 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 const mainNavItems = [
   {
     title: "HOME",
-    url: "#",
+    url: "/",
   },
   {
     title: "EVENTS",
-    url: "#",
+    url: "/food",
   },
   {
     title: "SERVICE",
