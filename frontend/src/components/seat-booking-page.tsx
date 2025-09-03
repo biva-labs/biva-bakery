@@ -14,7 +14,7 @@ export default function SeatBookingPage() {
 
       {id ? (
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* LEFT SIDE: Image + Seat Info */}
+       
           <div className="lg:w-1/2 space-y-4">
             <div className="w-full h-64 rounded-lg overflow-hidden">
               <img
