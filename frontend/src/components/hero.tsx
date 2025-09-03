@@ -1,39 +1,41 @@
 import { useState, useEffect, type ReactElement } from "react";
 import { Button } from "@/components/ui/button";
 
-const images = [
-  "https://i.pinimg.com/1200x/af/f2/69/aff26915501df944db3732592df0d06e.jpg",
-  "https://i.pinimg.com/1200x/af/f2/69/aff26915501df944db3732592df0d06e.jpg",
-  "https://i.pinimg.com/1200x/af/f2/69/aff26915501df944db3732592df0d06e.jpg",
-];
-
 export default function Hero({
   title,
   description,
   buttonText,
   buttonDescription,
+  images,
 }: {
   title: ReactElement;
   description: ReactElement;
   buttonText: ReactElement;
   buttonDescription: ReactElement;
+  images: { public_id: string; url: string }[];
 }) {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
+    if (!images || images.length === 0) {
+      setCurrent(0);
+      return;
+    }
+
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % images.length);
-    }, 4000);
+    }, 2000);
+
     return () => clearInterval(interval);
-  }, []);
+  }, [images]);
 
   return (
     <div className="relative w-screen h-[40vh] lg:h-[60vh] -mt-14 right-4">
       <div className="absolute inset-0">
         {images.map((src, idx) => (
           <img
-            key={idx}
-            src={src}
+            key={src.public_id}
+            src={src.url}
             alt={`Slide ${idx + 1}`}
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
               idx === current ? "opacity-100" : "opacity-0"
@@ -53,7 +55,6 @@ export default function Hero({
         </p>
       </div>
 
-      {/* Right text + button */}
       <div className="absolute bottom-0 right-0 p-3 md:p-10 z-20 flex flex-col items-end space-y-2">
         <div className="text-white text-sm md:text-xl">{buttonDescription}</div>
 

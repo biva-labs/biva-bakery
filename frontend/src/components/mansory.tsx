@@ -1,10 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
-export default function GalleryMasonry({ allImages, batchSize = 4 }) {
-  const [visibleImages, setVisibleImages] = useState(
-    allImages.slice(0, batchSize),
-  );
+interface Image {
+  public_id: string;
+  url: string;
+}
+
+interface GalleryMasonryProps {
+  allImages: Image[];
+  batchSize?: number;
+}
+
+export default function GalleryMasonry({
+  allImages,
+  batchSize = 4,
+}: GalleryMasonryProps) {
+  const [visibleImages, setVisibleImages] = useState<Image[]>([]);
+
+  useEffect(() => {
+    setVisibleImages(allImages.slice(0, batchSize));
+  }, [allImages, batchSize]);
 
   const handleShowMore = () => {
     const next = allImages.slice(
@@ -24,11 +39,11 @@ export default function GalleryMasonry({ allImages, batchSize = 4 }) {
         className="bg-gray-200 p-2.5 lg:pt-5 lg:pr-5 lg:pl-5  rounded-2xl"
       >
         <Masonry gap="16px">
-          {visibleImages.map((src, idx) => (
+          {visibleImages.map((src) => (
             <img
-              key={idx}
-              src={src}
-              alt={`img-${idx}`}
+              key={src.public_id}
+              src={src.url}
+              alt={`img-${src.public_id}`}
               loading="lazy"
               className="w-full object-cover rounded-lg mb-4  max-h-[300px]"
               style={{ display: "block" }}
