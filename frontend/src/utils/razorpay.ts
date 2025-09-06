@@ -1,8 +1,8 @@
-import axios from "axios"
+import { instance } from "./axios";
 
 export const createOrder = async (amount: number, currency: string = 'INR') => {
     try {
-        const response = await axios.post('http://localhost:3000/api/orders', {
+        const response = await instance.post('/api/orders', {
             amount: amount * 100,
             currency,
         })

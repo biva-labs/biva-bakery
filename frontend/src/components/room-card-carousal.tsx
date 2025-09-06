@@ -6,13 +6,14 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import RoomCard from "./room-card";
+import { useNavigate } from "react-router-dom";
 
 export interface Room {
   public_id: string;
   url: string | undefined;
   tag: string | undefined;
   desc: string | undefined;
-  onAction: () => void | undefined;
+  onAction: () => void | Promise<void>;
 }
 
 interface RoomCardCarouselProps {
@@ -20,6 +21,10 @@ interface RoomCardCarouselProps {
 }
 
 export default function RoomCardCarousel({ rooms }: RoomCardCarouselProps) {
+
+  const navigate = useNavigate()
+
+
   return (
     <div className="w-full px-4 py-8">
       <div className="relative max-w-7xl mx-auto">
@@ -41,7 +46,7 @@ export default function RoomCardCarousel({ rooms }: RoomCardCarouselProps) {
                     url={room.url}
                     title={room.tag}
                     desc=""
-                    onAction={() => alert("hello")}
+                    onAction={() => room.tag ? navigate("/test/H11") : navigate("/test/E11")}
                   />
                 </div>
               </CarouselItem>

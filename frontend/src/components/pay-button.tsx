@@ -1,5 +1,7 @@
 import { createOrder, loadRazorpayScript } from "@/utils/razorpay";
+import { Button } from "./ui/button";
 import { useState } from "react";
+import { instance } from "@/utils/axios";
 
 interface PayButtonProps {
   amount: number;
@@ -14,6 +16,8 @@ interface RazorpaySuccessResponse {
 }
 
 const PayButton = ({ amount, onSuccess, onError }: PayButtonProps) => {
+
+
   const [isLoading, setIsLoading] = useState(false);
 
   const handlePayment = async () => {
@@ -30,6 +34,7 @@ const PayButton = ({ amount, onSuccess, onError }: PayButtonProps) => {
       }
 
       const order = await createOrder(amount);
+      console.log(order)
 
       const razorpaykey = import.meta.env.VITE_RAZORPAY_ID;
       if (!razorpaykey) {
@@ -48,17 +53,15 @@ const PayButton = ({ amount, onSuccess, onError }: PayButtonProps) => {
           console.log("Payment Authorization Received!", response);
 
           try {
-            const verificationResponse = await fetch('/api/verify-payment', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+            const verificationResponse = await instance.post('/api/verify-payment', {
               body: JSON.stringify(response),
             });
 
-            if (!verificationResponse.ok) {
+            if (!verificationResponse) {
               throw new Error('Payment verification failed on the server.');
             }
 
-            const verificationData = await verificationResponse.json();
+            const verificationData = await verificationResponse.data();
 
             if (verificationData.status === 'success' && onSuccess) {
               onSuccess(response);
@@ -101,13 +104,13 @@ const PayButton = ({ amount, onSuccess, onError }: PayButtonProps) => {
   };
 
   return (
-    <button
+    <Button
       onClick={handlePayment}
       disabled={isLoading}
-      className="your-styles-here"
+      className="w-full"
     >
       {isLoading ? "Processing..." : `Pay ₹${amount}`}
-    </button>
+    </Button>
   );
 };
 

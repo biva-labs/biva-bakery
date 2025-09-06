@@ -15,7 +15,7 @@ export default function RoomCard({
   url: string | undefined;
   title: string | undefined;
   desc: string | undefined;
-  onAction: () => void | undefined;
+  onAction: () => void | Promise<void>;
 }) {
   return (
     <Card className="relative w-full max-w-sm mx-auto flex flex-col overflow-hidden p-0 transition-transform hover:scale-105 shadow-md hover:shadow-lg">
@@ -44,6 +44,7 @@ export default function RoomCard({
           variant="default"
           size="sm"
           className="rounded-full px-4 py-2 nexa bg-[#002a3a]"
+          
         >
           Book
         </Button>

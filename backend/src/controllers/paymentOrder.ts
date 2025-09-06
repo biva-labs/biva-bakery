@@ -23,6 +23,7 @@ app.post('/', zValidator('json', orderSchemas), async(c) => {
         }
 
         const order = await razorpay.orders.create(options);
+        console.log(order)
 
         return c.json({
             id: order.id,

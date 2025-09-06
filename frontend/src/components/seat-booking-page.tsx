@@ -4,17 +4,25 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import SeatForm from "./seat-form";
 import { useParams } from "react-router-dom";
+import PayButton from "./pay-button";
 
 export default function SeatBookingPage() {
   const { id } = useParams();
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10">
-      <h1 className="text-2xl font-bold mb-6">Book Your Seat</h1>
+      <h1 className="text-2xl font-bold mb-6">Book Your {id?.[0] === "H" ? (
+        <>Room</>
+      ) : id?.[0] === "E" ? (
+        <>Ticket</>
+      ) : (
+        <>Table</>
+      )}
+      </h1>
 
       {id ? (
         <div className="flex flex-col lg:flex-row gap-8">
-       
+
           <div className="lg:w-1/2 space-y-4">
             <div className="w-full h-64 rounded-lg overflow-hidden">
               <img
@@ -37,9 +45,10 @@ export default function SeatBookingPage() {
 
             <Separator />
 
-            <Button type="submit" className="w-full">
+            {/* <Button type="submit" className="w-full">
               Book Now
-            </Button>
+            </Button> */}
+            <PayButton amount={10000} />
           </div>
         </div>
       ) : (
