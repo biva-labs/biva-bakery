@@ -5,7 +5,8 @@ import Hero from "@/components/hero";
 import { useState } from "react";
 import { useEffect } from "react";
 import type { Room } from "../components/room-card-carousal";
-import { BentoGridDemo } from "@/components/bento";
+// import { BentoGridDemo } from "@/components/bento";
+import GalleryMasonry from "@/components/mansory";
 import Banquet from "@/components/banquet";
 
 
@@ -75,8 +76,8 @@ export default function Hotel() {
           <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-green-950 ">
             Gallery
           </h2>
-          {/* <GalleryMasonry allImages={hotelHero} /> */}
-          <BentoGridDemo images={hotelHero} />
+          <GalleryMasonry allImages={hotelHero} />
+          {/* <BentoGridDemo images={hotelHero} /> */}
         </div>
       </div>
     </div>

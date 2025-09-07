@@ -1,4 +1,5 @@
 import { BentoGrid, BentoGridItem } from "@camped-ui/bento-grid";
+import { useState } from "react";
 
 interface Image {
   public_id: string;
@@ -6,7 +7,14 @@ interface Image {
 }
 
 export function BentoGridDemo({ images }: { images: Image[] }) {
-  const data = images.length > 0 ? images : Array(6).fill(null);
+  const [visibleCount, setVisibleCount] = useState(6); // initially show 6 images
+
+  // Repeat images to fill the visible count
+  const data = Array.from({ length: visibleCount }, (_, i) => images[i % images.length] || null);
+
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + 6); // load 6 more images on each click
+  };
 
   return (
     <div className="w-full px-4 lg:px-8 mt-5">
@@ -32,6 +40,16 @@ export function BentoGridDemo({ images }: { images: Image[] }) {
           />
         ))}
       </BentoGrid>
+
+      {/* Read More Button */}
+      <div className="flex justify-center mt-6">
+        <button
+          onClick={handleLoadMore}
+          className="px-6 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+        >
+          Read More to Load More Images
+        </button>
+      </div>
     </div>
   );
 }

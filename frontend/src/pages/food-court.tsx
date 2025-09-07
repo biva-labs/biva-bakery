@@ -4,7 +4,8 @@ import Hero from "@/components/hero";
 import { useState, useEffect } from "react";
 import { useImages } from "@/hooks/useImages";
 import type { Room } from "../components/room-card-carousal";
-import { BentoGridDemo } from "@/components/bento";
+// import { BentoGridDemo } from "@/components/bento";
+import GalleryMasonry from "@/components/mansory";
 
 export default function FoodCourt() {
   const [foodCourtHero, setfoodCourtHero] = useState<
@@ -61,7 +62,7 @@ export default function FoodCourt() {
           </p>
 
           <a
-            href="/test"
+            href="/test/T11"
             className="relative top-10 inline-block px-10 py-4 font-semibold text-white nexa bg-[#002a3a] rounded-2xl shadow-lg transition-transform duration-300 hover:scale-105"
           >
             {/* 🍕🍔 Emojis around border with spacing */}
@@ -80,8 +81,8 @@ export default function FoodCourt() {
           <h2 className="text-3xl lg:text-4xl text-start lg:ml-6 ml-4 outfit font-extrabold  text-green-950 mb-2">
             Gallery
           </h2>
-          {/* <GalleryMasonry allImages={foodCourtHero} /> */}
-          <BentoGridDemo images={foodCourtHero}/>
+          <GalleryMasonry allImages={foodCourtHero} />
+          {/* <BentoGridDemo images={foodCourtHero}/> */}
         </div>
 
         <div className="mb-8 text-center lg:text-left mt-10">

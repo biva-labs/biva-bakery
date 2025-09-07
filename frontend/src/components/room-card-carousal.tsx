@@ -46,7 +46,7 @@ export default function RoomCardCarousel({ rooms }: RoomCardCarouselProps) {
                     url={room.url}
                     title={room.tag}
                     desc=""
-                    onAction={() => room.tag ? navigate("/test/H11") : navigate("/test/E11")}
+                    onAction={() => room.tag ? navigate("/test/H11") : navigate("/test")}
                   />
                 </div>
               </CarouselItem>
