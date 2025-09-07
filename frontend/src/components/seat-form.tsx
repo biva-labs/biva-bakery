@@ -14,42 +14,61 @@ export default function SeatForm({ table }: { table: string }) {
   }, [table]);
 
   return (
-    <>
-      <div className="grid gap-3">
-        <Label htmlFor="table">Table</Label>
-        <Input id="table" placeholder="table" value={table} disabled />
+    <div className="mt-6 space-y-6 p-4 ">
+      {/* Table */}
+      <div className="space-y-2">
+        <Label htmlFor="table" className="text-sm font-medium text-gray-700">
+          Table
+        </Label>
+        <Input id="table" value={table} disabled className="bg-gray-100" />
       </div>
-      <div className="grid gap-3">
-        <Label htmlFor="name">Name</Label>
+
+      {/* Name */}
+      <div className="space-y-2">
+        <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+          Name
+        </Label>
         <Input
           id="name"
-          placeholder="name"
+          placeholder="Enter your name"
           value={name}
           onChange={(e) => setField("name", e.target.value)}
         />
       </div>
-      <div className="grid gap-3">
-        <Label htmlFor="email">Email</Label>
+
+      {/* Email */}
+      <div className="space-y-2">
+        <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+          Email
+        </Label>
         <Input
           id="email"
-          placeholder="email"
+          placeholder="Enter your email"
           value={email}
           onChange={(e) => setField("email", e.target.value)}
         />
       </div>
-      <div className="grid gap-3">
-        <Label htmlFor="phone">Phone no.</Label>
+
+      {/* Phone */}
+      <div className="space-y-2">
+        <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
+          Phone no.
+        </Label>
         <Input
           id="phone"
-          placeholder="phone"
+          placeholder="Enter your phone number"
           value={phone}
           onChange={(e) => setField("phone", e.target.value)}
         />
       </div>
-      <div className="grid gap-3">
-        <Label htmlFor="phone">Time Slot</Label>
+
+      {/* Time Slot */}
+      <div className="space-y-2">
+        <Label htmlFor="time" className="text-sm font-medium text-gray-700">
+          Time Slot
+        </Label>
         <TimeSlotSelect />
       </div>
-    </>
+    </div>
   );
 }

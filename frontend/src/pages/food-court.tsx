@@ -1,9 +1,10 @@
-import GalleryMasonry from "../components/mansory";
+// import GalleryMasonry from "../components/mansory";
 import RoomCardCarousel from "../components/room-card-carousal";
 import Hero from "@/components/hero";
 import { useState, useEffect } from "react";
 import { useImages } from "@/hooks/useImages";
 import type { Room } from "../components/room-card-carousal";
+import { BentoGridDemo } from "@/components/bento";
 
 export default function FoodCourt() {
   const [foodCourtHero, setfoodCourtHero] = useState<
@@ -50,8 +51,7 @@ export default function FoodCourt() {
           images={foodCourtHero}
         />
 
-        {/* 🔽 New Section here */}
-        {/* 🔽 New Section */}
+
         <div className="mt-16 text-center">
           <h2 className="text-3xl lg:text-4xl outfit font-extrabold text-green-950 mb-4">
             🍽️ Book Your Table
@@ -62,7 +62,7 @@ export default function FoodCourt() {
 
           <a
             href="/test"
-            className="relative top-10 inline-block px-10 py-4 font-semibold text-white nexa bg-[#002a3a] rounded-2xl shadow-lg hover:bg-green-800 transition-transform duration-300 hover:scale-105"
+            className="relative top-10 inline-block px-10 py-4 font-semibold text-white nexa bg-[#002a3a] rounded-2xl shadow-lg transition-transform duration-300 hover:scale-105"
           >
             {/* 🍕🍔 Emojis around border with spacing */}
             <span className="absolute -top-10 left-1/2 -translate-x-1/2 animate-bounce">🍕</span>
@@ -80,7 +80,8 @@ export default function FoodCourt() {
           <h2 className="text-3xl lg:text-4xl text-start lg:ml-6 ml-4 outfit font-extrabold  text-green-950 mb-2">
             Gallery
           </h2>
-          <GalleryMasonry allImages={foodCourtHero} />
+          {/* <GalleryMasonry allImages={foodCourtHero} /> */}
+          <BentoGridDemo images={foodCourtHero}/>
         </div>
 
         <div className="mb-8 text-center lg:text-left mt-10">
