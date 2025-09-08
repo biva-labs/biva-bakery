@@ -10,7 +10,7 @@ export function SecondNavbar() {
   const location = useLocation();
 
   return (
-    <div className="bg-transparent z-50 top-18 sticky w-full">
+    <div className="bg-transparent z-20 top-18 sticky w-full">
       <div className="flex justify-center w-full px-2 md:px-8">
         <nav className="h-14 flex items-center w-full">
           <ul className="flex w-full gap-4">
