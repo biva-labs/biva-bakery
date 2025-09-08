@@ -54,28 +54,28 @@ export default function FoodCourt() {
 
 
         <div className="mt-16 text-center">
-          <h2 className="text-3xl lg:text-4xl outfit font-extrabold text-green-950 mb-4">
+          {/* <h2 className="text-3xl lg:text-4xl outfit font-extrabold text-green-950 mb-4">
             🍽️ Book Your Table
           </h2>
           <p className="text-muted-foreground text-lg font-medium mb-6">
             Reserve your spot and enjoy events without the wait
-          </p>
+          </p> */}
 
-          <a
+          {/* <a
             href="/test/T11"
             className="relative top-10 inline-block px-10 py-4 font-semibold text-white nexa bg-[#002a3a] rounded-2xl shadow-lg transition-transform duration-300 hover:scale-105"
           >
-            {/* 🍕🍔 Emojis around border with spacing */}
+           
             <span className="absolute -top-10 left-1/2 -translate-x-1/2 animate-bounce">🍕</span>
             <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 animate-bounce delay-200">🍔</span>
             <span className="absolute top-1/2 -left-12 -translate-y-1/2 animate-bounce delay-500">🍽️</span>
             <span className="absolute top-1/2 -right-12 -translate-y-1/2 animate-bounce delay-700">🥗</span>
 
-            {/* Button text */}
+          
             Book Now
-          </a>
+          </a> */}
         </div>
-        {/* 🔼 New Section ends */}
+
 
         <div className="mt-16">
           <h2 className="text-3xl lg:text-4xl text-start lg:ml-6 ml-4 outfit font-extrabold  text-green-950 mb-2">

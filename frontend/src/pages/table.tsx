@@ -9,7 +9,8 @@ export default function Table() {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row px-4 lg:px-8">
+      <div className="flex flex-col lg:flex-row lg:justify-between w-full px-4 lg:px-8">
+        {/* Left column (Form & Guide) */}
         <div className="lg:w-1/3 p-6 rounded-lg lg:mr-6">
           <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-6">
             Book Your Tables
@@ -47,9 +48,15 @@ export default function Table() {
           </div>
         </div>
 
+        {/* Right column (Table Map) */}
         <div className="lg:w-2/3 mt-8 lg:mt-12">
-          <div className="bg-gray-400 rounded-3xl p-6 shadow-2xl h-[550px] lg:h-[650px] flex items-center justify-center">
-            <div className="grid grid-cols-12 gap-4 w-full max-w-3xl">
+          {/*
+            KEY CHANGE:
+            - Added `min-h-[500px]` (or your desired height) to give it more vertical space.
+            - `flex items-center justify-center` will center the table grid vertically within this new height.
+          */}
+          <div className="bg-gray-200 rounded-3xl p-6 shadow-2xl min-h-[500px] flex items-center justify-center">
+            <div className="grid grid-cols-12 gap-x-4 gap-y-8 w-full max-w-3xl mx-auto">
               <div className="col-start-2 col-span-2 flex justify-center items-center">
                 <div className="transform -rotate-25">
                   <TableBlock
