@@ -2,7 +2,7 @@ export default function Map() {
   return (
     <div className="mt-10 px-4 lg:px-10 mb-10">
 
-      <h2 className="text-3xl lg:text-4xl text-green-950 outfit font-extrabold md:mt-6">
+      <h2 className="text-3xl lg:text-4xl text-green-950 outfit font-extrabold md:mt-20">
         Near Biva?
       </h2>
 
@@ -16,8 +16,8 @@ export default function Map() {
             className="w-full h-full rounded-xl shadow-md"
             loading="lazy"
           ></iframe>
-          <h2 className="text-3xl lg:text-4xl text-center text-green-950 outfit font-extrabold md:mt-6">
-            Near Biva?
+          <h2 className=" mt-4 text-3xl lg:text-4xl text-center text-green-950 outfit font-extrabold md:mt-6">
+            Biva Bakery
           </h2>
         </div>
 
@@ -29,8 +29,8 @@ export default function Map() {
             className="w-full h-full rounded-xl shadow-md"
             loading="lazy"
           ></iframe>
-          <h2 className="text-3xl lg:text-4xl text-center text-green-950 outfit font-extrabold md:mt-6">
-            Near Biva?
+          <h2 className=" mt-4 text-3xl lg:text-4xl text-center text-green-950 outfit font-extrabold md:mt-6">
+            Biva FoodCourt
           </h2>
         </div>
 
@@ -42,8 +42,8 @@ export default function Map() {
             className="w-full h-full rounded-xl shadow-md"
             loading="lazy"
           ></iframe>
-          <h2 className="text-3xl lg:text-4xl text-center text-green-950 outfit font-extrabold md:mt-6">
-            Near Biva?
+          <h2 className="mt-4 text-3xl lg:text-4xl text-center text-green-950 outfit font-extrabold md:mt-6">
+            Hotel Biva
           </h2>
         </div>
       </div>

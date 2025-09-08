@@ -1,6 +1,6 @@
 export default function About() {
     return (
-        <div className="mt-10 px-4 lg:px-10 mb-10">
+        <div className="mt-20 px-4 lg:px-10 mb-10">
 
             <h2 className="text-3xl lg:text-4xl text-green-950 outfit font-extrabold md:mt-6">
                 About Us

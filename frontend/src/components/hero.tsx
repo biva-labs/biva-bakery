@@ -1,6 +1,7 @@
 import { useState, useEffect, type ReactElement } from "react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import clsx from "clsx"; // Import clsx for clean conditional class names
 
 export default function Hero({
   title,
@@ -10,79 +11,113 @@ export default function Hero({
   images,
   redirect,
 }: {
-  title: ReactElement;
-  description: ReactElement;
-  buttonText: ReactElement;
-  buttonDescription: ReactElement;
-  images: { public_id: string; url: string }[];
-  redirect: string;
+  title?: ReactElement;
+  description?: ReactElement;
+  buttonText?: ReactElement;
+  buttonDescription?: ReactElement;
+  images?: { public_id: string; url: string }[];
+  redirect?: string;
 }) {
   const [current, setCurrent] = useState(0);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isBakeryPage = location.pathname.includes("/bakery");
 
   useEffect(() => {
     if (!images || images.length === 0) {
       setCurrent(0);
       return;
     }
-
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % images.length);
     }, 2000);
-
     return () => clearInterval(interval);
   }, [images]);
+
+  // Define a set of base classes for the title wrapper
+  const titleWrapperBaseClasses = "absolute bottom-0 p-6 md:p-10 z-20";
+  // Conditionally add classes based on the page
+  const titleWrapperClasses = clsx(
+    titleWrapperBaseClasses,
+    // Add centering and full-width classes for the bakery page
+    isBakeryPage ? "left-1/2 transform -translate-x-1/2 w-full text-center" : "left-0"
+  );
 
   return (
     <div className="relative w-screen h-[40vh] lg:h-[60vh] -mt-14 right-4">
       <div className="absolute inset-0">
-        {images.map((src, idx) => (
-          <img
-            key={src.public_id}
-            src={src.url}
-            alt={`Slide ${idx + 1}`}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-              idx === current ? "opacity-100" : "opacity-0"
-            }`}
-          />
-        ))}
+        {isBakeryPage ? (
+          <>
+            <img
+              src="/bakery-hero.jpg"
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 `}
+            />
+          </>
+        ) : (
+          <>
+            {images?.map((src, idx) => (
+              <img
+                key={src.public_id}
+                src={src.url}
+                alt={`Slide ${idx + 1}`}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                  idx === current ? "opacity-100" : "opacity-0"
+                }`}
+              />
+            ))}
+          </>
+        )}
       </div>
 
       <div className="absolute inset-0 bg-black/40 z-10" />
 
-      <div className="absolute bottom-0 left-0 p-6 md:p-10 z-20">
-        <h1 className="text-2xl md:text-4xl outfit font-extrabold lg:text-5xl  text-white leading-tight">
+      {/* CORRECTED TITLE WRAPPER */}
+      <div className={titleWrapperClasses}>
+        <h1 className={`text-2xl md:text-4xl outfit font-extrabold lg:text-5xl text-white leading-tight`}>
           {title}
         </h1>
-        <p className="mt-2 text-xs font-light md:text-lg lg:text-xl text-gray-200 max-w-xs md:max-w-sm leading-snug">
-          {description || ""}
-        </p>
+        {/*
+          We also need to make sure the description and buttons don't appear
+          on the bakery page since they are conditional.
+        */}
+        {!isBakeryPage && (
+          <p className="mt-2 text-xs font-light md:text-lg lg:text-xl text-gray-200 max-w-xs md:max-w-sm leading-snug">
+            {description || ""}
+          </p>
+        )}
       </div>
 
-      <div className="absolute bottom-0 right-0 p-3 md:p-10 z-20 flex flex-col items-end space-y-2">
-        <div className="text-white text-sm md:text-xl">{buttonDescription}</div>
+      {/* The rest of the content (buttons and dots) should also be conditional */}
+      {!isBakeryPage && (
+        <>
+          <div className="absolute bottom-0 right-0 p-3 md:p-10 z-20 flex flex-col items-end space-y-2">
+            <div className="text-white text-sm md:text-xl">
+              {buttonDescription}
+            </div>
 
-        <Button
-          variant="orange"
-          onClick={() => navigate(redirect)}
-          className="hover:cursor-pointer mb-4 lg:mb-0 w-28 lg:w-max nexa rounded-full"
-        >
-          {buttonText}
-        </Button>
-      </div>
+            <Button
+              variant="orange"
+              onClick={() => navigate(redirect ? redirect : "/")}
+              className="hover:cursor-pointer mb-4 lg:mb-0 w-28 lg:w-max nexa rounded-full"
+            >
+              {buttonText}
+            </Button>
+          </div>
 
-      <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2">
-        {images.map((_, idx) => (
-          <span
-            key={idx}
-            className={`w-2.5 h-2.5 rounded-full transition-all ${
-              idx === current
-                ? "bg-white scale-110"
-                : "bg-white/50 hover:bg-white/80"
-            }`}
-          />
-        ))}
-      </div>
+          <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 z-20 flex space-x-2">
+            {images?.map((_, idx) => (
+              <span
+                key={idx}
+                className={`w-2.5 h-2.5 rounded-full transition-all ${
+                  idx === current
+                    ? "bg-white scale-110"
+                    : "bg-white/50 hover:bg-white/80"
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

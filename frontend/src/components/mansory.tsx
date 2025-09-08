@@ -32,7 +32,7 @@ export default function GalleryMasonry({
   const hasMore = visibleImages.length < allImages.length;
 
   return (
-    <div className="px-4 py-8 bg-gray-200">
+    <div className="px-4 py-8 mt-10 bg-gray-200">
       <ResponsiveMasonry
         columnsCountBreakPoints={{ 320: 2, 640: 3, 1024: 4 }}
         gutterBreakpoints={{ 320: "12px", 640: "16px", 1024: "20px" }}

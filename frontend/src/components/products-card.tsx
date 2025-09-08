@@ -1,64 +1,39 @@
-export default function ProductCard() {
-  const products = [
-    {
-      id: 1,
-      name: "Chocolate Cake",
-      description: "Rich and creamy chocolate layered cake.",
-      price: "₹450",
-      image: "/room.jpg",
-    },
-    {
-      id: 2,
-      name: "Fresh Bread",
-      description: "Soft and fluffy oven-fresh bread loaf.",
-      price: "₹80",
-      image: "/room.jpg",
-    },
-    {
-      id: 3,
-      name: "Blueberry Muffin",
-      description: "Moist muffin filled with blueberries.",
-      price: "₹120",
-      image: "/room.jpg",
-    },
-    {
-      id: 4,
-      name: "Croissant",
-      description: "Flaky and buttery French croissant.",
-      price: "₹90",
-      image: "/room.jpg",
-    },
+export default function ProductCategoryDisplay() {
+  const categories = [
+    { id: 1, name: 'Patties', image: '/bakery-hero.jpg' },
+    { id: 2, name: 'Pastries', image: '/bakery-hero.jpg' },
+    { id: 3, name: 'Birthday Cakes', image: '/bakery-hero.jpg' },
+    { id: 4, name: 'Egg-less Cakes', image: '/bakery-hero.jpg' },
+    { id: 5, name: 'Bento Cakes', image: '/bakery-hero.jpg' },
+    { id: 6, name: 'Muffins', image: '/bakery-hero.jpg' },
+    { id: 7, name: 'Sweets', image: '/bakery-hero.jpg' }, // NOTE: Corrected duplicate IDs
+    { id: 8, name: 'Pastries', image: '/bakery-hero.jpg' },
+    { id: 9, name: 'Cakes', image: '/bakery-hero.jpg' },
+    { id: 10, name: 'Cookies', image: '/bakery-hero.jpg' },
   ];
 
   return (
     <div className="w-full px-6 lg:px-20 mt-16 mb-12">
-
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {products.map((product) => (
+      {/*
+        Changed `grid-cols-6` to `grid-cols-5` on `lg` breakpoint.
+        Also added a `md:grid-cols-5` for an extra breakpoint, which is a common practice.
+      */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-5 gap-8">
+        {categories.map((category) => (
           <div
-            key={product.id}
-            className="bg-white rounded-2xl shadow-lg overflow-hidden hover:scale-105 transform transition duration-300"
+            // IMPORTANT: Make sure your `key` is unique. I've corrected the duplicate IDs
+            // in your `categories` array for this example.
+            key={category.id}
+            className="flex flex-col items-center justify-center space-y-4 "
           >
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-48 object-cover"
-            />
-            <div className="p-5 flex flex-col justify-between h-40">
-              <div>
-                <h3 className="text-xl font-bold text-[#002a3a] ">{product.name}</h3>
-                <p className="text-gray-600 text-sm mt-2">{product.description}</p>
-              </div>
-              <div className="flex items-center justify-between mt-4">
-                <span className="text-lg font-semibold text-[#002a3a] ">
-                  {product.price}
-                </span>
-                <button className=" text-white px-4 py-2 rounded-lg nexa bg-[#002a3a]  ">
-                  Order Now
-                </button>
-              </div>
+            <div className="w-24 h-24 rounded-full overflow-hidden shadow-lg border-2 border-[#DE4243]">
+              <img
+                src={category.image}
+                alt={category.name}
+                className="w-full h-full object-cover"
+              />
             </div>
+            <h3 className="text-lg font-semibold text-gray-800">{category.name}</h3>
           </div>
         ))}
       </div>

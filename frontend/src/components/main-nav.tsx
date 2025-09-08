@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
@@ -26,8 +26,15 @@ const mainNavItems = [
 ];
 
 export default function MainNav() {
+
+  const location = useLocation();
+
+  const isBakeryPage = location.pathname.includes("/bakery");
+
+  const bgColor = isBakeryPage ? "bg-[#DE4243]" : "bg-[#002a3a]";
+  // bg-[#002a3a]
   return (
-    <div className="bg-[#002a3a] text-white px-10 py-4 w-screen top-0 z-50 sticky">
+    <div className={`${bgColor} text-white px-10 py-4 w-screen top-0 z-50 sticky`}>
       <div className="container mx-auto flex items-center h-full">
         <div className="absolute left-6 top-1/2 -translate-y-1/2 md:hidden">
           <SidebarTrigger />
