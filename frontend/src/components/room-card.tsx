@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -7,26 +8,51 @@ import {
 import { Button } from "@/components/ui/button";
 
 export default function RoomCard({
-  imgurl,
+  urls = [],
   title,
   desc,
   onAction,
 }: {
-  imgurl: string;
-  title: string;
-  desc: string;
-  onAction: () => void;
+  urls: string[];
+  title: string | undefined;
+  desc?: string | undefined;
+  onAction?: () => void | Promise<void>;
 }) {
+  const [index, setIndex] = useState(0);
+  const [hovering, setHovering] = useState(false);
+
+  useEffect(() => {
+    if (!hovering || urls.length <= 1) return;
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % urls.length);
+    }, 1200); // ⏩ faster cycling
+    return () => clearInterval(interval);
+  }, [hovering, urls.length]);
+
   return (
-    <Card className="relative w-full max-w-sm mx-auto flex flex-col overflow-hidden p-0 transition-transform hover:scale-105 shadow-md hover:shadow-lg">
+    <Card
+      className="relative w-full max-w-sm mx-auto flex flex-col overflow-hidden p-0 transition-transform hover:scale-105 shadow-md hover:shadow-lg"
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => {
+        setHovering(false);
+        setIndex(0);
+      }}
+    >
+      {/* Image Slideshow */}
       <div className="relative w-full aspect-[4/3] overflow-hidden">
-        <img
-          src={imgurl}
-          alt={title}
-          className="w-full h-full object-cover transition-transform hover:scale-100"
-        />
+        {urls.map((url, i) => (
+          <img
+            key={i}
+            src={url}
+            alt={title}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ease-in-out ${
+              i === index ? "opacity-100" : "opacity-0"
+            }`}
+          />
+        ))}
       </div>
 
+      {/* Content */}
       <CardContent className="flex-1 flex flex-col justify-between p-4 pb-16 sm:pb-14">
         <div className="flex-1">
           <CardTitle className="text-base sm:text-lg font-semibold mb-2 line-clamp-2">
@@ -38,6 +64,7 @@ export default function RoomCard({
         </div>
       </CardContent>
 
+      {/* Book Button */}
       <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
         <Button
           onClick={onAction}
