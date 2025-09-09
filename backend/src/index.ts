@@ -8,7 +8,15 @@ import verifyPayment from "./controllers/verify-payment.ts"
 
 const app = new Hono();
 app.use(secureHeaders())
-app.use("*", cors());
+
+const allowedOrigin = "https://biva-bakery.onrender.com"
+
+app.use(cors({
+  origin: allowedOrigin,
+  credentials: true,
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'Authorization']
+}))
 
 app.get("/images/:folder", getImage);
 app.route('/api/orders', orders)
