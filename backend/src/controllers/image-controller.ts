@@ -34,6 +34,7 @@ export const getImage = async (c: Context) => {
       const groupedRoom: GroupedRooms[] = [];
 
       const taggedImages = await cloudService.listImagesByTags(roomTypes);
+      console.log("Tagged images",taggedImages)
       
       taggedImages.forEach((room) => {
         const isTag = room.tags[0];
@@ -54,7 +55,7 @@ export const getImage = async (c: Context) => {
         });
       });
 
-      console.log(groupedRoom)
+      console.log("gp",groupedRoom)
 
       return c.json({
         data: {

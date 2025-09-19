@@ -6,20 +6,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import {ROOM_TYPE} from "../../data/room-data"
 
 export default function RoomCard({
   urls = [],
   title,
   desc,
+  price,
   onAction,
 }: {
   urls: string[];
-  title: string | undefined;
+  title: string;
   desc?: string | undefined;
+  price?: string | undefined;
   onAction?: () => void | Promise<void>;
 }) {
   const [index, setIndex] = useState(0);
   const [hovering, setHovering] = useState(false);
+  const [showFullDesc, setShowFullDesc] = useState(false);
 
   useEffect(() => {
     if (!hovering || urls.length <= 1) return;
@@ -30,6 +34,9 @@ export default function RoomCard({
   }, [hovering, urls.length]);
 
   console.log("from room-card.tsx: " + urls, title, desc)
+
+  // Check if description is long (more than 50 characters)
+  const isLongDescription = desc && desc.length > 50;
 
   return (
     <Card
@@ -58,11 +65,33 @@ export default function RoomCard({
       <CardContent className="flex-1 flex flex-col justify-between p-4 pb-16 sm:pb-14">
         <div className="flex-1">
           <CardTitle className="text-base sm:text-lg font-semibold mb-2 line-clamp-2">
-            {title ? title : "hello world"} 
+            {ROOM_TYPE[title]}
           </CardTitle>
-          <CardDescription className="text-xs sm:text-sm text-muted-foreground line-clamp-3 leading-relaxed">
-            {desc}
-          </CardDescription>
+          <div className="mb-2">
+            <CardDescription 
+              className={`text-xs sm:text-sm text-muted-foreground leading-relaxed ${
+                showFullDesc ? '' : 'line-clamp-1'
+              }`}
+            >
+              {desc}
+            </CardDescription>
+            {isLongDescription && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowFullDesc(!showFullDesc);
+                }}
+                className="text-xs text-blue-600 hover:text-blue-800 mt-1 font-medium"
+              >
+                {showFullDesc ? 'Show less' : 'See details'}
+              </button>
+            )}
+          </div>
+          {price && (
+            <div className="text-sm font-semibold text-[#002a3a] mt-2">
+              ₹{price}
+            </div>
+          )}
         </div>
       </CardContent>
 
