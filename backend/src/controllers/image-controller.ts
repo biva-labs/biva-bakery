@@ -10,14 +10,16 @@ const roomTypes = [
   "executive_room",
   "studio_room",
   "deluxe_room",
-  "queen_room",
+  "super_deluxe_room",
   "twin_room",
 ];
 
 type GroupedRooms = {
   public_id: string,
   url: string,
-  tag: string
+  desc: string,
+  price: string
+  tag: string,
 };
 
 export const getImage = async (c: Context) => {
@@ -33,16 +35,21 @@ export const getImage = async (c: Context) => {
 
       const taggedImages = await cloudService.listImagesByTags(roomTypes);
       
-      taggedImages.map((room) => {
+      taggedImages.forEach((room) => {
         const isTag = room.tags[0];
 
         if (!isTag) {
           return; // Skip if no tag
         }
 
+        const desc = room.context && room.context.alt ? room.context.alt : "description not available";
+        const price = room.context && room.context.Price ? room.context.Price : "no price available"
+
         groupedRoom.push({
           public_id: room.public_id,
           url: room.secure_url,
+          desc: desc,
+          price: price,
           tag: isTag,
         });
       });

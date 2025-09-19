@@ -42,6 +42,7 @@ export class CloudinaryService {
             const result = await cloudinary.search
                 .expression(expression)
                 .with_field("tags")
+                .with_field("context")
                 .max_results(500)
                 .execute();
 
