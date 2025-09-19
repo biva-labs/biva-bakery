@@ -1,5 +1,7 @@
 import type { Context } from "hono";
 import { CloudinaryService } from "../utils/cloudinary-service.ts";
+import { isGelSchema } from "drizzle-orm/gel-core";
+import { countReset } from "console";
 
 const cloudService = new CloudinaryService();
 
@@ -24,17 +26,15 @@ export const getImage = async (c: Context) => {
 
     if (param.toLowerCase().includes("hotel")) {
       const hotelHero = await cloudService.listImages("hotel-hero", true);
+      const hotelEvents = await cloudService.listImages("events", true)
+      const hotelGallery = await cloudService.listImages("gallery", true)
 
       const groupedRoom: GroupedRooms[] = [];
 
-
       const taggedImages = await cloudService.listImagesByTags(roomTypes);
-
-
+      
       taggedImages.map((room) => {
         const isTag = room.tags[0];
-
-
 
         if (!isTag) {
           return; // Skip if no tag
@@ -49,14 +49,20 @@ export const getImage = async (c: Context) => {
 
       console.log(groupedRoom)
 
-
-
       return c.json({
         data: {
           hero: hotelHero.map((img) => ({
             public_id: img.public_id,
             url: img.secure_url,
           })),
+        events: hotelEvents.map((img) => ({
+          public_id: img.public_id,
+          url: img.secure_url,
+        })),
+        gallery: hotelGallery.map((img) => ({
+          public_id: img.public_id,
+          url: img.secure_url,
+        })),
           rooms: groupedRoom,
         },
       });
@@ -65,10 +71,19 @@ export const getImage = async (c: Context) => {
         "food-court-hero",
         true,
       );
-      const foodCourtTables = await cloudService.listImages(
-        "food-court-tables",
-        true,
-      );
+      // const foodCourtTables = await cloudService.listImages(
+      //   "food-court-tables",
+      //   true,
+      // ); // unused for now
+
+      const foodCourtEvents = await cloudService.listImages(
+        "events",
+        true
+      )
+      const foodCourtGallery = await cloudService.listImages(
+        "gallery",
+        true
+      )
 
       return c.json({
         data: {
@@ -76,9 +91,13 @@ export const getImage = async (c: Context) => {
             public_id: img.public_id,
             url: img.secure_url,
           })),
-          events: foodCourtTables.map((img) => ({
+          events: foodCourtEvents.map((img) => ({
             public_id: img.public_id,
             url: img.secure_url,
+          })),
+          gallery: foodCourtGallery.map((img) => ({
+            public_id: img.public_id,
+            url: img.secure_url
           })),
         },
       });

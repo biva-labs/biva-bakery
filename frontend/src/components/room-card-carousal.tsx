@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/carousel";
 import { useNavigate } from "react-router-dom";
 import { groupByTag } from "@/utils/group-by-tag";
-import HoverSlideshowCard from "./hover-slideshow-card";
+// import HoverSlideshowCard from "./hover-slideshow-card";
 import RoomCard from "./room-card";
 
 export interface Room {
@@ -24,10 +24,14 @@ interface RoomCardCarouselProps {
 
 export default function RoomCardCarousel({ rooms }: RoomCardCarouselProps) {
   const navigate = useNavigate();
-
+  let roomTypes = []
   // Group rooms by tag
   const grouped = groupByTag(rooms);
-  const roomTypes = Object.entries(grouped); // [[tag, [urls...]], ...]
+
+  
+  roomTypes = Object.entries(grouped); // [[tag, [urls...]], ...]
+
+  console.log("from room card carousal: " + JSON.stringify(rooms))
 
   return (
     <div className="w-full px-4 py-8">

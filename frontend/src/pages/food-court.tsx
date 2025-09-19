@@ -1,5 +1,5 @@
 // import GalleryMasonry from "../components/mansory";
-import RoomCardCarousel from "../components/room-card-carousal";
+// import RoomCardCarousel from "../components/room-card-carousal";
 import Hero from "@/components/hero";
 import { useState, useEffect } from "react";
 import { useImages } from "@/hooks/useImages";
@@ -7,12 +7,14 @@ import type { Room } from "../components/room-card-carousal";
 // import { BentoGridDemo } from "@/components/bento";
 import { useLocation } from "react-router-dom";
 import GalleryMasonry from "@/components/mansory";
+import EventCardCarousel from "@/components/event-card-carousal";
 
 export default function FoodCourt() {
   const [foodCourtHero, setfoodCourtHero] = useState<
     { public_id: string; url: string }[]
   >([]);
   const [hotelRooms, setHotelRooms] = useState<Room[]>([]);
+  const [foodCourtGallery, setFoodCourtGallery] = useState([]);
 
   const { data, error, isLoading } = useImages("food-court");
 
@@ -33,6 +35,7 @@ export default function FoodCourt() {
       console.log(data.data);
       setfoodCourtHero(data.data.hero ?? []);
       setHotelRooms(data.data.events ?? []);
+      setFoodCourtGallery(data.data.gallery ?? []);
     }
   }, [data]);
 
@@ -65,13 +68,11 @@ export default function FoodCourt() {
           images={foodCourtHero}
         />
 
-
-
         <div className="mt-16" id="events">
           <h2 className="text-3xl lg:text-4xl text-start lg:ml-6 ml-4 outfit font-extrabold  text-green-950 mb-2">
             Gallery
           </h2>
-          <GalleryMasonry allImages={foodCourtHero} />
+          <GalleryMasonry allImages={foodCourtGallery} />
           {/* <BentoGridDemo images={foodCourtHero}/> */}
         </div>
 
@@ -83,7 +84,7 @@ export default function FoodCourt() {
             Book your table for the best experience
           </p>
         </div>
-        <RoomCardCarousel rooms={hotelRooms} />
+        <EventCardCarousel events={hotelRooms} />
       </div>
     </div>
 

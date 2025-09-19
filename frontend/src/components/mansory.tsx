@@ -13,6 +13,7 @@ interface GalleryMasonryProps {
 export default function GalleryMasonry({ allImages }: GalleryMasonryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [loopImages, setLoopImages] = useState<Image[]>([]);
+  const [columnCount, setColumnCount] = useState(4);
 
   useEffect(() => {
     if (allImages.length === 0) return;
@@ -29,15 +30,29 @@ export default function GalleryMasonry({ allImages }: GalleryMasonryProps) {
     setLoopImages(duplicated);
   }, [allImages]);
 
-  // split images into 4 columns (max)
-  const columnCount = 4;
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width <= 640) {
+        setColumnCount(2);
+      } else {
+        setColumnCount(4);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Set initial column count
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const columns: Image[][] = Array.from({ length: columnCount }, () => []);
   loopImages.forEach((img, idx) => {
     columns[idx % columnCount].push(img);
   });
 
-  // different speeds for each column
-  const speeds = ["10s", "15s", "15s", "10s"];
+  const speeds = columnCount === 2
+    ? Array(2).fill("15s") // Same speed for both columns on small screens
+    : Array.from({ length: columnCount }, (_, idx) => `${(idx + 1) * 5 + 15}s`);
 
   return (
     <div

@@ -55,10 +55,10 @@ export default function MainNav() {
   return (
     <div
       ref={navRef}
-      className={`${bgColor} text-white px-10 py-4 w-screen top-0 z-50 sticky relative`}
+      className={`${bgColor} text-white px-10 py-4 w-screen top-0 z-50 sticky`}
     >
       <div className="container mx-auto flex items-center h-full relative z-50">
-        <div className="absolute left-6 top-1/2 -translate-y-1/2 md:hidden">
+        <div className="absolute -left-6 top-1/2 -translate-y-1/2 md:hidden">
           <SidebarTrigger />
         </div>
 
