@@ -29,6 +29,8 @@ export default function RoomCard({
     return () => clearInterval(interval);
   }, [hovering, urls.length]);
 
+  console.log("from room-card.tsx: " + urls, title, desc)
+
   return (
     <Card
       className="relative w-full max-w-sm mx-auto flex flex-col overflow-hidden p-0 transition-transform hover:scale-105 shadow-md hover:shadow-lg"
@@ -56,7 +58,7 @@ export default function RoomCard({
       <CardContent className="flex-1 flex flex-col justify-between p-4 pb-16 sm:pb-14">
         <div className="flex-1">
           <CardTitle className="text-base sm:text-lg font-semibold mb-2 line-clamp-2">
-            {title}
+            {title ? title : "hello world"} 
           </CardTitle>
           <CardDescription className="text-xs sm:text-sm text-muted-foreground line-clamp-3 leading-relaxed">
             {desc}
