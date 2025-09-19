@@ -1,38 +1,9 @@
-import { useImages } from "@/hooks/useImages";
-import RoomCardCarousel from "../components/room-card-carousal";
 import Hero from "@/components/hero";
-import { useState } from "react";
-import { useEffect } from "react";
-import type { Room } from "../components/room-card-carousal";
-import { BentoGridDemo } from "@/components/bento";
-import Banquet from "@/components/banquet";
 import ProductCard from "@/components/products-card";
-import BakeryCard from "@/components/bakery-card";
+import BakeryCard from "@/components/bakery-card-carousal";
+import { getCategoryById } from "../../data/bakery-data";
 
 export default function Bakery() {
-  const [hotelHero, setHotelHero] = useState<
-    { public_id: string; url: string }[]
-  >([]);
-  const [hotelRooms, setHotelRooms] = useState<Room[]>([]);
-
-  const { data, error, isLoading } = useImages("hotel");
-
-  useEffect(() => {
-    if (data) {
-      console.log(data.data);
-      setHotelHero(data.data.hero ?? []);
-      setHotelRooms(data.data.rooms ?? []);
-    }
-  }, [data]);
-
-  if (error) {
-    // handle error
-  }
-
-  if (isLoading) {
-    // handle loading
-  }
-
   return (
     <div className="outfit">
       {/*
@@ -62,60 +33,44 @@ export default function Bakery() {
           Order bulk for your house party
         </div>
 
+        {/* Bread Section */}
         <div className="mb-8 text-center lg:text-left mt-10">
           <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
-            Our Bestsellers
+            Bread
           </h2>
-
-          <BakeryCard />
+          <BakeryCard products={getCategoryById("bread")?.products || []} />
         </div>
 
+        {/* Biscuits Section */}
         <div className="mb-8 text-center lg:text-left mt-10">
           <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
-            Patties
+            Biscuits
           </h2>
-
-          <BakeryCard />
+          <BakeryCard products={getCategoryById("biscuit")?.products || []} />
         </div>
 
+        {/* Rusk Section */}
         <div className="mb-8 text-center lg:text-left mt-10">
           <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
-            Pastries
+            Rusk
           </h2>
-
-          <BakeryCard />
+          <BakeryCard products={getCategoryById("rusk")?.products || []} />
         </div>
 
+        {/* Puff & Snacks Section */}
         <div className="mb-8 text-center lg:text-left mt-10">
           <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
-            Birthday Cakes
+            Puff & Snacks
           </h2>
-
-          <BakeryCard />
+          <BakeryCard products={getCategoryById("puff-snacks")?.products || []} />
         </div>
 
+        {/* Sweets Section */}
         <div className="mb-8 text-center lg:text-left mt-10">
           <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
-            Egg-less Cakes
+            Sweets
           </h2>
-
-          <BakeryCard />
-        </div>
-
-        <div className="mb-8 text-center lg:text-left mt-10">
-          <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
-            Bento Cakes
-          </h2>
-
-          <BakeryCard />
-        </div>
-
-        <div className="mb-8 text-center lg:text-left mt-10">
-          <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
-            Muffins
-          </h2>
-
-          <BakeryCard />
+          <BakeryCard products={getCategoryById("sweets")?.products || []} />
         </div>
       </div>
     </div>
