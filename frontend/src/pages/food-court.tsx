@@ -1,13 +1,12 @@
-// import GalleryMasonry from "../components/mansory";
-// import RoomCardCarousel from "../components/room-card-carousal";
 import Hero from "@/components/hero";
 import { useState, useEffect } from "react";
 import { useImages } from "@/hooks/useImages";
 import type { Room } from "../components/room-card-carousal";
-// import { BentoGridDemo } from "@/components/bento";
 import { useLocation } from "react-router-dom";
 import GalleryMasonry from "@/components/mansory";
 import EventCardCarousel from "@/components/event-card-carousal";
+import NonVegetarianFood from "@/components/ui/non-veg-food";
+import VegetarianFood from "@/components/ui/veg-food";
 
 export default function FoodCourt() {
   const [foodCourtHero, setfoodCourtHero] = useState<
@@ -18,10 +17,9 @@ export default function FoodCourt() {
 
   const { data, error, isLoading } = useImages("food-court");
 
-    const { hash } = useLocation();
+  const { hash } = useLocation();
 
-
-    useEffect(() => {
+  useEffect(() => {
     if (hash) {
       const element = document.querySelector(hash);
       if (element) {
@@ -68,12 +66,28 @@ export default function FoodCourt() {
           images={foodCourtHero}
         />
 
-        <div className="mt-16" id="events">
-          <h2 className="text-3xl lg:text-4xl text-start lg:ml-6 ml-4 outfit font-extrabold  text-green-950 mb-2">
+        {/* --- Adverts Section with improved UI/UX --- */}
+        <div className="mt-16 items-center justify-center text-center">
+          <h2 className="text-3xl lg:text-4xl text-start justify-center lg:ml-6 ml-4 outfit font-extrabold text-green-950 mb-6">
+            Our Delicious Offerings
+          </h2>
+          <div className="mx-auto max-w-7xl px-4 py-8  rounded-3xl bg-gray-50 shadow-inner">
+            <div className="flex flex-col lg:flex-row justify-center items-center gap-6 lg:gap-10">
+              <div className="flex-1 w-full">
+                <VegetarianFood />
+              </div>
+              <div className="flex-1 w-full">
+                <NonVegetarianFood />
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-16" id="gallery">
+          <h2 className="text-3xl lg:text-4xl text-start lg:ml-6 ml-4 outfit font-extrabold text-green-950 mb-2">
             Gallery
           </h2>
           <GalleryMasonry allImages={foodCourtGallery} />
-          {/* <BentoGridDemo images={foodCourtHero}/> */}
         </div>
 
         <div className="mb-8 text-center lg:text-left mt-10">
@@ -87,7 +101,5 @@ export default function FoodCourt() {
         <EventCardCarousel events={hotelRooms} />
       </div>
     </div>
-
-
   );
 }

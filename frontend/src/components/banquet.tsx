@@ -19,12 +19,12 @@ export default function Banquet() {
         */}
         <div className="absolute bottom-4 left-4 md:left-10 text-left outfit">
           {/* Large "BANQUET HALL" heading */}
-          <h2 className="text-white text-3xl md:text-5xl lg:text-7xl font-bold drop-shadow-[0_0_10px_rgba(255,223,0,0.9)] mb-2">
+          <h2 className="text-white text-3xl md:text-5xl lg:text-7xl font-bold mb-2">
             BANQUET HALL
           </h2>
           
           {/* Your original "Celebrate..." heading, now left-aligned and bold */}
-          <h3 className="text-white text-lg md:text-2xl font-bold drop-shadow-[0_0_10px_rgba(255,223,0,0.9)]">
+          <h3 className="text-white text-lg md:text-2xl font-bold]">
             Celebrate Your Special Moments With Us
           </h3>
         </div>
