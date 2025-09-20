@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 const mainNavItems = [
   { title: "HOME", url: "/" },
   { title: "EVENTS", url: "/food#events" },
+  { title: "ABOUT US", url: "/about" }, // New "ABOUT US" section
   {
     title: "BOOKINGS",
     url: "#",
@@ -22,7 +23,6 @@ const mainNavItems = [
       { title: "Events", url: "/services/events" },
     ],
   },
-
   { title: "SUPPORT", url: "#" },
 ];
 
@@ -108,7 +108,6 @@ export default function MainNav() {
                 )}
 
                 {/* Dropdown with form (BOOKINGS) */}
-                {/* Dropdown with form (BOOKINGS) */}
                 {item.type === "form" && isOpen && (
                   <div className="absolute left-0 top-full mt-2 w-64 bg-white text-black rounded-lg shadow-lg p-4 z-50">
                     <form
@@ -131,8 +130,6 @@ export default function MainNav() {
                     </form>
                   </div>
                 )}
-
-
               </li>
             );
           })}

@@ -29,6 +29,11 @@ const data = {
       icon: <Calendar />,
     },
     {
+      title: "ABOUT US", // New "ABOUT US" section
+      url: "/about",
+      icon: <Notebook />,
+    },
+    {
       title: "SERVICE",
       url: "#",
       icon: <Settings />,
