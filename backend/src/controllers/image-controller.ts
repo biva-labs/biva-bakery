@@ -14,6 +14,27 @@ const roomTypes = [
   "twin_room",
 ];
 
+type BakeryItem = {
+  title: string,
+  public_id: string,
+  url: string,
+  desc: string,
+}
+
+type GroupedBakeryItems = {
+  bread: BakeryItem[],
+  biscuit: BakeryItem[],
+  rusk: BakeryItem[],
+  puff_and_snacks: BakeryItem[],
+}
+
+const bakeryTypes = [
+  "bread",
+  "biscuit",
+  "rusk",
+  "puff_and_snacks",
+]
+
 type GroupedRooms = {
   public_id: string,
   url: string,
@@ -34,7 +55,7 @@ export const getImage = async (c: Context) => {
       const groupedRoom: GroupedRooms[] = [];
 
       const taggedImages = await cloudService.listImagesByTags(roomTypes);
-      
+
       taggedImages.forEach((room) => {
         const isTag = room.tags[0];
 
@@ -62,14 +83,14 @@ export const getImage = async (c: Context) => {
             public_id: img.public_id,
             url: img.secure_url,
           })),
-        events: hotelEvents.map((img) => ({
-          public_id: img.public_id,
-          url: img.secure_url,
-        })),
-        gallery: hotelGallery.map((img) => ({
-          public_id: img.public_id,
-          url: img.secure_url,
-        })),
+          events: hotelEvents.map((img) => ({
+            public_id: img.public_id,
+            url: img.secure_url,
+          })),
+          gallery: hotelGallery.map((img) => ({
+            public_id: img.public_id,
+            url: img.secure_url,
+          })),
           rooms: groupedRoom,
         },
       });
@@ -108,6 +129,40 @@ export const getImage = async (c: Context) => {
           })),
         },
       });
+    } else if (param.toLowerCase().includes("bakery")) {
+      const bakeryImages = await cloudService.listImagesByTags(bakeryTypes)
+      const groupedItems: GroupedBakeryItems = {
+        bread: [],
+        biscuit: [],
+        puff_and_snacks: [],
+        rusk: [],
+      }
+
+      bakeryImages.forEach((image) => {
+        const primaryTag = image.tags && image.tags.length > 0 ? image.tags[0] : null;
+
+        if (!primaryTag || !bakeryTypes.includes(primaryTag)) {
+          console.log(`Skipping ${image.public_id}: Invalid or no tag found`);
+          return;
+        }
+
+        const desc = image.context && image.context.alt ? image.context.alt : 'Description not available';
+
+        const item: BakeryItem = {
+          title: image.context.caption,
+          public_id: image.public_id,
+          desc: desc,
+          url: image.secure_url
+        };
+
+        groupedItems[primaryTag as keyof GroupedBakeryItems].push(item)
+      });
+
+      console.log('Grouped Items:', groupedItems);
+      return c.json({
+        data: groupedItems,
+      })
+
     } else {
       const images = await cloudService.listImages(param);
       return c.json({
