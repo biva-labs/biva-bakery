@@ -9,19 +9,23 @@ import type { Room } from "../components/room-card-carousal";
 import GalleryMasonry from "@/components/mansory";
 import Banquet from "@/components/banquet";
 
+
 export default function Hotel() {
   const [hotelHero, setHotelHero] = useState<
     { public_id: string; url: string }[]
   >([]);
   const [hotelRooms, setHotelRooms] = useState<Room[]>([]);
+  const [hotelGallery, setHotelGallery] = useState<{ public_id: string; url: string }[]>([])
 
   const { data, error, isLoading } = useImages("hotel");
+  console.log(data)
 
   useEffect(() => {
     if (data) {
       console.log(data.data);
       setHotelHero(data.data.hero ?? []);
       setHotelRooms(data.data.rooms ?? []);
+      setHotelGallery(data.data.gallery ?? []);
     }
   }, [data]);
 
@@ -75,8 +79,8 @@ export default function Hotel() {
           <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-green-950 ">
             Gallery
           </h2>
-          <GalleryMasonry allImages={hotelHero} />
-          {/* <BentoGridDemo images={hotelHero} /> */}
+          <GalleryMasonry allImages={hotelGallery} />
+       
         </div>
       </div>
     </div>
