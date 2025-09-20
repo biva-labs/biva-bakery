@@ -1,9 +1,43 @@
 import Hero from "@/components/hero";
 import ProductCard from "@/components/products-card";
 import BakeryCard from "@/components/bakery-card-carousal";
-import { getCategoryById } from "../../data/bakery-data";
+import { useImages } from "@/hooks/useImages";
+import { useState } from "react";
+import { useEffect } from "react";
+
+export type BakeryImagesType = {
+  title: string,
+  public_id: string,
+  desc: string,
+  url: string
+}
+
+type GroupedBakeryData = {
+  [key: string]: BakeryImagesType[]
+}
 
 export default function Bakery() {
+  const [groupedBakeryData, setGroupedBakeryData] = useState<GroupedBakeryData>({})
+
+  const {data, error, isLoading} = useImages("bakery");
+
+
+
+  useEffect(() => {
+    if (data) {
+      console.log(data.data);
+      setGroupedBakeryData(data.data)
+    }
+  }, [data]);
+  
+  if (error) {
+    return <div className="text-center py-10">Error loading bakery data</div>
+  }
+
+  if (isLoading) {
+    return <div className="text-center py-10">Loading bakery products...</div>
+  }
+
   return (
     <div className="outfit">
       {/*
@@ -34,44 +68,54 @@ export default function Bakery() {
         </div>
 
         {/* Bread Section */}
-        <div className="mb-8 text-center lg:text-left mt-10">
-          <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
-            Bread
-          </h2>
-          <BakeryCard products={getCategoryById("bread")?.products || []} />
-        </div>
+        {groupedBakeryData.bread && groupedBakeryData.bread.length > 0 && (
+          <div className="mb-8 text-center lg:text-left mt-10">
+            <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
+              Bread
+            </h2>
+            <BakeryCard products={groupedBakeryData.bread} />
+          </div>
+        )}
 
         {/* Biscuits Section */}
-        <div className="mb-8 text-center lg:text-left mt-10">
-          <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
-            Biscuits
-          </h2>
-          <BakeryCard products={getCategoryById("biscuit")?.products || []} />
-        </div>
+        {groupedBakeryData.biscuit && groupedBakeryData.biscuit.length > 0 && (
+          <div className="mb-8 text-center lg:text-left mt-10">
+            <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
+              Biscuits
+            </h2>
+            <BakeryCard products={groupedBakeryData.biscuit} />
+          </div>
+        )}
 
         {/* Rusk Section */}
-        <div className="mb-8 text-center lg:text-left mt-10">
-          <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
-            Rusk
-          </h2>
-          <BakeryCard products={getCategoryById("rusk")?.products || []} />
-        </div>
+        {groupedBakeryData.rusk && groupedBakeryData.rusk.length > 0 && (
+          <div className="mb-8 text-center lg:text-left mt-10">
+            <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
+              Rusk
+            </h2>
+            <BakeryCard products={groupedBakeryData.rusk} />
+          </div>
+        )}
 
         {/* Puff & Snacks Section */}
-        <div className="mb-8 text-center lg:text-left mt-10">
-          <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
-            Puff & Snacks
-          </h2>
-          <BakeryCard products={getCategoryById("puff-snacks")?.products || []} />
-        </div>
+        {groupedBakeryData.puff_and_snacks && groupedBakeryData.puff_and_snacks.length > 0 && (
+          <div className="mb-8 text-center lg:text-left mt-10">
+            <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
+              Puff & Snacks
+            </h2>
+            <BakeryCard products={groupedBakeryData.puff_and_snacks} />
+          </div>
+        )}
 
         {/* Sweets Section */}
-        <div className="mb-8 text-center lg:text-left mt-10">
-          <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
-            Sweets
-          </h2>
-          <BakeryCard products={getCategoryById("sweets")?.products || []} />
-        </div>
+        {groupedBakeryData.sweets && groupedBakeryData.sweets.length > 0 && (
+          <div className="mb-8 text-center lg:text-left mt-10">
+            <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-[#DE4243] ">
+              Sweets
+            </h2>
+            <BakeryCard products={groupedBakeryData.sweets} />
+          </div>
+        )}
       </div>
     </div>
   );
