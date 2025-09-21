@@ -5,14 +5,14 @@ import type { Room } from "../components/room-card-carousal";
 import { useLocation } from "react-router-dom";
 import GalleryMasonry from "@/components/mansory";
 import EventCardCarousel from "@/components/event-card-carousal";
-import NonVegetarianFood from "@/components/ui/non-veg-food";
-import VegetarianFood from "@/components/ui/veg-food";
+import NonVegetarianFood from "@/components/non-veg-food";
+import VegetarianFood from "@/components/veg-food";
 
 export default function FoodCourt() {
   const [foodCourtHero, setfoodCourtHero] = useState<
     { public_id: string; url: string }[]
   >([]);
-  const [hotelRooms, setHotelRooms] = useState<Room[]>([]);
+  const [events, setEvents] = useState<Room[]>([]);
   const [foodCourtGallery, setFoodCourtGallery] = useState([]);
 
   const { data, error, isLoading } = useImages("food-court");
@@ -32,7 +32,7 @@ export default function FoodCourt() {
     if (data) {
       console.log(data.data);
       setfoodCourtHero(data.data.hero ?? []);
-      setHotelRooms(data.data.events ?? []);
+      setEvents(data.data.events ?? []);
       setFoodCourtGallery(data.data.gallery ?? []);
     }
   }, [data]);
@@ -62,7 +62,7 @@ export default function FoodCourt() {
             </div>
           }
           buttonText={<>Book Now</>}
-          redirect="/test"
+          redirect="/table/booking"
           images={foodCourtHero}
         />
 
@@ -90,15 +90,15 @@ export default function FoodCourt() {
           <GalleryMasonry allImages={foodCourtGallery} />
         </div>
 
-        <div className="mb-8 text-center lg:text-left mt-10">
-          <h2 className="text-2xl lg:text-4xl text-start outfit font-extrabold lg:ml-6 ml-4 text-green-950 mb-2">
+        <div id="events" className="mb-8 text-center lg:text-left mt-10">
+          <h2  className="text-2xl lg:text-4xl text-start outfit font-extrabold lg:ml-6 ml-4 text-green-950 mb-2">
             Upcoming Events
           </h2>
           <p className="text-muted-foreground text-center lg:text-start lg:ml-6 outfit font-medium text-lg">
             Book your table for the best experience
           </p>
         </div>
-        <EventCardCarousel events={hotelRooms} />
+        <EventCardCarousel events={events} />
       </div>
     </div>
   );

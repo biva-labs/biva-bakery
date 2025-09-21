@@ -13,7 +13,7 @@ import { foodCourtForm } from "./controllers/foodCourtForm.ts";
 const app = new Hono();
 app.use(secureHeaders());
 
-const allowedOrigin = "http://localhost:5173"
+const allowedOrigin = "http://127.0.0.1:5173"
 
 app.use(cors({
   origin: allowedOrigin,

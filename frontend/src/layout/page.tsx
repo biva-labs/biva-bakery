@@ -3,7 +3,7 @@ import MainNav from "@/components/main-nav";
 import Footer from "@/components/footer";
 import { SecondNavbar } from "@/components/second-nav";
 import Map from "@/components/map";
-import About from "@/components/about";
+import About from "@/components/about-section";
 import Testimonial from "@/components/testimonial";
 
 export default function Biva() {

@@ -38,6 +38,9 @@ export default function TableBlock({
     if (seatState === "available") {
       setSeatState("selected");
       onSelect?.(label); // notify parent
+    } else if (seatState === "selected") {
+      setSeatState("available");
+      onSelect?.(label); // notify parent to deselect
     }
   };
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export default function EventCard({
   urls = [],
@@ -11,6 +12,8 @@ export default function EventCard({
 }) {
   const [index, setIndex] = useState(0);
   const [hovering, setHovering] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!hovering || urls.length <= 1) return;
@@ -61,7 +64,7 @@ export default function EventCard({
         <div className="absolute bottom-4 right-4 z-20 md:hidden">
           {/* Button code without the overlay and animation */}
           <Button
-            onClick={onAction}
+            onClick={() => navigate("/events/booking")}
             className="rounded-full px-8 py-4 outfit bg-[#002a3a] text-white text-lg font-semibold shadow-lg"
           >
             Book Now
@@ -85,7 +88,7 @@ export default function EventCard({
             />
             {/* actual button (top layer) */}
             <Button
-              onClick={onAction}
+            onClick={() => navigate("/events/booking")}
               className="relative z-10 rounded-full px-8 py-4 outfit bg-[#002a3a] text-white text-lg font-semibold overflow-visible shadow-lg"
             >
               {/* fallback plain label (fades out on hover) */}

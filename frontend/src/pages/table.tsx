@@ -5,7 +5,19 @@ import SeatForm from "@/components/seat-form";
 import PayButton from "@/components/pay-button";
 
 export default function Table() {
-  const [selectedTable, setSelectedTable] = useState<string | null>(null);
+  const [selectedTables, setSelectedTables] = useState<string[]>([]);
+
+  const handleTableSelect = (label: string) => {
+    setSelectedTables(prev => {
+      if (prev.includes(label)) {
+        // Remove if already selected
+        return prev.filter(table => table !== label);
+      } else {
+        // Add if not selected
+        return [...prev, label];
+      }
+    });
+  };
 
   return (
     <>
@@ -16,9 +28,9 @@ export default function Table() {
             Book Your Tables
           </h1>
 
-          {selectedTable && (
+          {selectedTables.length > 0 && (
             <div className="mb-8">
-              <SeatForm table={selectedTable} />
+              <SeatForm table={selectedTables.join(", ")} />
               <div className="mt-4">
                 <PayButton amount={1000} />
               </div>
@@ -59,31 +71,31 @@ export default function Table() {
             <div className="grid grid-cols-12 gap-x-4 gap-y-8 w-full max-w-3xl mx-auto">
               <div className="col-start-2 col-span-2 flex justify-center items-center">
                 <div className="transform -rotate-25">
-                  <TableBlock
-                    shape="rectangle"
-                    size="lg"
-                    label="T1"
-                    onSelect={setSelectedTable}
-                  />
+                  {/* Stage - bigger and unselectable */}
+                  <div className="w-20 h-10 bg-gradient-to-br from-red-500 to-red-700 text-white border-red-800 shadow-lg flex items-center justify-center font-bold text-lg rounded-md">
+                    STAGE
+                  </div>
                 </div>
               </div>
               <div className="col-start-1 row-start-2 row-span-4 flex flex-col justify-between items-center gap-3">
                 {["T2", "T3", "T4", "T5"].map((label) => (
                   <TableBlock
-                    key={label}
+                    key={`${label}-${selectedTables.includes(label)}`}
                     size="lg"
                     label={label}
-                    onSelect={setSelectedTable}
+                    initialState={selectedTables.includes(label) ? "selected" : "available"}
+                    onSelect={handleTableSelect}
                   />
                 ))}
               </div>
               <div className="col-start-12 row-start-2 row-span-4 flex flex-col justify-between items-center gap-3">
                 {["T6", "T7", "T8", "T9"].map((label) => (
                   <TableBlock
-                    key={label}
+                    key={`${label}-${selectedTables.includes(label)}`}
                     size="lg"
                     label={label}
-                    onSelect={setSelectedTable}
+                    initialState={selectedTables.includes(label) ? "selected" : "available"}
+                    onSelect={handleTableSelect}
                   />
                 ))}
               </div>
@@ -104,10 +116,12 @@ export default function Table() {
                     }`}
                   >
                     <TableBlock
+                      key={`${label}-${selectedTables.includes(label)}`}
                       shape="round"
                       size="lg"
                       label={label}
-                      onSelect={setSelectedTable}
+                      initialState={selectedTables.includes(label) ? "selected" : "available"}
+                      onSelect={handleTableSelect}
                     />
                   </div>
                 ))}

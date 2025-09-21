@@ -37,7 +37,7 @@ export function TimeSlotSelect() {
         }
       }}
     >
-      <SelectTrigger className="w-[200px]">
+      <SelectTrigger className="w-full">
         <SelectValue placeholder="Select a time slot" />
       </SelectTrigger>
       <SelectContent>

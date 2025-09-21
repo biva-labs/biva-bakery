@@ -5,10 +5,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-// import { useNavigate } from "react-router-dom";
-// import { groupByTag } from "@/utils/group-by-tag";
-// import HoverSlideshowCard from "./hover-slideshow-card";
-// import RoomCard from "./room-card";
+
 import EventCard from "./event-card";
 export interface Card {
   public_id: string;
