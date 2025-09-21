@@ -1,9 +1,24 @@
-import { PgTable, serial, text, integer, pgTable } from "drizzle-orm/pg-core";
+import {serial, text, integer, pgTable} from "drizzle-orm/pg-core";
 
-export const table = pgTable('tables', {
+export const foodCourtTable = pgTable('foodCourtTable', {
+  id: serial('id').primaryKey(),
+  total_table: integer('total_table').notNull().default(1),
+  name: text('name').notNull(),
+  total_people: integer('total_people').notNull().default(1),
+  status: text('status').notNull().default('available'),
+  aadhar_or_pan_img_url: text('aadhar_or_pan_img_url').notNull(),
+  phone_number: text('phone_number').notNull().unique(),
+  email: text('email').notNull(),
+  food_preference: text('food_preference').notNull().default("veg"),
+  timeSlot: text("time_slot").notNull(),
+});
+
+export const foodCourtEventTable = pgTable('foodCourtEventTable', {
     id: serial('id').primaryKey(),
     name: text('name').notNull(),
-    shape: text('shape').notNull(),
-    seats: integer('seats').notNull(),
-    status: text('status').notNull().default('available')
+    email: text("email").notNull().unique(),
+    aadhar_or_pan_img_url: text('aadhar_or_pan_img_url').notNull(),
+    phone_number: text("phone_number").unique().notNull(),
+    total_people: integer('total_people').notNull().default(1),
 });
+

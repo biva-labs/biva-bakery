@@ -1,7 +1,9 @@
 import type { Context } from "hono";
-import { CloudinaryService } from "../utils/cloudinary-service.ts";
+import { CloudinaryService, type UploadFileResult } from "../utils/cloudinary-service.ts";
 import { isGelSchema } from "drizzle-orm/gel-core";
 import { countReset } from "console";
+
+const MAX_BYTES = 5 * 1024 * 1024;
 
 const cloudService = new CloudinaryService();
 
@@ -180,3 +182,20 @@ export const getImage = async (c: Context) => {
     return c.json({ error: "Failed to fetch images" }, 500);
   }
 };
+
+
+export const uploadImage = async(imgFile: File): Promise<UploadFileResult> => {
+  try {
+
+    const res = await cloudService.uploadImage(imgFile, {
+      maxSizeBytes: 10 * 1028 * 1024
+  });
+
+  
+  return res; 
+  }
+  catch(err: any) {
+    console.error(err);
+    throw new Error('Image upload failed');
+  }
+}
