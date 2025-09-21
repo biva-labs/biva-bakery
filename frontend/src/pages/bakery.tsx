@@ -19,7 +19,7 @@ type GroupedBakeryData = {
 export default function Bakery() {
   const [groupedBakeryData, setGroupedBakeryData] = useState<GroupedBakeryData>({})
 
-  const {data, error, isLoading} = useImages("bakery");
+  const { data, error, isLoading } = useImages("bakery");
 
 
 
@@ -29,7 +29,7 @@ export default function Bakery() {
       setGroupedBakeryData(data.data)
     }
   }, [data]);
-  
+
   if (error) {
     return <div className="text-center py-10">Error loading bakery data</div>
   }
@@ -40,10 +40,7 @@ export default function Bakery() {
 
   return (
     <div className="outfit">
-      {/*
-        The wrapper has horizontal padding (px-4), so the content inside it
-        will not go edge-to-edge by default.
-      */}
+
       <div className="mx-auto px-4 lg:mr-0">
         <Hero
           title={
