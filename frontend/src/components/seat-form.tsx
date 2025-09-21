@@ -3,33 +3,85 @@ import { TimeSlotSelect } from "./time-slot";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { useSeatFormStore } from "@/store/seat-form-store";
-import { useEffect } from "react";
 import { FOOD_COURT_FORM_FIELDS, EVENT_FORM_FIELDS } from "../../data/form-fields-data"
+import { useFoodCourtTableFormStore } from "@/store/food-court-store";
+import { useFoodCourtEventFormStore } from "@/store/seat-form-store";
 
 
 
 export default function SeatForm({ table }: { table?: string }) {
-
-
-  const { name, email, phone, setField } = useSeatFormStore();
-
   const location = useLocation();
   const path = location.pathname;
+  const isEventForm = path.includes('/events/booking');
 
-  const FIELDS = path.includes('/events/booking') ? EVENT_FORM_FIELDS : FOOD_COURT_FORM_FIELDS;
+  // Use appropriate store based on route
+  const foodCourtStore = useFoodCourtTableFormStore();
+  const eventStore = useFoodCourtEventFormStore();
+  
+  const currentStore = isEventForm ? eventStore : foodCourtStore;
+  
+  const FIELDS = isEventForm ? EVENT_FORM_FIELDS : FOOD_COURT_FORM_FIELDS;
 
-  useEffect(() => {
-    if (table && path.includes('events')) {
-      setField("tableId", table);
+  // Helper function to map form field IDs to store field names
+  const getStoreFieldName = (fieldId: string) => {
+    if (isEventForm) {
+      // Event form field mappings
+      const eventFieldMap: { [key: string]: string } = {
+        'phone': 'phone',
+        'adhaar-pan': 'adhaar_or_pan_card', 
+        'guest-no': 'number_of_guest',
+        'table-id': 'table_id',
+        'name': 'name',
+        'email': 'email'
+      };
+      return eventFieldMap[fieldId] || fieldId;
+    } else {
+      // Food court field mappings
+      const foodCourtFieldMap: { [key: string]: string } = {
+        'phone': 'phone_number',
+        'adhaar-pan': 'adhaar_or_pan_card', 
+        'guest-no': 'number_of_guest',
+        'time-slot': 'time_slot',
+        'name': 'name',
+        'email': 'email',
+        'preference': 'preference'
+      };
+      return foodCourtFieldMap[fieldId] || fieldId;
     }
-  }, [table, path, setField]);
+  };
+
+  // Helper function to get field value from appropriate store
+  const getFieldValue = (fieldId: string) => {
+    if (fieldId === 'table-id') {
+      if (isEventForm) {
+        // For events, get table_id array from store and join as string
+        const tableIds = (currentStore as any).table_id;
+        return Array.isArray(tableIds) ? tableIds.join(", ") : "";
+      }
+      // For other forms, use the table prop if provided
+      return table || "";
+    }
+    
+    const storeFieldName = getStoreFieldName(fieldId);
+    return (currentStore as any)[storeFieldName] || "";
+  };
+
+  // Helper function to set field value in appropriate store
+  const setFieldValue = (fieldId: string, value: string) => {
+    const storeFieldName = getStoreFieldName(fieldId);
+    
+    // Handle table_id as array for events
+    if (fieldId === 'table-id' && isEventForm) {
+      // Convert comma-separated string back to array
+      const tableArray = value.split(',').map(s => s.trim()).filter(Boolean);
+      (currentStore as any).setField(storeFieldName, tableArray);
+    } else {
+      (currentStore as any).setField(storeFieldName, value);
+    }
+  };
 
   const renderField = (field: any) => {
-    const fieldValue = field.id === 'table-id' ? table :
-      field.id === 'name' ? name :
-        field.id === 'email' ? email :
-          field.id === 'phone' ? phone : '';
+    const fieldValue = getFieldValue(field.id);
 
     return (
       <div key={field.id} className="space-y-2">
@@ -42,7 +94,7 @@ export default function SeatForm({ table }: { table?: string }) {
             placeholder={field.placeholder}
             value={fieldValue}
             disabled={field.disabled}
-            onChange={(e) => setField(field.id.replace('-', ''), e.target.value)}
+            onChange={(e) => setFieldValue(field.id, e.target.value)}
           />
         ) : field.element === 'upload' ? (
           <Input
@@ -53,7 +105,7 @@ export default function SeatForm({ table }: { table?: string }) {
             onChange={(e) => {
               const file = e.target.files?.[0];
               if (file) {
-                setField(field.id.replace('-', ''), file.name);
+                setFieldValue(field.id, file.name);
               }
             }}
           />
@@ -64,7 +116,8 @@ export default function SeatForm({ table }: { table?: string }) {
           ) : (
             <Select
               disabled={field.disabled}
-              onValueChange={(value) => setField(field.id.replace('-', ''), value)}
+              value={fieldValue}
+              onValueChange={(value) => setFieldValue(field.id, value)}
             >
               <SelectTrigger className="w-full h-10">
                 <SelectValue placeholder={field.placeholder} />

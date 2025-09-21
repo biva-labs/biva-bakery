@@ -1,11 +1,21 @@
 
+import { Button } from "@radix-ui/themes";
 import PayButton from "./pay-button";
 import SeatForm from "./seat-form";
 import { useLocation } from "react-router-dom";
+import { useFoodCourtTableFormStore } from "@/store/food-court-store";
 
 export default function SeatBookingPage() {
     const location = useLocation();
     const isFoodCourt = location.pathname.includes('/table/booking');
+
+    const data = useFoodCourtTableFormStore();
+
+
+    const run = () => {
+        console.log(data);
+    }
+
     return (
         <div className="h-screen flex flex-col lg:flex-row overflow-hidden">
             <div className="lg:w-1/2 flex flex-col items-center justify-center px-4 py-4">
@@ -17,7 +27,8 @@ export default function SeatBookingPage() {
                         <SeatForm />
                     </div>
                     <div className="bg-white rounded-lg p-4">
-                        <PayButton amount={100}/>
+                        {/* <PayButton amount={100}/> */}
+                        <Button onClick={run}>click</Button>
                     </div>
                 </div>
             </div>

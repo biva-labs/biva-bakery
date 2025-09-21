@@ -1,11 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Footer from "@/components/footer";
 import TableBlock from "@/components/table";
 import SeatForm from "@/components/seat-form";
 import PayButton from "@/components/pay-button";
+import { useFoodCourtEventFormStore } from "@/store/seat-form-store";
+import { Button } from "@radix-ui/themes";
 
 export default function Table() {
   const [selectedTables, setSelectedTables] = useState<string[]>([]);
+  const  { setField } = useFoodCourtEventFormStore();
+  const body = useFoodCourtEventFormStore();
+
+  // Update the store whenever selected tables change
+  useEffect(() => {
+    setField("table_id", selectedTables);
+  }, [selectedTables, setField]);
 
   const handleTableSelect = (label: string) => {
     setSelectedTables(prev => {
@@ -30,9 +39,10 @@ export default function Table() {
 
           {selectedTables.length > 0 && (
             <div className="mb-8">
-              <SeatForm table={selectedTables.join(", ")} />
+              <SeatForm />
               <div className="mt-4">
-                <PayButton amount={1000} />
+                {/* <PayButton amount={1000} /> */}
+                <Button onClick={() => console.log(body)}>cl</Button>
               </div>
             </div>
           )}

@@ -1,4 +1,4 @@
-import { useSeatFormStore } from "@/store/seat-form-store"; // adjust path if needed
+import { useLocation } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useFoodCourtTableFormStore } from "@/store/food-court-store";
 
 const timeSlots = [
   { slotId: "1", label: "00:00 - 02:00" },
@@ -25,17 +26,20 @@ const timeSlots = [
 ];
 
 export function TimeSlotSelect() {
-  const { slotId, setSlot } = useSeatFormStore();
+  const location = useLocation();
+  const path = location.pathname;
+  // const isEventForm = path.includes('/events/booking');
+  
+  // Only food court forms have time slots, events don't need them
+  // So we always use the food court store for time slots
+  const { time_slot, setField } = useFoodCourtTableFormStore();
+
+
 
   return (
     <Select
-      value={slotId}
-      onValueChange={(value) => {
-        const selected = timeSlots.find((s) => s.slotId === value);
-        if (selected) {
-          setSlot(selected.label, selected.slotId);
-        }
-      }}
+      value={time_slot}
+      onValueChange={(value) => setField("time_slot", value)}
     >
       <SelectTrigger className="w-full">
         <SelectValue placeholder="Select a time slot" />
@@ -44,7 +48,7 @@ export function TimeSlotSelect() {
         <SelectGroup>
           <SelectLabel>Time Slots</SelectLabel>
           {timeSlots.map((slot) => (
-            <SelectItem key={slot.slotId} value={slot.slotId}>
+            <SelectItem key={slot.slotId} value={slot.label}>
               {slot.label}
             </SelectItem>
           ))}
@@ -53,3 +57,4 @@ export function TimeSlotSelect() {
     </Select>
   );
 }
+

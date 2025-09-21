@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { X, MessageCircle, Send } from 'lucide-react';
+import { useAi } from '@/hooks/useAi';
 
 interface Message {
   id: string;
@@ -24,6 +25,21 @@ export default function ChatBot() {
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Use the AI hook
+  const aiMutation = useAi();
+
+  // Quick message options
+  const quickMessages = [
+    "What are your opening hours?",
+    "How can I book a table?", 
+    "Tell me about events",
+    "What's on the menu?",
+    "Hotel booking info",
+    "Contact information",
+    "Location and directions",
+    "Special offers today"
+  ];
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -33,42 +49,37 @@ export default function ChatBot() {
     scrollToBottom();
   }, [messages]);
 
-  const simulateBotResponse = (userMessage: string) => {
+  const simulateBotResponse = async (userMessage: string) => {
     setIsTyping(true);
     
-    setTimeout(() => {
-      const botResponse = getBotResponse(userMessage);
+    try {
+      // Use the AI mutation to get response from backend
+      const response = await aiMutation.mutateAsync(userMessage);
+      
       const newMessage: Message = {
         id: Date.now().toString(),
-        text: botResponse,
+        text: response.content,
         sender: 'bot',
         timestamp: new Date()
       };
       
       setMessages(prev => [...prev, newMessage]);
+    } catch (error) {
+      // Fallback response if AI fails
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        text: 'Sorry, I\'m having trouble responding right now. Please try again or contact our support team.',
+        sender: 'bot',
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
-  };
-
-  const getBotResponse = (message: string): string => {
-    const lowerMessage = message.toLowerCase();
-    
-    if (lowerMessage.includes('booking') || lowerMessage.includes('reserve')) {
-      return 'I can help you with bookings! We offer table reservations, event bookings, and food court services. Which one are you interested in?';
-    } else if (lowerMessage.includes('menu') || lowerMessage.includes('food')) {
-      return 'Our menu features fresh bakery items, delicious meals, and special event catering. Would you like to know about any specific items?';
-    } else if (lowerMessage.includes('hours') || lowerMessage.includes('time')) {
-      return 'We are open daily from 8:00 AM to 10:00 PM. Our food court operates from 11:00 AM to 9:30 PM.';
-    } else if (lowerMessage.includes('location') || lowerMessage.includes('address')) {
-      return 'We are located at the heart of the city. You can find our exact location on our contact page.';
-    } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
-      return 'Hello! Welcome to Biva Bakery! How can I assist you today?';
-    } else {
-      return 'Thank you for your message! For specific inquiries, please contact our customer service team. Is there anything else I can help you with?';
     }
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
     const userMessage: Message = {
@@ -79,8 +90,20 @@ export default function ChatBot() {
     };
 
     setMessages(prev => [...prev, userMessage]);
-    simulateBotResponse(inputMessage);
+    await simulateBotResponse(inputMessage);
     setInputMessage('');
+  };
+
+  const handleQuickMessage = async (message: string) => {
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      text: message,
+      sender: 'user',
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    await simulateBotResponse(message);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -100,23 +123,39 @@ export default function ChatBot() {
     </div>
   );
 
+  // Component to render formatted message content
+  const FormattedMessage = ({ text }: { text: string }) => {
+    return (
+      <div 
+        className="text-sm"
+        dangerouslySetInnerHTML={{ __html: text }}
+      />
+    );
+  };
+
   return (
     <>
       {/* Chat Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50">
         <Button
           onClick={() => setIsOpen(!isOpen)}
-          className={`w-14 h-14 rounded-full bg-yellow-500 hover:bg-yellow-600 text-black shadow-lg transition-all duration-300 ${
+          className={`w-12 h-12 md:w-14 md:h-14 rounded-full bg-yellow-500 hover:bg-yellow-600 text-black 
+                     shadow-lg transition-all duration-300 ${
             isOpen ? 'rotate-180' : 'hover:scale-110'
           }`}
         >
-          {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
+          {isOpen ? <X size={20} /> : <MessageCircle size={20} />}
         </Button>
       </div>
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-80 h-96 bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col z-50 animate-in slide-in-from-bottom-2 duration-300">
+        <div className="fixed bottom-4 right-4 md:bottom-24 md:right-6 
+                        w-80 h-96 
+                        md:w-96 md:h-[500px] 
+                        lg:w-[450px] lg:h-[600px]
+                        bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col z-50 
+                        animate-in slide-in-from-bottom-2 duration-300">
           {/* Chat Header */}
           <div className="bg-yellow-500 text-black p-4 rounded-t-lg flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -128,6 +167,13 @@ export default function ChatBot() {
                 <p className="text-xs opacity-80">Online now</p>
               </div>
             </div>
+            {/* Close button for mobile */}
+            <Button
+              onClick={() => setIsOpen(false)}
+              className="md:hidden bg-transparent hover:bg-black/10 text-black p-1 h-auto"
+            >
+              <X size={20} />
+            </Button>
           </div>
 
           {/* Messages Area */}
@@ -138,13 +184,13 @@ export default function ChatBot() {
                 className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[80%] p-3 rounded-lg ${
+                  className={`max-w-[85%] md:max-w-[80%] p-3 rounded-lg ${
                     message.sender === 'user'
                       ? 'bg-yellow-500 text-black'
                       : 'bg-white text-gray-800 border'
                   }`}
                 >
-                  <p className="text-sm">{message.text}</p>
+                  <FormattedMessage text={message.text} />
                   <p className={`text-xs mt-1 ${
                     message.sender === 'user' ? 'text-black/70' : 'text-gray-500'
                   }`}>
@@ -160,6 +206,23 @@ export default function ChatBot() {
               </div>
             )}
             <div ref={messagesEndRef} />
+          </div>
+
+          {/* Quick Messages - Only visible on medium screens and up */}
+          <div className="hidden md:block p-3 bg-gray-50 border-t border-b">
+            <p className="text-xs text-gray-600 mb-2">Quick questions:</p>
+            <div className="flex flex-wrap gap-2">
+              {quickMessages.slice(0, 4).map((message, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleQuickMessage(message)}
+                  className="text-xs bg-white hover:bg-yellow-100 border border-gray-200 
+                           rounded-full px-3 py-1.5 transition-colors duration-200"
+                >
+                  {message}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Input Area */}
