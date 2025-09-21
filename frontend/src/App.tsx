@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
 import Main from "./layout/main";
 import Biva from "./layout/page";
 import Hotel from "./pages/hotel";
@@ -10,8 +10,23 @@ import Bakery from "./pages/bakery";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import SeatBookingPage from "./components/seat-booking-page";
+import ChatBot from "./components/chatbot";
 
-const queryClient = new QueryClient();
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
+
+const queryClient = new QueryClient({
+  defaultOptions:{
+    queries: {
+      gcTime: 1000 * 60 * 5
+    }
+  }
+});
+
+const asyncStoragePersister = createAsyncStoragePersister({
+  storage: window.localStorage,
+})
+
 
 
 function ScrollToHash() {
@@ -31,7 +46,7 @@ function ScrollToHash() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: asyncStoragePersister }}>
       <BrowserRouter>
         <ScrollToHash />
 
@@ -47,8 +62,9 @@ function App() {
             <Route path="/events/booking" element={<Table />}/>
           </Route>
         </Routes>
+        <ChatBot />
       </BrowserRouter>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 }
 
