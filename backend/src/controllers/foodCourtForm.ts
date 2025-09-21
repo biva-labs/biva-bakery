@@ -14,6 +14,7 @@ interface FoodCourtFormData {
   total_people?: number;
   status?: string;
   food_preference?: string;
+  table_id?: string[]; // New field to store an array of strings
 }
 
 export const foodCourtForm = async (c: Context) => {
@@ -28,14 +29,19 @@ export const foodCourtForm = async (c: Context) => {
         uploadedImage = await uploadImage(imgFile);
       } catch (error) {
         console.error('Image upload failed:', error);
-        // You might want to return an error response here instead of just logging
         return c.json({ error: 'Image upload failed' }, 500);
       }
     }
 
+    const tableIdStr = body['table_id'] as string;
+    let tableidArray: string[] | undefined
+    if (tableIdStr){
+        tableidArray = tableIdStr.split(',').map(s => s.trim());
+    }
+
     const tableData: FoodCourtFormData = {
       id: body['id'] ? Number(body['id']) : undefined,
-      total_table: body['total_table'] ? Number(body['total_table']) : undefined,
+      table_id: tableidArray,
       name: body['name'] as string,
       total_people: body['total_people'] ? Number(body['total_people']) : undefined,
       status: body['status'] as string,
