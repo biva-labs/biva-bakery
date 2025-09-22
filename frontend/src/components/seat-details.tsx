@@ -1,5 +1,3 @@
-// src/components/SeatDetail.tsx
-
 import { Separator } from "@/components/ui/separator";
 
 export default function SeatDetail() {

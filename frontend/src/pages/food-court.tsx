@@ -1,19 +1,19 @@
 import Hero from "@/components/hero";
 import { useState, useEffect } from "react";
 import { useImages } from "@/hooks/useImages";
-import type { Room } from "../components/room-card-carousal";
 import { useLocation } from "react-router-dom";
-import GalleryMasonry from "@/components/mansory";
-import EventCardCarousel from "@/components/event-card-carousal";
-import NonVegetarianFood from "@/components/non-veg-food";
-import VegetarianFood from "@/components/veg-food";
+import GalleryMasonry from "@/components/gallery/masonary";
+import EventCardCarousel from "@/components/events/event-card-carousal";
+import FoodCourtPreference from "@/components/food-court/food-court-prefrence";
+
+import { type CardImagesType } from "@/types/card-images-types";
+import { type HeroImagesType } from "@/types/hero-images-types";
+import { type GalleryImagesType } from "@/types/gallery-images-types";
 
 export default function FoodCourt() {
-  const [foodCourtHero, setfoodCourtHero] = useState<
-    { public_id: string; url: string }[]
-  >([]);
-  const [events, setEvents] = useState<Room[]>([]);
-  const [foodCourtGallery, setFoodCourtGallery] = useState([]);
+  const [foodCourtHero, setfoodCourtHero] = useState<HeroImagesType[]>([]);
+  const [events, setEvents] = useState<CardImagesType[]>([]);
+  const [foodCourtGallery, setFoodCourtGallery] = useState<GalleryImagesType[]>([]);
 
   const { data, error, isLoading } = useImages("food-court");
 
@@ -66,7 +66,6 @@ export default function FoodCourt() {
           images={foodCourtHero}
         />
 
-        {/* --- Adverts Section with improved UI/UX --- */}
         <div className="mt-16 items-center justify-center text-center">
           <h2 className="text-3xl lg:text-4xl text-start justify-center lg:ml-6 ml-4 outfit font-extrabold text-green-950 mb-6">
             Our Delicious Offerings
@@ -74,10 +73,10 @@ export default function FoodCourt() {
           <div className="mx-auto max-w-7xl px-4 py-8  rounded-3xl bg-gray-50 shadow-inner">
             <div className="flex flex-col lg:flex-row justify-center items-center gap-6 lg:gap-10">
               <div className="flex-1 w-full">
-                <VegetarianFood />
+                <FoodCourtPreference preference="veg" />
               </div>
               <div className="flex-1 w-full">
-                <NonVegetarianFood />
+                 <FoodCourtPreference preference="non-veg"/>  
               </div>
             </div>
           </div>

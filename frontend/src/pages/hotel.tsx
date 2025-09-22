@@ -1,24 +1,24 @@
 import { useImages } from "@/hooks/useImages";
-// import GalleryMasonry from "../components/mansory";
-import RoomCardCarousel from "../components/room-card-carousal";
+import RoomCardCarousel from "../components/hotel/room-card/room-card-carousal";
 import Hero from "@/components/hero";
 import { useState } from "react";
 import { useEffect } from "react";
-import type { Room } from "../components/room-card-carousal";
-// import { BentoGridDemo } from "@/components/bento";
-import GalleryMasonry from "@/components/mansory";
-import Banquet from "@/components/banquet";
+import GalleryMasonry from "@/components/gallery/masonary";
+import Banquet from "@/components/hotel/banquet";
 
+
+import { type CardImagesType } from "@/types/card-images-types";
+import { type HeroImagesType } from "@/types/hero-images-types";
+import { type GalleryImagesType } from "@/types/gallery-images-types";
 
 export default function Hotel() {
-  const [hotelHero, setHotelHero] = useState<
-    { public_id: string; url: string }[]
-  >([]);
-  const [hotelRooms, setHotelRooms] = useState<Room[]>([]);
-  const [hotelGallery, setHotelGallery] = useState<{ public_id: string; url: string }[]>([])
+
+  const [hotelHero, setHotelHero] = useState<HeroImagesType[]>([]);
+  const [hotelRooms, setHotelRooms] = useState<CardImagesType[]>([]);
+  const [hotelGallery, setHotelGallery] = useState<GalleryImagesType[]>([])
 
   const { data, error, isLoading } = useImages("hotel");
-  console.log(data)
+
 
   useEffect(() => {
     if (data) {
@@ -82,6 +82,7 @@ export default function Hotel() {
           <GalleryMasonry allImages={hotelGallery} />
        
         </div>
+
       </div>
     </div>
   );

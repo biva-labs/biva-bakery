@@ -5,11 +5,11 @@ import Biva from "./layout/page";
 import Hotel from "./pages/hotel";
 import FoodCourt from "./pages/food-court";
 import Table from "./pages/table";
-import RoomBookingPage from "./components/room-booking-page";
+import RoomBookingPage from "./components/hotel/room-booking-page";
 import Bakery from "./pages/bakery";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import SeatBookingPage from "./components/seat-booking-page";
+import SeatBookingPage from "./components/food-court/seat-booking-page";
 import ChatBot from "./components/chatbot";
 
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'

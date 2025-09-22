@@ -2,17 +2,18 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+
+import MainNavLinkDropdown from "./main-nav-link-dropdown";
+import MainNavForm from "./main-nav-form";
 
 const mainNavItems = [
   { title: "HOME", url: "/" },
   { title: "EVENTS", url: "/food#events" },
-  { title: "ABOUT US", url: "/about" }, // New "ABOUT US" section
+  { title: "ABOUT US", url: "/about" }, 
   {
     title: "BOOKINGS",
     url: "#",
-    type: "form", // 👈 special type for form dropdown
+    type: "form", 
   },
   {
     title: "SERVICE",
@@ -27,6 +28,7 @@ const mainNavItems = [
 ];
 
 export default function MainNav() {
+
   const location = useLocation();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
@@ -38,7 +40,7 @@ export default function MainNav() {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  // 🔑 Close dropdown when clicking outside
+ 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(event.target as Node)) {
@@ -90,45 +92,14 @@ export default function MainNav() {
                   </Link>
                 )}
 
-                {/* Dropdown with links */}
+            
                 {item.children && isOpen && (
-                  <ul className="absolute left-0 mt-2 w-52 bg-white text-black rounded-lg shadow-lg transition-all duration-200 z-50">
-                    {item.children.map((child, i) => (
-                      <li key={i}>
-                        <Link
-                          to={child.url}
-                          className="block px-4 py-2 text-sm font-medium hover:bg-gray-100 rounded-lg"
-                          onClick={() => setOpenIndex(null)}
-                        >
-                          {child.title}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                  <MainNavLinkDropdown items={item.children} /> 
                 )}
 
-                {/* Dropdown with form (BOOKINGS) */}
+              
                 {item.type === "form" && isOpen && (
-                  <div className="absolute left-0 top-full mt-2 w-64 bg-white text-black rounded-lg shadow-lg p-4 z-50">
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        alert("Booking submitted ✅");
-                        setOpenIndex(null);
-                      }}
-                      className="flex flex-col gap-3"
-                    >
-                      <Input
-                        type="email"
-                        placeholder="Enter your email"
-                        required
-                        className="w-full"
-                      />
-                      <Button type="submit" className="w-full">
-                        Submit
-                      </Button>
-                    </form>
-                  </div>
+                  <MainNavForm />
                 )}
               </li>
             );
