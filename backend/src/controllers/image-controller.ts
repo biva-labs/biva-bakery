@@ -184,11 +184,11 @@ export const getImage = async (c: Context) => {
 };
 
 
-export const uploadImage = async(imgFile: File): Promise<UploadFileResult> => {
+export const uploadImage = async(imgFile: File, folder: string): Promise<UploadFileResult> => {
   try {
 
     const res = await cloudService.uploadImage(imgFile, {
-      maxSizeBytes: 10 * 1028 * 1024
+      maxSizeBytes: 3 * 1028 * 1024, folder: folder
   });
 
   

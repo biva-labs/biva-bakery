@@ -9,6 +9,7 @@ import { insertFoodCourt } from "./db/index.ts";
 import { CloudinaryService } from "./utils/cloudinary-service.ts";
 import { foodCourtForm } from "./controllers/foodCourtForm.ts";
 import { bivaAiChat } from "./controllers/biva-ai.ts";
+import { eventFormData } from "./controllers/eventFormData.ts";
 
 
 const app = new Hono();
@@ -40,6 +41,7 @@ app.post('/test', async(c) => {
 })
 
 app.post('/foodCourtTable', foodCourtForm);
+app.post('/eventTable', eventFormData);
 app.post('/biva-ai', bivaAiChat)
 
 serve(

@@ -9,13 +9,12 @@ interface FoodCourtFormData {
   phone_number: string;
   email: string;
   timeSlot: string;
-  id?: number;
-  total_table?: number;
+  // total_table?: number;
   total_people?: number;
-  status?: string;
   food_preference?: string;
-  table_id?: string[]; // New field to store an array of strings
 }
+
+
 
 export const foodCourtForm = async (c: Context) => {
   try {
@@ -26,25 +25,16 @@ export const foodCourtForm = async (c: Context) => {
     let uploadedImage: UploadFileResult | undefined;
     if (imgFile instanceof File) {
       try {
-        uploadedImage = await uploadImage(imgFile);
+        uploadedImage = await uploadImage(imgFile, "documentImageForVisitors");
       } catch (error) {
         console.error('Image upload failed:', error);
         return c.json({ error: 'Image upload failed' }, 500);
       }
     }
 
-    const tableIdStr = body['table_id'] as string;
-    let tableidArray: string[] | undefined
-    if (tableIdStr){
-        tableidArray = tableIdStr.split(',').map(s => s.trim());
-    }
-
     const tableData: FoodCourtFormData = {
-      id: body['id'] ? Number(body['id']) : undefined,
-      table_id: tableidArray,
       name: body['name'] as string,
       total_people: body['total_people'] ? Number(body['total_people']) : undefined,
-      status: body['status'] as string,
       aadhar_or_pan_img_url: uploadedImage?.secure_url,
       phone_number: body['phone_number'] as string,
       email: body['email'] as string,
