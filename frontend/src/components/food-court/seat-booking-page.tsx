@@ -1,7 +1,7 @@
 
 import { Button } from "@radix-ui/themes";
-import PayButton from "./pay-button";
-import SeatForm from "./seat-form";
+import PayButton from "../pay-button";
+import SeatForm from "../seat-form";
 import { useLocation } from "react-router-dom";
 import { useFoodCourtTableFormStore } from "@/store/food-court-store";
 
@@ -32,7 +32,7 @@ export default function SeatBookingPage() {
                     </div>
                 </div>
             </div>
-            {/* Right Section - Video */}
+
             <div className="lg:w-1/2 flex items-center justify-center bg-gray-100">
                 <video 
                     className="w-full h-full object-cover" 

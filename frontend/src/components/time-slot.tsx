@@ -1,4 +1,3 @@
-import { useLocation } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -26,12 +25,7 @@ const timeSlots = [
 ];
 
 export function TimeSlotSelect() {
-  const location = useLocation();
-  const path = location.pathname;
-  // const isEventForm = path.includes('/events/booking');
-  
-  // Only food court forms have time slots, events don't need them
-  // So we always use the food court store for time slots
+
   const { time_slot, setField } = useFoodCourtTableFormStore();
 
 

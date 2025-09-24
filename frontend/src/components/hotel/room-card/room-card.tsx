@@ -6,36 +6,32 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {ROOM_TYPE} from "../../data/room-data"
+import { ROOM_TYPE } from "../../../../data/room-data"
+
+import { type CardImagesType } from "@/types/card-images-types";
+
 
 export default function RoomCard({
-  urls = [],
+  url = [],
   title,
   desc,
   price,
   onAction,
-}: {
-  urls: string[];
-  title: string;
-  desc?: string | undefined;
-  price?: string | undefined;
-  onAction?: () => void | Promise<void>;
-}) {
+}: CardImagesType) {
   const [index, setIndex] = useState(0);
   const [hovering, setHovering] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
 
   useEffect(() => {
-    if (!hovering || urls.length <= 1) return;
+    if (!hovering || url.length <= 1) return;
     const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % urls.length);
-    }, 1200); // ⏩ faster cycling
+      setIndex((prev) => (prev + 1) % url.length);
+    }, 1200);
     return () => clearInterval(interval);
-  }, [hovering, urls.length]);
+  }, [hovering, url.length]);
 
-  console.log("from room-card.tsx: " + urls, title, desc)
+  console.log("from room-card.tsx: " + url, title, desc)
 
-  // Check if description is long (more than 50 characters)
   const isLongDescription = desc && desc.length > 50;
 
   return (
@@ -47,31 +43,29 @@ export default function RoomCard({
         setIndex(0);
       }}
     >
-      {/* Image Slideshow */}
       <div className="relative w-full aspect-[4/3] overflow-hidden">
-        {urls.map((url, i) => (
-          <img
-            key={i}
-            src={url}
-            alt={title}
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ease-in-out ${
-              i === index ? "opacity-100" : "opacity-0"
-            }`}
-          />
-        ))}
+        {Array.isArray(url) &&
+          url.map((u, i) => (
+            <img
+              key={i}
+              src={u}
+              alt={title}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ease-in-out ${i === index ? "opacity-100" : "opacity-0"
+                }`}
+            />
+          ))}
+
       </div>
 
-      {/* Content */}
       <CardContent className="flex-1 flex flex-col justify-between p-4 pb-16 sm:pb-14">
         <div className="flex-1">
           <CardTitle className="text-base sm:text-lg font-semibold mb-2 line-clamp-2">
-            {ROOM_TYPE[title]}
+            {ROOM_TYPE[title!]}
           </CardTitle>
           <div className="mb-2">
-            <CardDescription 
-              className={`text-xs sm:text-sm text-muted-foreground leading-relaxed ${
-                showFullDesc ? '' : 'line-clamp-1'
-              }`}
+            <CardDescription
+              className={`text-xs sm:text-sm text-muted-foreground leading-relaxed ${showFullDesc ? '' : 'line-clamp-1'
+                }`}
             >
               {desc}
             </CardDescription>

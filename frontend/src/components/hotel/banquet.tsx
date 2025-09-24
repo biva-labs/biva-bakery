@@ -13,17 +13,13 @@ export default function Banquet() {
         </video>
 
         <div className="absolute inset-0  bg-gradient-to-t from-yellow-900/40 via-transparent to-transparent"></div>
-
-        {/* This is the new container for both headings.
-            We've changed its positioning to be left-aligned.
-        */}
         <div className="absolute bottom-4 left-4 md:left-10 text-left outfit">
-          {/* Large "BANQUET HALL" heading */}
+   
           <h2 className="text-white text-3xl md:text-5xl lg:text-7xl font-bold mb-2">
             BANQUET HALL
           </h2>
           
-          {/* Your original "Celebrate..." heading, now left-aligned and bold */}
+
           <h3 className="text-white text-lg md:text-2xl font-bold]">
             Celebrate Your Special Moments With Us
           </h3>
