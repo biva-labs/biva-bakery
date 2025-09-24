@@ -24,32 +24,19 @@ export const insertFoodCourt = async (data: NewFoodCourtTable): Promise<NewFoodC
 }
 
 export const insertEvent = async (data: NewEventTable): Promise<NewEventTable | null>  => {
-    let result: NewEventTable | null = null;
-
     try {
-        await db.transaction(async (tx) => {
-            const [eventRes] = await tx.insert(foodCourtEventTable).values(data).returning();
-            result = eventRes;
+        const tableIdArray = Array.isArray(data.table_id) ? data.table_id : [data.table_id];
 
-            if (result.table_id) {
-                await tx.update(adminFoodCourtTable)
-                    .set({ status: 'occupied' })
-                    .where(eq(adminFoodCourtTable.tableName, result.table_id))
+        const [inserted] = await db.insert(foodCourtEventTable)
+        .values({
+            ...data,
+            table_id: tableIdArray,
+        }).returning();
 
-                console.log(`Event inserted and table '${result.table_id}' marked as occupied.`)
-            }
-
-            else {
-                // This will cause the transaction to roll back
-                throw new Error('New event data is missing a table name.');
-            }
-
-        });
-
-        return result;
-    } catch (error) {
-        console.error('Error during transaction:', error);
-       
-        throw new Error('Failed to book the event and update the admin table.');
+        console.log(`Event inserted with table IDs: [${tableIdArray.join(', ')}]`);
+        return inserted;
+    }catch(error) {
+        console.error('Error inserting event:', error);
+        throw new Error('Failed to book the event.');
     }
 }

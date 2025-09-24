@@ -12,6 +12,8 @@ interface eventFormData {
     status: string;
     table_id: string[];
     eventId: string;
+    paid: boolean;
+    total_amount: number;
 }
 
 export const eventFormData = async (c: Context) => {
@@ -19,6 +21,7 @@ export const eventFormData = async (c: Context) => {
         const body = await c.req.parseBody();
 
         const imgFile = body['aadhar_or_pan_img_url'];
+        const ticket_price: number = Number(body['ticket_price']);
 
         let uploadedImage: UploadFileResult | undefined;
         if (imgFile instanceof File) {
@@ -28,6 +31,18 @@ export const eventFormData = async (c: Context) => {
                 console.error('Image upload filed: this is eventformdata.ts line 30', error)
                 return c.json({ error: 'image upload failed' });
             }
+        }
+
+        const totalPeopleInput = body['total_people'];
+        const total_people = totalPeopleInput
+            ? Number(totalPeopleInput)
+            : undefined;
+
+        if (total_people === undefined ||
+            isNaN(total_people) ||
+            !Number.isInteger(total_people) ||
+            total_people <= 0) {
+            throw new Error('Invalid or missing total_people. Must be a positive integer.');
         }
 
         const tableIdStr = body['table_id'] as string;
@@ -44,12 +59,15 @@ export const eventFormData = async (c: Context) => {
             status: "occupied",
             aadhar_or_pan_img_url: uploadedImage?.secure_url,
             phone_number: body['phone_number'] as string,
-            email: body['email'] as string, 
+            email: body['email'] as string,
+            paid: false,
+            total_amount: total_people * (ticket_price ? ticket_price : 10)
+
         };
         const insertedData = await insertEvent(tableData);
 
-        return c.json({message: 'form submitted sucess', data: insertedData}, 201);
-    } catch(error) {
+        return c.json({ message: 'form submitted sucess', data: insertedData }, 201);
+    } catch (error) {
         console.error('Error processing form:', error);
         return c.json({ error: 'Internal server error' }, 500);
     }

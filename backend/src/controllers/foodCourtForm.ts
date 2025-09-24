@@ -12,6 +12,8 @@ interface FoodCourtFormData {
   // total_table?: number;
   total_people?: number;
   food_preference?: string;
+  paid: boolean;
+  totalAmount: number;
 }
 
 
@@ -39,14 +41,28 @@ export const foodCourtForm = async (c: Context) => {
       return c.json({ error: 'Image upload did not return a valid URL' }, 500);
     }
 
+    const totalPeopleInput = body['total_people'];
+    const total_people = totalPeopleInput
+      ? Number(totalPeopleInput)
+      : undefined;
+
+    if (total_people === undefined ||
+      isNaN(total_people) ||
+      !Number.isInteger(total_people) ||
+      total_people <= 0) {
+      throw new Error('Invalid or missing total_people. Must be a positive integer.');
+    }
+
     const tableData: FoodCourtFormData = {
       name: body['name'] as string,
-      total_people: body['total_people'] ? Number(body['total_people']) : undefined,
+      total_people: total_people,
       aadhar_or_pan_img_url: uploadedImage?.secure_url,
       phone_number: body['phone_number'] as string,
       email: body['email'] as string,
       timeSlot: body['timeSlot'] as string, // Added timeSlot from the form
       food_preference: body['food_preference'] as string,
+      paid: false,
+      totalAmount: total_people * 500,
     };
 
     // The data object to be inserted into the database

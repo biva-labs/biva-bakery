@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import { serial, text, integer, pgTable, boolean, timestamp } from "drizzle-orm/pg-core";
+import { number } from "zod";
 
 export const foodCourtTable = pgTable('foodCourtTable', {
   id: serial('id').primaryKey(),
@@ -27,6 +28,7 @@ export const foodCourtEventTable = pgTable('foodCourtEventTable', {
   phone_number: text("phone_number").unique().notNull(),
   total_people: integer('total_people').notNull().default(1),
   paid: boolean("paid").notNull().default(false),
+  total_amount: integer("total_amount").notNull(),
   createdAt: timestamp("created_at").notNull().default(sql`now()`),
 });
 
