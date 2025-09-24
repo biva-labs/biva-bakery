@@ -22,14 +22,21 @@ export const foodCourtForm = async (c: Context) => {
 
     const imgFile = body['aadhar_or_pan_img_url'];
 
+    if (!(imgFile instanceof File)) {
+      return c.json({ error: 'Aadhar or PAN image is required' }, 400);
+    }
+
     let uploadedImage: UploadFileResult | undefined;
-    if (imgFile instanceof File) {
-      try {
-        uploadedImage = await uploadImage(imgFile, "documentImageForVisitors");
-      } catch (error) {
-        console.error('Image upload failed:', error);
-        return c.json({ error: 'Image upload failed' }, 500);
-      }
+
+    try {
+      uploadedImage = await uploadImage(imgFile, "documentImageForVisitors");
+    } catch (error) {
+      console.error('Image upload failed:', error);
+      return c.json({ error: 'Image upload failed' }, 500);
+    }
+
+    if (!uploadedImage?.secure_url) {
+      return c.json({ error: 'Image upload did not return a valid URL' }, 500);
     }
 
     const tableData: FoodCourtFormData = {
@@ -46,7 +53,7 @@ export const foodCourtForm = async (c: Context) => {
     console.log("Data to insert:", tableData);
 
     const insertedData = await insertFoodCourt(tableData);
-    
+
     return c.json({ message: 'Form submitted successfully', data: insertedData }, 201);
   } catch (error) {
     console.error('Error processing form:', error);
