@@ -10,7 +10,7 @@ import Bakery from "./pages/bakery";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import SeatBookingPage from "./components/food-court/seat-booking-page";
-import ChatBot from "./components/chatbot";
+import ChatBot from "./components/chatbot/chatbot";
 
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
