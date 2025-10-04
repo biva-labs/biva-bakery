@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import GalleryMasonry from "@/components/gallery/masonary";
 import Banquet from "@/components/hotel/banquet";
+import { ROOM_PHOTOS_DATA } from "../../data/room-pic"
 
 
 import { type CardImagesType } from "@/types/card-images-types";
@@ -26,6 +27,21 @@ export default function Hotel() {
       setHotelHero(data.data.hero ?? []);
       setHotelRooms(data.data.rooms ?? []);
       setHotelGallery(data.data.gallery ?? []);
+      const grouped: Record<string, CardImagesType[]> = {};
+
+hotelRooms.forEach((v) => {
+  const tag = v.tag || "untagged"; 
+  if (!grouped[tag]) {
+    grouped[tag] = [];
+  }
+  grouped[tag].push(v);
+});
+
+Object.entries(grouped).forEach(([tag, photos]) => {
+  ROOM_PHOTOS_DATA.push({ tag, photos });
+});
+
+      console.log(ROOM_PHOTOS_DATA)
     }
   }, [data]);
 
@@ -53,7 +69,7 @@ export default function Hotel() {
             </>
           }
           buttonText={<>Contact Us</>}
-          redirect="/"
+          redirect="#footer"
           buttonDescription={<>Available at just ₹4999/-</>}
           images={hotelHero}
         />
@@ -80,7 +96,7 @@ export default function Hotel() {
             Gallery
           </h2>
           <GalleryMasonry allImages={hotelGallery} />
-       
+
         </div>
 
       </div>

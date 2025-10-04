@@ -17,14 +17,14 @@ export default function RoomBookingPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
-  // Demo images - using same image for now
+
   const images = [
-    "/room.jpg",
-    "/room.jpg", 
-    "/room.jpg",
-    "/room.jpg",
-    "/room.jpg",
-    "/room.jpg"
+    "/room-2.png", 
+    "/room-1.png",
+    "/room-3.png",
+    "/room-4.png",
+    // "/room.jpg",
+    // "/room.jpg"
   ];
 
   return (
@@ -40,7 +40,7 @@ export default function RoomBookingPage() {
 
       {id ? (
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* LEFT SIDE: Image Gallery with Hover Animation */}
+
           <div className="lg:w-1/2">
             <div 
               className="relative h-64 cursor-pointer"
@@ -76,7 +76,7 @@ export default function RoomBookingPage() {
                   />
                 </div>
 
-                {/* Third card - appears on hover with delay */}
+     
                 <div 
                   className="absolute inset-0 z-6 transition-all duration-900 ease-out"
                   style={{

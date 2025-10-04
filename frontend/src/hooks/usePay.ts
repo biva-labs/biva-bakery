@@ -1,9 +1,8 @@
-
 import { useState } from "react";
 import { createOrder, loadRazorpayScript } from "@/utils/razorpay";
 import { instance } from "@/utils/axios";
 
-// Declare Razorpay type for window
+
 declare global {
     interface Window {
         Razorpay: any;
