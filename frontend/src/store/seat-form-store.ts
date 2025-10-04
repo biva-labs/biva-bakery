@@ -5,14 +5,15 @@ interface FoodCourtEventForm {
   name: string;
   email: string;
   phone: string;
-  adhaar_or_pan_card: string;
+  adhaar_or_pan_card: File | null;
   number_of_guest: string;
 
   setField: (
-    field: "table_id" | "name" | "email" | "phone" | "adhaar_or_pan_card" | "number_of_guest",
+    field: "table_id" | "name" | "email" | "phone" | "number_of_guest",
     value: string | string[],
   ) => void;
-
+  
+  setFile: (file: File | null) => void;
 }
 
 
@@ -21,11 +22,10 @@ export const useFoodCourtEventFormStore = create<FoodCourtEventForm>()((set) => 
   name: "",
   email: "",
   phone: "",
-  adhaar_or_pan_card: "",
+  adhaar_or_pan_card: null,
   number_of_guest: "",
 
-
   setField: (field, value) => set((state) => ({ ...state, [field]: value })),
-
-
-}));
+  
+  setFile: (file) => set((state) => ({ ...state, adhaar_or_pan_card: file }))
+}))

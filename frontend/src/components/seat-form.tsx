@@ -62,6 +62,17 @@ export default function SeatForm({ table }: { table?: string }) {
       return table || "";
     }
     
+    // Handle file input display
+    if (fieldId === 'adhaar-pan') {
+      if (!isEventForm) {
+        const file = foodCourtStore.adhaar_or_pan_card;
+        return file ? file.name : "";
+      } else {
+        const file = eventStore.adhaar_or_pan_card;
+        return file ? file.name : "";
+      }
+    }
+    
     const storeFieldName = getStoreFieldName(fieldId);
     return (currentStore as any)[storeFieldName] || "";
   };
@@ -105,7 +116,14 @@ export default function SeatForm({ table }: { table?: string }) {
             onChange={(e) => {
               const file = e.target.files?.[0];
               if (file) {
-                setFieldValue(field.id, file.name);
+                // Store the actual File object, not just the name
+                if (!isEventForm) {
+                  // For food court form, use setFile method
+                  foodCourtStore.setFile(file);
+                } else {
+                  // For event form, use setFile method
+                  eventStore.setFile(file);
+                }
               }
             }}
           />

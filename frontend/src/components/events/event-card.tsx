@@ -23,6 +23,7 @@ export default function EventCard(props: CardImagesType) {
      
         <div className="relative h-[65vh] max-h-[1000px] w-full overflow-hidden bg-black sm:h-[55vh] md:h-[60vh] lg:h-[65vh]">
           <img
+            loading="lazy"
             src={Array.isArray(props.url) ? props.url[0] : props.url}
             alt="event"
             className="absolute inset-0 h-full w-full object-cover transition-opacity"

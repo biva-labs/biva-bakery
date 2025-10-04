@@ -1,7 +1,9 @@
 import WhatsappIcon from "@/icons/whatsapp";
 import { useState } from "react";
+import {PHONE} from "../../../../data/phone-data"
 
 import type { CardImagesType } from "@/types/card-images-types";
+import wa_link from "@/utils/wa-link";
 
 export default function BakeryCard(props: CardImagesType) {
 
@@ -39,10 +41,10 @@ export default function BakeryCard(props: CardImagesType) {
                         </div>
                     </div>
                     <div className="flex items-center justify-center mt-4">
-                        <button className="text-white px-4 py-2 rounded-lg nexa bg-[#DE4243] flex items-center gap-2">
+                        <a href={wa_link(`hey, I want to order ${props.title}`, PHONE["admin"])} className="text-white px-4 py-2 rounded-lg nexa bg-[#DE4243] flex items-center gap-2">
                             <WhatsappIcon />
                             Order Now
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>

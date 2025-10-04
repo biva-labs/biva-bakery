@@ -22,9 +22,9 @@ export default function About() {
             From our ovens to your table, we ensure every bite is crafted with love and the highest quality ingredients.
           </p>
 
-          <button className={`bg-${color} text-white px-8 py-3 rounded-lg font-semibold  transition-colors duration-200 shadow-lg`}>
+          <a href="/about" className={`bg-${color} text-white px-8 py-3 rounded-lg font-semibold  transition-colors duration-200 shadow-lg`}>
             Read More
-          </button>
+          </a>
         </div>
       </div>
     </div>

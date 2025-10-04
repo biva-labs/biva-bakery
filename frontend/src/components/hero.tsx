@@ -60,6 +60,7 @@ export default function Hero({
           <>
             {images?.map((src, idx) => (
               <img
+                fetchPriority="high"
                 key={src.public_id}
                 src={src.url}
                 alt={`Slide ${idx + 1}`}

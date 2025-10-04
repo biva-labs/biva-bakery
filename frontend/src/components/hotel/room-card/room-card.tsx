@@ -47,6 +47,7 @@ export default function RoomCard({
         {Array.isArray(url) &&
           url.map((u, i) => (
             <img
+              loading="lazy"
               key={i}
               src={u}
               alt={title}

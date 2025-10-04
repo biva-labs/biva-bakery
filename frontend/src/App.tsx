@@ -14,6 +14,7 @@ import ChatBot from "./components/chatbot/chatbot";
 
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
+import About from "./pages/about";
 
 const queryClient = new QueryClient({
   defaultOptions:{
@@ -60,6 +61,7 @@ function App() {
             <Route path="/test/:id" element={<RoomBookingPage />} />
             <Route path="/table/booking" element={<SeatBookingPage />}/>
             <Route path="/events/booking" element={<Table />}/>
+            <Route path="/about" element={<About/>} />
           </Route>
         </Routes>
         <ChatBot />

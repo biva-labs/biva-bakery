@@ -5,6 +5,8 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 import MainNavLinkDropdown from "./main-nav-link-dropdown";
 import MainNavForm from "./main-nav-form";
+import wa_link from "@/utils/wa-link";
+import { PHONE } from "../../../../data/phone-data";
 
 const mainNavItems = [
   { title: "HOME", url: "/" },
@@ -24,7 +26,7 @@ const mainNavItems = [
       { title: "Events", url: "/services/events" },
     ],
   },
-  { title: "SUPPORT", url: "#" },
+  { title: "SUPPORT", url: wa_link("Hi, I ran into an issue: ", PHONE["technical"]), isExternal: true },
 ];
 
 export default function MainNav() {
@@ -86,6 +88,10 @@ export default function MainNav() {
                       <ChevronDown className="w-4 h-4" />
                     )}
                   </button>
+                ) : item.isExternal ? (
+                  <a href={item.url} className="hover:underline" target="_blank" rel="noopener noreferrer">
+                    {item.title}
+                  </a>
                 ) : (
                   <Link to={item.url} className="hover:underline">
                     {item.title}

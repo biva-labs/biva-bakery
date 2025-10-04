@@ -70,16 +70,18 @@ export default function FoodCourt() {
           <h2 className="text-3xl lg:text-4xl text-start justify-center lg:ml-6 ml-4 outfit font-extrabold text-green-950 mb-6">
             Our Delicious Offerings
           </h2>
-          <div className="mx-auto max-w-7xl px-4 py-8  rounded-3xl bg-gray-50 shadow-inner">
-            <div className="flex flex-col lg:flex-row justify-center items-center gap-6 lg:gap-10">
-              <div className="flex-1 w-full">
-                <FoodCourtPreference preference="veg" />
-              </div>
-              <div className="flex-1 w-full">
-                 <FoodCourtPreference preference="non-veg"/>  
-              </div>
-            </div>
-          </div>
+
+                  <div className="mt-10">
+
+         <FoodCourtPreference preference="veg" />
+                  </div>
+
+                  
+                  <div className="mt-10">
+
+            <FoodCourtPreference preference="non-veg"/>  
+                  </div>
+ 
         </div>
         
         <div className="mt-16" id="gallery">
