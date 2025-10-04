@@ -67,7 +67,7 @@ export default function MainNav() {
         </div>
 
         <div className="flex-1 flex justify-center lg:justify-start">
-          <img src="../../../../public/biva-removebg-preview.png" className="w-10 scale-[150%] h-auto" />
+          <img src="/biva-removebg-preview.png" className="w-10 scale-[150%] h-auto" />
         </div>
 
         <ul className="hidden lg:flex space-x-6 outfit font-bold relative z-50">
