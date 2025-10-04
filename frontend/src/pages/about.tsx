@@ -89,6 +89,7 @@ export default function About() {
                     <div className="w-16 h-1 bg-[#a67c52] mx-auto mb-4"></div>
                     <p className="text-lg">
                         <strong><em>With warmest regards, The Biva Bakery Family</em></strong>
+                        <img src="../../public/hotel_biva.png" alt="" className="w-20 flex ml-auto mr-8 h-auto"/>
                     </p>
                 </div>
             </div>
