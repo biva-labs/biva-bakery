@@ -21,9 +21,9 @@ const mainNavItems = [
     title: "SERVICE",
     url: "#",
     children: [
-      { title: "Banquet Hall", url: "/services/banquet-hall" },
-      { title: "Book a Table", url: "/services/book-table" },
-      { title: "Events", url: "/services/events" },
+      { title: "Banquet Hall", url: "/" },
+      { title: "Book a Table", url: "/food" },
+      { title: "Events", url: "/food#events" },
     ],
   },
   { title: "SUPPORT", url: wa_link("Hi, I ran into an issue: ", PHONE["technical"]), isExternal: true },
@@ -67,7 +67,10 @@ export default function MainNav() {
         </div>
 
         <div className="flex-1 flex justify-center lg:justify-start">
+
           <img src="/biva-hero.png" className="w-10 scale-[200%] h-auto" />
+
+
         </div>
 
         <ul className="hidden lg:flex space-x-6 outfit font-bold relative z-50">
