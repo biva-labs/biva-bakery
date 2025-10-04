@@ -12,7 +12,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-
 import { SidebarGroup, SidebarGroupContent } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -66,13 +65,19 @@ export function NavMain({
               <SidebarMenuItem className="flex justify-center">
                 {item.isExternal ? (
                   <a href={item.url} target="_blank" rel="noopener noreferrer">
-                    <SidebarMenuButton tooltip={item.title} className="justify-start">
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      className="justify-start"
+                    >
                       <span>{item.title}</span>
                     </SidebarMenuButton>
                   </a>
                 ) : (
                   <Link to={item.url}>
-                    <SidebarMenuButton tooltip={item.title} className="justify-start">
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      className="justify-start"
+                    >
                       <span>{item.title}</span>
                     </SidebarMenuButton>
                   </Link>
@@ -102,11 +107,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#" className="">
-                <img 
-                  src="/biva-logo.webp" 
-                  alt="Biva Logo" 
-                  className="  scale-20 w-auto"
+              {/* The 'a' tag needs no additional class here, as the positioning is controlled by the parent container or the image itself. */}
+              <a href="#">
+                <img
+                  src="/biva-logo.webp"
+                  alt="Biva Logo"
+                  // MODIFICATION:
+                  // 1. Removed 'scale-20' as it makes the image massive.
+                  // 2. Used a standard width class like 'w-8' or 'w-10' for a typical logo size in a header/sidebar.
+                  // 3. Ensure 'h-auto' to maintain aspect ratio.
+                  className="w-16 h-auto"
                 />
               </a>
             </SidebarMenuButton>
