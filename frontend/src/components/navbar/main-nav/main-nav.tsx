@@ -21,9 +21,9 @@ const mainNavItems = [
     title: "SERVICE",
     url: "#",
     children: [
-      { title: "Banquet Hall", url: "/services/banquet-hall" },
-      { title: "Book a Table", url: "/services/book-table" },
-      { title: "Events", url: "/services/events" },
+      { title: "Banquet Hall", url: "/" },
+      { title: "Book a Table", url: "/food" },
+      { title: "Events", url: "/food#events" },
     ],
   },
   { title: "SUPPORT", url: wa_link("Hi, I ran into an issue: ", PHONE["technical"]), isExternal: true },

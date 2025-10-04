@@ -35,7 +35,7 @@ export default function usePay({ onSuccess, onError }: UsePayProps = {}) {
                 throw new Error("Razorpay SDK failed to load. Please check your connection.");
             }
 
-            // Create order
+           
             const order = await createOrder(amount);
             const razorpaykey = import.meta.env.VITE_RAZORPAY_ID;
             
