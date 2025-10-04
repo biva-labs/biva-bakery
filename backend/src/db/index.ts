@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 import { foodCourtEventTable, foodCourtTable } from './schema.js';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { adminFoodCourtTable } from '../../drizzle/schema.ts';
 
 const sql = neon(process.env.NEON_PG_URL!);
@@ -23,20 +23,42 @@ export const insertFoodCourt = async (data: NewFoodCourtTable): Promise<NewFoodC
     }
 }
 
-export const insertEvent = async (data: NewEventTable): Promise<NewEventTable | null>  => {
+export const insertEvent = async (data: NewEventTable): Promise<NewEventTable | null> => {
     try {
         const tableIdArray = Array.isArray(data.table_id) ? data.table_id : [data.table_id];
 
         const [inserted] = await db.insert(foodCourtEventTable)
-        .values({
-            ...data,
-            table_id: tableIdArray,
-        }).returning();
+            .values({
+                ...data,
+                table_id: tableIdArray,
+            }).returning();
 
         console.log(`Event inserted with table IDs: [${tableIdArray.join(', ')}]`);
         return inserted;
-    }catch(error) {
+    } catch (error) {
         console.error('Error inserting event:', error);
         throw new Error('Failed to book the event.');
+    }
+}
+
+export const checkFoodCourtData = async (email: string, phone_number: string) => {
+    try {
+        const result = await db.select()
+            .from(foodCourtTable)
+            .where(
+                and(
+                    eq(foodCourtTable.email, email),
+                    eq(foodCourtTable.phone_number, phone_number),
+                    eq(foodCourtTable.paid, false),
+                )
+            ).limit(1);
+
+        if (result.length > 0) {
+            return true;
+        }
+        return false;
+    } catch (err: any) {
+        console.error('Database error:', err);
+        throw err;
     }
 }

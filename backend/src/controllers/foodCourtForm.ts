@@ -1,6 +1,6 @@
 import type { Context } from "hono";
 import { uploadImage } from "./image-controller.ts";
-import { db, insertFoodCourt } from "../db/index.ts";
+import { checkFoodCourtData, db, insertFoodCourt } from "../db/index.ts";
 import type { UploadFileResult } from "../utils/cloudinary-service.ts";
 
 interface FoodCourtFormData {
@@ -67,6 +67,11 @@ export const foodCourtForm = async (c: Context) => {
 
     // The data object to be inserted into the database
     console.log("Data to insert:", tableData);
+
+    const existingForm = await checkFoodCourtData(tableData.email, tableData.phone_number);
+    if (existingForm) {
+      return c.json({message: 'form was submitted before, payment left', data: existingForm }, 200);
+    }
 
     const insertedData = await insertFoodCourt(tableData);
 
