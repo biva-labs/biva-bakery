@@ -1,5 +1,6 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
+import React from "react";
 
 import {
   Sidebar,
@@ -10,38 +11,37 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { X, House, Calendar, Notebook, Settings, HandFist } from "lucide-react";
 
 import { SidebarGroup, SidebarGroupContent } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { X } from "lucide-react";
+import wa_link from "@/utils/wa-link";
+import { PHONE } from "../../data/phone-data";
 
 const data = {
   navMain: [
     {
       title: "HOME",
       url: "/",
-      icon: <House />,
+      icon: null,
     },
     {
       title: "EVENTS",
-      url: "/food",
-      icon: <Calendar />,
+      url: "/food#events",
+      icon: null,
     },
     {
       title: "SERVICE",
-      url: "#",
-      icon: <Settings />,
-    },
-    {
-      title: "BOOKINGS",
-      url: "#",
-      icon: <Notebook />,
+      url: "/",
+      icon: null,
     },
     {
       title: "SUPPORT",
-      url: "#",
-      icon: <HandFist />,
+      url: wa_link("Hey, I ran into an issue: ", PHONE["technical"]),
+      icon: null,
+      isExternal: true,
     },
   ],
 };
@@ -53,21 +53,42 @@ export function NavMain({
     title: string;
     url: string;
     icon: React.ReactNode;
+    isExternal?: boolean;
   }[];
 }) {
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <Link to={item.url}>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon}
-                  <span>{item.title}</span>
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
+          {items.map((item, index) => (
+            <React.Fragment key={item.title}>
+              <SidebarMenuItem className="flex justify-center">
+                {item.isExternal ? (
+                  <a href={item.url} target="_blank" rel="noopener noreferrer">
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      className="justify-start"
+                    >
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
+                  </a>
+                ) : (
+                  <Link to={item.url}>
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      className="justify-start"
+                    >
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
+                  </Link>
+                )}
+              </SidebarMenuItem>
+              {index < items.length - 1 && (
+                <div className="px-4">
+                  <Separator />
+                </div>
+              )}
+            </React.Fragment>
           ))}
         </SidebarMenu>
       </SidebarGroupContent>
@@ -86,8 +107,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
+              {/* The 'a' tag needs no additional class here, as the positioning is controlled by the parent container or the image itself. */}
               <a href="#">
-                <span className="text-base font-semibold">The Biva</span>
+                <img
+                  src="/biva-logo.webp"
+                  alt="Biva Logo"
+                  // MODIFICATION:
+                  // 1. Removed 'scale-20' as it makes the image massive.
+                  // 2. Used a standard width class like 'w-8' or 'w-10' for a typical logo size in a header/sidebar.
+                  // 3. Ensure 'h-auto' to maintain aspect ratio.
+                  className="w-16 h-auto"
+                />
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

@@ -1,7 +1,17 @@
 import { useState, useEffect, type ReactElement } from "react";
 import { Button } from "@/components/ui/button";
 import { useLocation, useNavigate } from "react-router-dom";
-import clsx from "clsx"; // Import clsx for clean conditional class names
+import clsx from "clsx";
+import { type HeroImagesType } from "@/types/hero-images-types";
+
+type HeroType = {
+  title?: ReactElement;
+  description?: ReactElement;
+  buttonText?: ReactElement;
+  buttonDescription?: ReactElement;
+  images?: HeroImagesType[];
+  redirect?: string;
+}
 
 export default function Hero({
   title,
@@ -10,14 +20,7 @@ export default function Hero({
   buttonDescription,
   images,
   redirect,
-}: {
-  title?: ReactElement;
-  description?: ReactElement;
-  buttonText?: ReactElement;
-  buttonDescription?: ReactElement;
-  images?: { public_id: string; url: string }[];
-  redirect?: string;
-}) {
+}: HeroType) {
   const [current, setCurrent] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
@@ -34,12 +37,12 @@ export default function Hero({
     return () => clearInterval(interval);
   }, [images]);
 
-  // Define a set of base classes for the title wrapper
+
   const titleWrapperBaseClasses = "absolute bottom-0 p-6 md:p-10 z-20";
-  // Conditionally add classes based on the page
+  
   const titleWrapperClasses = clsx(
     titleWrapperBaseClasses,
-    // Add centering and full-width classes for the bakery page
+
     isBakeryPage ? "left-1/2 transform -translate-x-1/2 w-full text-center" : "left-0"
   );
 
@@ -57,12 +60,12 @@ export default function Hero({
           <>
             {images?.map((src, idx) => (
               <img
+                fetchPriority="high"
                 key={src.public_id}
                 src={src.url}
                 alt={`Slide ${idx + 1}`}
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-                  idx === current ? "opacity-100" : "opacity-0"
-                }`}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${idx === current ? "opacity-100" : "opacity-0"
+                  }`}
               />
             ))}
           </>
@@ -71,15 +74,12 @@ export default function Hero({
 
       <div className="absolute inset-0 bg-black/40 z-10" />
 
-      {/* CORRECTED TITLE WRAPPER */}
+
       <div className={titleWrapperClasses}>
         <h1 className={`text-2xl md:text-4xl outfit font-extrabold lg:text-5xl text-white leading-tight`}>
           {title}
         </h1>
-        {/*
-          We also need to make sure the description and buttons don't appear
-          on the bakery page since they are conditional.
-        */}
+
         {!isBakeryPage && (
           <p className="mt-2 text-xs font-light md:text-lg lg:text-xl text-gray-200 max-w-xs md:max-w-sm leading-snug">
             {description || ""}
@@ -87,7 +87,7 @@ export default function Hero({
         )}
       </div>
 
-      {/* The rest of the content (buttons and dots) should also be conditional */}
+
       {!isBakeryPage && (
         <>
           <div className="absolute bottom-0 right-0 p-3 md:p-10 z-20 flex flex-col items-end space-y-2">
@@ -108,11 +108,10 @@ export default function Hero({
             {images?.map((_, idx) => (
               <span
                 key={idx}
-                className={`w-2.5 h-2.5 rounded-full transition-all ${
-                  idx === current
+                className={`w-2.5 h-2.5 rounded-full transition-all ${idx === current
                     ? "bg-white scale-110"
                     : "bg-white/50 hover:bg-white/80"
-                }`}
+                  }`}
               />
             ))}
           </div>

@@ -1,27 +1,47 @@
 import { useImages } from "@/hooks/useImages";
-// import GalleryMasonry from "../components/mansory";
-import RoomCardCarousel from "../components/room-card-carousal";
+import RoomCardCarousel from "../components/hotel/room-card/room-card-carousal";
 import Hero from "@/components/hero";
 import { useState } from "react";
 import { useEffect } from "react";
-import type { Room } from "../components/room-card-carousal";
-// import { BentoGridDemo } from "@/components/bento";
-import GalleryMasonry from "@/components/mansory";
-import Banquet from "@/components/banquet";
+import GalleryMasonry from "@/components/gallery/masonary";
+import Banquet from "@/components/hotel/banquet";
+import { ROOM_PHOTOS_DATA } from "../../data/room-pic"
+
+
+import { type CardImagesType } from "@/types/card-images-types";
+import { type HeroImagesType } from "@/types/hero-images-types";
+import { type GalleryImagesType } from "@/types/gallery-images-types";
 
 export default function Hotel() {
-  const [hotelHero, setHotelHero] = useState<
-    { public_id: string; url: string }[]
-  >([]);
-  const [hotelRooms, setHotelRooms] = useState<Room[]>([]);
+
+  const [hotelHero, setHotelHero] = useState<HeroImagesType[]>([]);
+  const [hotelRooms, setHotelRooms] = useState<CardImagesType[]>([]);
+  const [hotelGallery, setHotelGallery] = useState<GalleryImagesType[]>([])
 
   const { data, error, isLoading } = useImages("hotel");
+
 
   useEffect(() => {
     if (data) {
       console.log(data.data);
       setHotelHero(data.data.hero ?? []);
       setHotelRooms(data.data.rooms ?? []);
+      setHotelGallery(data.data.gallery ?? []);
+      const grouped: Record<string, CardImagesType[]> = {};
+
+hotelRooms.forEach((v) => {
+  const tag = v.tag || "untagged"; 
+  if (!grouped[tag]) {
+    grouped[tag] = [];
+  }
+  grouped[tag].push(v);
+});
+
+Object.entries(grouped).forEach(([tag, photos]) => {
+  ROOM_PHOTOS_DATA.push({ tag, photos });
+});
+
+      console.log(ROOM_PHOTOS_DATA)
     }
   }, [data]);
 
@@ -49,7 +69,7 @@ export default function Hotel() {
             </>
           }
           buttonText={<>Contact Us</>}
-          redirect="/"
+          redirect="#footer"
           buttonDescription={<>Available at just ₹4999/-</>}
           images={hotelHero}
         />
@@ -75,9 +95,10 @@ export default function Hotel() {
           <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-green-950 ">
             Gallery
           </h2>
-          <GalleryMasonry allImages={hotelHero} />
-          {/* <BentoGridDemo images={hotelHero} /> */}
+          <GalleryMasonry allImages={hotelGallery} />
+
         </div>
+
       </div>
     </div>
   );

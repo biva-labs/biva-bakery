@@ -1,29 +1,31 @@
 import { create } from "zustand";
 
-interface SeatForm {
-  tableId: string;
+interface FoodCourtEventForm {
+  table_id: string[];
   name: string;
   email: string;
   phone: string;
-  slot: string;
-  slotId: string;
+  adhaar_or_pan_card: File | null;
+  number_of_guest: string;
 
   setField: (
-    field: "tableId" | "name" | "email" | "phone",
-    value: string,
+    field: "table_id" | "name" | "email" | "phone" | "number_of_guest",
+    value: string | string[],
   ) => void;
-  setSlot: (slot: string, slotId: string) => void;
+  
+  setFile: (file: File | null) => void;
 }
 
-export const useSeatFormStore = create<SeatForm>()((set) => ({
-  tableId: "",
+
+export const useFoodCourtEventFormStore = create<FoodCourtEventForm>()((set) => ({
+  table_id: [],
   name: "",
   email: "",
   phone: "",
-  slot: "",
-  slotId: "",
+  adhaar_or_pan_card: null,
+  number_of_guest: "",
 
   setField: (field, value) => set((state) => ({ ...state, [field]: value })),
-
-  setSlot: (slot, slotId) => set(() => ({ slot, slotId })),
-}));
+  
+  setFile: (file) => set((state) => ({ ...state, adhaar_or_pan_card: file }))
+}))

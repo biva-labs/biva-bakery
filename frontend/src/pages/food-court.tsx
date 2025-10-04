@@ -1,25 +1,25 @@
-// import GalleryMasonry from "../components/mansory";
-import RoomCardCarousel from "../components/room-card-carousal";
 import Hero from "@/components/hero";
 import { useState, useEffect } from "react";
 import { useImages } from "@/hooks/useImages";
-import type { Room } from "../components/room-card-carousal";
-// import { BentoGridDemo } from "@/components/bento";
 import { useLocation } from "react-router-dom";
-import GalleryMasonry from "@/components/mansory";
+import GalleryMasonry from "@/components/gallery/masonary";
+import EventCardCarousel from "@/components/events/event-card-carousal";
+import FoodCourtPreference from "@/components/food-court/food-court-prefrence";
+
+import { type CardImagesType } from "@/types/card-images-types";
+import { type HeroImagesType } from "@/types/hero-images-types";
+import { type GalleryImagesType } from "@/types/gallery-images-types";
 
 export default function FoodCourt() {
-  const [foodCourtHero, setfoodCourtHero] = useState<
-    { public_id: string; url: string }[]
-  >([]);
-  const [hotelRooms, setHotelRooms] = useState<Room[]>([]);
+  const [foodCourtHero, setfoodCourtHero] = useState<HeroImagesType[]>([]);
+  const [events, setEvents] = useState<CardImagesType[]>([]);
+  const [foodCourtGallery, setFoodCourtGallery] = useState<GalleryImagesType[]>([]);
 
   const { data, error, isLoading } = useImages("food-court");
 
-    const { hash } = useLocation();
+  const { hash } = useLocation();
 
-
-    useEffect(() => {
+  useEffect(() => {
     if (hash) {
       const element = document.querySelector(hash);
       if (element) {
@@ -32,7 +32,8 @@ export default function FoodCourt() {
     if (data) {
       console.log(data.data);
       setfoodCourtHero(data.data.hero ?? []);
-      setHotelRooms(data.data.events ?? []);
+      setEvents(data.data.events ?? []);
+      setFoodCourtGallery(data.data.gallery ?? []);
     }
   }, [data]);
 
@@ -61,32 +62,45 @@ export default function FoodCourt() {
             </div>
           }
           buttonText={<>Book Now</>}
-          redirect="/test"
+          redirect="/table/booking"
           images={foodCourtHero}
         />
 
+        <div className="mt-16 items-center justify-center text-center">
+          <h2 className="text-3xl lg:text-4xl text-start justify-center lg:ml-6 ml-4 outfit font-extrabold text-green-950 mb-6">
+            Our Delicious Offerings
+          </h2>
 
+                  <div className="mt-10">
 
-        <div className="mt-16" id="events">
-          <h2 className="text-3xl lg:text-4xl text-start lg:ml-6 ml-4 outfit font-extrabold  text-green-950 mb-2">
+         <FoodCourtPreference preference="veg" />
+                  </div>
+
+                  
+                  <div className="mt-10">
+
+            <FoodCourtPreference preference="non-veg"/>  
+                  </div>
+ 
+        </div>
+        
+        <div className="mt-16" id="gallery">
+          <h2 className="text-3xl lg:text-4xl text-start lg:ml-6 ml-4 outfit font-extrabold text-green-950 mb-2">
             Gallery
           </h2>
-          <GalleryMasonry allImages={foodCourtHero} />
-          {/* <BentoGridDemo images={foodCourtHero}/> */}
+          <GalleryMasonry allImages={foodCourtGallery} />
         </div>
 
-        <div className="mb-8 text-center lg:text-left mt-10">
-          <h2 className="text-2xl lg:text-4xl text-start outfit font-extrabold lg:ml-6 ml-4 text-green-950 mb-2">
+        <div id="events" className="mb-8 text-center lg:text-left mt-10">
+          <h2  className="text-2xl lg:text-4xl text-start outfit font-extrabold lg:ml-6 ml-4 text-green-950 mb-2">
             Upcoming Events
           </h2>
           <p className="text-muted-foreground text-center lg:text-start lg:ml-6 outfit font-medium text-lg">
             Book your table for the best experience
           </p>
         </div>
-        <RoomCardCarousel rooms={hotelRooms} />
+        <EventCardCarousel events={events} />
       </div>
     </div>
-
-
   );
 }

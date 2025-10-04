@@ -1,11 +1,24 @@
-import { type Room } from "@/components/room-card-carousal";
+import { type CardImagesType } from "@/types/card-images-types";
 
-// Groups rooms into { [tag]: [urls...] }
-export function groupByTag(rooms: Room[]) {
-  return rooms.reduce((acc, room) => {
-    if (!room.tag) return acc;
-    if (!acc[room.tag]) acc[room.tag] = [];
-    if (room.url) acc[room.tag].push(room.url);
-    return acc;
-  }, {} as Record<string, string[]>);
+export function groupByTag(rooms: CardImagesType[]): Record<string, CardImagesType> {
+  const grouped: Record<string, CardImagesType> = {};
+
+  rooms.forEach(room => {
+    if (!room.tag) return;
+
+    if (!grouped[room.tag]) {
+      grouped[room.tag] = {
+        ...room,
+        url: Array.isArray(room.url) ? [...room.url] : room.url ? [room.url] : [],
+      };
+    } else {
+
+      const existingUrls = Array.isArray(grouped[room.tag].url) ? grouped[room.tag].url : [grouped[room.tag].url];
+      const newUrls = Array.isArray(room.url) ? room.url : room.url ? [room.url] : [];
+
+      grouped[room.tag].url = Array.from(new Set([...existingUrls, ...newUrls].flat()));
+    }
+  });
+
+  return grouped;
 }
