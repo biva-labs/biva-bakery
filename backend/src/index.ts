@@ -16,7 +16,7 @@ import { eventFormData } from "./controllers/eventFormData.ts";
 const app = new Hono();
 app.use(secureHeaders());
 
-const allowedOrigin = "http://localhost:5173"
+const allowedOrigin = "https://biva-bakery.onrender.com"
 
 app.use(cors({
   origin: allowedOrigin,
