@@ -7,8 +7,8 @@ import FoodCourt from "./pages/food-court";
 import Table from "./pages/table";
 import RoomBookingPage from "./components/hotel/room-booking-page";
 import Bakery from "./pages/bakery";
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+
+
 import SeatBookingPage from "./components/food-court/seat-booking-page";
 import ChatBot from "./components/chatbot/chatbot";
 
@@ -30,26 +30,16 @@ const asyncStoragePersister = createAsyncStoragePersister({
 
 
 
-function ScrollToHash() {
-  const { hash } = useLocation();
 
-  useEffect(() => {
-    if (hash) {
-      const element = document.querySelector(hash);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  }, [hash]);
-
-  return null;
-}
 
 function App() {
+
+
+
   return (
     <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: asyncStoragePersister }}>
       <BrowserRouter>
-        <ScrollToHash />
+      
 
         <Routes>
           <Route path="/" element={<Main />}>

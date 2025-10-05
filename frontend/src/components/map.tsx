@@ -12,6 +12,7 @@ export default function Map() {
           <div key={index} className="w-full group">
             <div className="relative p-1 bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 rounded-3xl shadow-lg overflow-hidden">
               <iframe
+                aria-label="maps"
                 src={loc.mapSrc}
                 style={{ border: 0 }}
                 className="w-full h-80 rounded-3xl"
