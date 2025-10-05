@@ -46,13 +46,14 @@ export default function Hero({
     isBakeryPage ? "left-1/2 transform -translate-x-1/2 w-full text-center" : "left-0"
   );
 
+  
   return (
     <div className="relative w-screen h-[40vh] lg:h-[60vh] -mt-14 right-4">
       <div className="absolute inset-0">
         {isBakeryPage ? (
           <>
             <img
-              src="/bakery-hero.jpg"
+              src="/bakery-hero.webp"
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 `}
             />
           </>

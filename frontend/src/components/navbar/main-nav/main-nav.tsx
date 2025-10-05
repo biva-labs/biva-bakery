@@ -21,7 +21,7 @@ const mainNavItems = [
     title: "SERVICE",
     url: "#",
     children: [
-      { title: "Banquet Hall", url: "/" },
+      { title: "Banquet Hall", url: "/#banquet" },
       { title: "Book a Table", url: "/food" },
       { title: "Events", url: "/food#events" },
     ],

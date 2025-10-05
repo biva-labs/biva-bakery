@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import GalleryMasonry from "@/components/gallery/masonary";
 import Banquet from "@/components/hotel/banquet";
-import { ROOM_PHOTOS_DATA } from "../../data/room-pic";
+
 
 import { type CardImagesType } from "@/types/card-images-types";
 import { type HeroImagesType } from "@/types/hero-images-types";
@@ -21,17 +21,17 @@ export default function Hotel() {
   useEffect(() => {
 
     if (!data || !data.data) {
-      console.warn('no valid data received' , data);
-      return ;
+      console.warn('no valid data received', data);
+      return;
     }
 
-    const {hero, rooms, gallery} = data.data;
+    const { hero, rooms, gallery } = data.data;
     setHotelHero(hero ?? []);
     setHotelRooms(rooms ?? []);
     setHotelGallery(gallery ?? []);
 
-    const grouped: Record<string, CardImagesType[]>= {};
-    (rooms ?? []).forEach((v) => {
+    const grouped: Record<string, CardImagesType[]> = {};
+    (rooms ?? []).forEach((v: any) => {
       const tag = v.tag || "untagged";
       if (!grouped[tag]) {
         grouped[tag] = [];
@@ -39,35 +39,9 @@ export default function Hotel() {
       grouped[tag].push(v);
     });
 
-    Object.entries(grouped).forEach(([tag, photos]) => {
-    ROOM_PHOTOS_DATA.push({ tag, photos });
-  });
+  }, [data]);
 
-  console.log("ROOM_PHOTOS_DATA updated:", ROOM_PHOTOS_DATA);
-}, [data]);
 
-  //   if (data) {
-  //     console.log(data.data);
-  //     setHotelHero(data.data.hero ?? []);
-  //     setHotelRooms(data.data.rooms ?? []);
-  //     setHotelGallery(data.data.gallery ?? []);
-  //     const grouped: Record<string, CardImagesType[]> = {};
-
-  //     hotelRooms.forEach((v) => {
-  //       const tag = v.tag || "untagged";
-  //       if (!grouped[tag]) {
-  //         grouped[tag] = [];
-  //       }
-  //       grouped[tag].push(v);
-  //     });
-
-  //     Object.entries(grouped).forEach(([tag, photos]) => {
-  //       ROOM_PHOTOS_DATA.push({ tag, photos });
-  //     });
-
-  //     console.log(ROOM_PHOTOS_DATA);
-  //   }
-  // }, [data]);
 
   if (error) {
     // handle error
@@ -108,14 +82,14 @@ export default function Hotel() {
         </div>
         <RoomCardCarousel rooms={hotelRooms} />
 
-        <div className="mt-10">
+        <div className="mt-10" id="banquet">
           <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-green-950 ">
             Banquet
           </h2>
           <Banquet />
         </div>
 
-        <div className="mt-16">
+        <div className="mt-16" id="gallery">
           <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-green-950 ">
             Gallery
           </h2>

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { QueryClient } from "@tanstack/react-query";
 import Main from "./layout/main";
 import Biva from "./layout/page";
@@ -15,6 +15,7 @@ import ChatBot from "./components/chatbot/chatbot";
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import About from "./pages/about";
+import { useEffect } from "react";
 
 const queryClient = new QueryClient({
   defaultOptions:{
@@ -24,9 +25,26 @@ const queryClient = new QueryClient({
   }
 });
 
+
 const asyncStoragePersister = createAsyncStoragePersister({
   storage: window.localStorage,
 })
+
+
+function ScrollToHash() {
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      const element = document.querySelector(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [hash]);
+
+  return null;
+}
 
 
 
@@ -35,12 +53,11 @@ const asyncStoragePersister = createAsyncStoragePersister({
 function App() {
 
 
-
   return (
     <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: asyncStoragePersister }}>
       <BrowserRouter>
       
-
+          <ScrollToHash/>
         <Routes>
           <Route path="/" element={<Main />}>
             <Route path="/" element={<Biva />}>
