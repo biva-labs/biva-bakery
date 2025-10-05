@@ -187,13 +187,14 @@ export function RoomBookingPage({ url }: { url: string | string[] }) {
 
   const [isHovered, setIsHovered] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
+  const [bookingOpen, setBookingOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
 
   const images = Array.isArray(url) ? url : [url];
 
   return (
-    <Dialog>
-      <form>
+    <>
+      <Dialog open={bookingOpen} onOpenChange={setBookingOpen}>
         <DialogTrigger asChild>
           <Button variant="default" className="rounded-full px-4 py-2 nexa bg-[#002a3a] text-white hover:bg-[#002a3a] " size="sm">Book</Button>
         </DialogTrigger>
@@ -242,7 +243,11 @@ export function RoomBookingPage({ url }: { url: string | string[] }) {
 
                 <button
                   type="button"
-                  onClick={() => setGalleryOpen(true)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setGalleryOpen(true);
+                  }}
                   className="absolute top-3 left-3 bg-black/70 text-white text-sm px-3 py-1.5 rounded-lg backdrop-blur-sm hover:bg-black/90 transition-all duration-200 font-medium z-20"
                 >
                   View More +
@@ -266,17 +271,16 @@ export function RoomBookingPage({ url }: { url: string | string[] }) {
             </div>
           </div>
         </DialogContent>
-      </form>
+      </Dialog>
 
-      {/* (Optional) Image Gallery */}
-      {galleryOpen && (
-        <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
-          <DialogContent className="max-w-screen  max-h-screen overflow-y-auto rounded-2xl mr-10">
-            <DialogHeader>
-              <DialogTitle>Seat Image Gallery</DialogTitle>
-            </DialogHeader>
-          <ScrollArea>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+      {/* Image Gallery Dialog - Separate from booking dialog */}
+      <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
+        <DialogContent className="max-w-screen max-h-screen overflow-hidden rounded-2xl">
+          <DialogHeader>
+            <DialogTitle>Seat Image Gallery</DialogTitle>
+          </DialogHeader>
+          <ScrollArea className="h-[80vh]">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
               {images.map((img, index) => (
                 <div
                   key={index}
@@ -300,15 +304,14 @@ export function RoomBookingPage({ url }: { url: string | string[] }) {
               />
             </div>
           </ScrollArea>
-            <DialogClose asChild>
-              <Button variant="outline" className="mt-4">
-                Close
-              </Button>
-            </DialogClose>
-          </DialogContent>
-        </Dialog>
-      )}
-    </Dialog>
+          <DialogClose asChild>
+            <Button variant="outline" className="mt-4">
+              Close
+            </Button>
+          </DialogClose>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
