@@ -5,17 +5,14 @@ import Biva from "./layout/page";
 import Hotel from "./pages/hotel";
 import FoodCourt from "./pages/food-court";
 import Table from "./pages/table";
-import RoomBookingPage from "./components/hotel/room-booking-page";
+// import RoomBookingPage from "./components/hotel/room-booking-page";
 import Bakery from "./pages/bakery";
-
-
 import SeatBookingPage from "./components/food-court/seat-booking-page";
 import ChatBot from "./components/chatbot/chatbot";
-
-import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import About from "./pages/about";
 import { useEffect } from "react";
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 
 const queryClient = new QueryClient({
   defaultOptions:{
@@ -65,7 +62,7 @@ function App() {
               <Route path="/food" element={<FoodCourt />} />
               <Route path="/bakery" element={<Bakery />} />
             </Route>
-            <Route path="/test/:id" element={<RoomBookingPage />} />
+            {/* <Route path="/test/:id" element={<RoomBookingPage />} /> */}
             <Route path="/table/booking" element={<SeatBookingPage />}/>
             <Route path="/events/booking" element={<Table />}/>
             <Route path="/about" element={<About/>} />

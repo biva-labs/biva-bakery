@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ROOM_TYPE } from "../../../../data/room-data"
 
 import { type CardImagesType } from "@/types/card-images-types";
+import { RoomBookingPage } from "../room-booking-page";
 
 
 export default function RoomCard({
@@ -90,16 +91,17 @@ export default function RoomCard({
         </div>
       </CardContent>
 
-      {/* Book Button */}
-      <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4">
-        <Button
+      <div className="absolute sm:bottom-12 bottom-15 right-3   sm:right-4">
+        {/* <Button
           onClick={onAction}
           variant="default"
           size="sm"
           className="rounded-full px-4 py-2 nexa bg-[#002a3a]"
         >
           Book
-        </Button>
+        </Button> */}
+
+        <RoomBookingPage url={url}/>
       </div>
     </Card>
   );
