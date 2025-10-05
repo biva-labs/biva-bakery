@@ -1,7 +1,6 @@
 import Hero from "@/components/hero";
 import { useState, useEffect } from "react";
 import { useImages } from "@/hooks/useImages";
-import { useLocation } from "react-router-dom";
 import GalleryMasonry from "@/components/gallery/masonary";
 import EventCardCarousel from "@/components/events/event-card-carousal";
 import FoodCourtPreference from "@/components/food-court/food-court-prefrence";
@@ -17,16 +16,6 @@ export default function FoodCourt() {
 
   const { data, error, isLoading } = useImages("food-court");
 
-  const { hash } = useLocation();
-
-  useEffect(() => {
-    if (hash) {
-      const element = document.querySelector(hash);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  }, [hash]);
 
   useEffect(() => {
     if (data) {
@@ -65,25 +54,17 @@ export default function FoodCourt() {
           redirect="/table/booking"
           images={foodCourtHero}
         />
-
         <div className="mt-16 items-center justify-center text-center">
           <h2 className="text-3xl lg:text-4xl text-start justify-center lg:ml-6 ml-4 outfit font-extrabold text-green-950 mb-6">
             Our Delicious Offerings
           </h2>
-
-                  <div className="mt-10">
-
-         <FoodCourtPreference preference="veg" />
-                  </div>
-
-                  
-                  <div className="mt-10">
-
-            <FoodCourtPreference preference="non-veg"/>  
-                  </div>
- 
+          <div className="mt-10">
+            <FoodCourtPreference preference="veg" />
+          </div>
+          <div className="mt-10">
+            <FoodCourtPreference preference="non-veg" />
+          </div>
         </div>
-        
         <div className="mt-16" id="gallery">
           <h2 className="text-3xl lg:text-4xl text-start lg:ml-6 ml-4 outfit font-extrabold text-green-950 mb-2">
             Gallery
@@ -92,7 +73,7 @@ export default function FoodCourt() {
         </div>
 
         <div id="events" className="mb-8 text-center lg:text-left mt-10">
-          <h2  className="text-2xl lg:text-4xl text-start outfit font-extrabold lg:ml-6 ml-4 text-green-950 mb-2">
+          <h2 className="text-2xl lg:text-4xl text-start outfit font-extrabold lg:ml-6 ml-4 text-green-950 mb-2">
             Upcoming Events
           </h2>
           <p className="text-muted-foreground text-center lg:text-start lg:ml-6 outfit font-medium text-lg">

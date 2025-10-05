@@ -4,7 +4,6 @@ export default function Banquet() {
       <div className="relative w-full aspect-[4/3] md:aspect-video rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(255,223,0,0.6)]">
         <video
           className="w-full h-full object-cover"
-          controls
           autoPlay
           loop
           muted

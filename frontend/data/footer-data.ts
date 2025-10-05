@@ -1,13 +1,16 @@
+import wa_link from "@/utils/wa-link";
 import { Home, Menu, Info, Phone, Briefcase, Star, MapPin, Mail, Truck, FileText, RotateCcw } from "lucide-react";
+import { PHONE } from "./phone-data";
+import { isExternal } from "util/types";
 
 export const QUICK_LINKS = {
   "navigation": [
-    { href: "/", label: "Home", icon: Home },
-    { href: "/bakery", label: "Bakery", icon: Menu },
-    { href: "/food", label: "Food Court", icon: Info },
-    { href: "/#gallery", label: "Gallery", icon: Star },
-    { href: "/#contact", label: "Contact", icon: Phone },
-    { href: "/table/booking", label: "Book Table", icon: Briefcase },
+    { href: "/", label: "Home", icon: Home, isExternal: false },
+    { href: "/bakery", label: "Bakery", icon: Menu, isExternal: false },
+    { href: "/food", label: "Food Court", icon: Info, isExternal: false },
+    { href: "/#gallery", label: "Gallery", icon: Star, isExternal: false },
+    { href: wa_link("Hey!", PHONE["admin"]), label: "Contact", icon: Phone, isExternal: true },
+    { href: "/food", label: "Book Table", icon: Briefcase, isExternal: false },
   ],
   "address": [
     { text: "Station Road, Silchar, Assam", icon: MapPin },
