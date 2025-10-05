@@ -110,7 +110,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               {/* The 'a' tag needs no additional class here, as the positioning is controlled by the parent container or the image itself. */}
               <a href="#">
                 <img
-                  src="/biva-hero.png"
+
+                  src="/biva-main-logo.webp"
+
                   alt="Biva Logo"
                   // MODIFICATION:
                   // 1. Removed 'scale-20' as it makes the image massive.

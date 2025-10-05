@@ -5,45 +5,69 @@ import { useState } from "react";
 import { useEffect } from "react";
 import GalleryMasonry from "@/components/gallery/masonary";
 import Banquet from "@/components/hotel/banquet";
-import { ROOM_PHOTOS_DATA } from "../../data/room-pic"
-
+import { ROOM_PHOTOS_DATA } from "../../data/room-pic";
 
 import { type CardImagesType } from "@/types/card-images-types";
 import { type HeroImagesType } from "@/types/hero-images-types";
 import { type GalleryImagesType } from "@/types/gallery-images-types";
 
 export default function Hotel() {
-
   const [hotelHero, setHotelHero] = useState<HeroImagesType[]>([]);
   const [hotelRooms, setHotelRooms] = useState<CardImagesType[]>([]);
-  const [hotelGallery, setHotelGallery] = useState<GalleryImagesType[]>([])
+  const [hotelGallery, setHotelGallery] = useState<GalleryImagesType[]>([]);
 
   const { data, error, isLoading } = useImages("hotel");
 
-
   useEffect(() => {
-    if (data) {
-      console.log(data.data);
-      setHotelHero(data.data.hero ?? []);
-      setHotelRooms(data.data.rooms ?? []);
-      setHotelGallery(data.data.gallery ?? []);
-      const grouped: Record<string, CardImagesType[]> = {};
 
-hotelRooms.forEach((v) => {
-  const tag = v.tag || "untagged"; 
-  if (!grouped[tag]) {
-    grouped[tag] = [];
-  }
-  grouped[tag].push(v);
-});
-
-Object.entries(grouped).forEach(([tag, photos]) => {
-  ROOM_PHOTOS_DATA.push({ tag, photos });
-});
-
-      console.log(ROOM_PHOTOS_DATA)
+    if (!data || !data.data) {
+      console.warn('no valid data received' , data);
+      return ;
     }
-  }, [data]);
+
+    const {hero, rooms, gallery} = data.data;
+    setHotelHero(hero ?? []);
+    setHotelRooms(rooms ?? []);
+    setHotelGallery(gallery ?? []);
+
+    const grouped: Record<string, CardImagesType[]>= {};
+    (rooms ?? []).forEach((v) => {
+      const tag = v.tag || "untagged";
+      if (!grouped[tag]) {
+        grouped[tag] = [];
+      }
+      grouped[tag].push(v);
+    });
+
+    Object.entries(grouped).forEach(([tag, photos]) => {
+    ROOM_PHOTOS_DATA.push({ tag, photos });
+  });
+
+  console.log("ROOM_PHOTOS_DATA updated:", ROOM_PHOTOS_DATA);
+}, [data]);
+
+  //   if (data) {
+  //     console.log(data.data);
+  //     setHotelHero(data.data.hero ?? []);
+  //     setHotelRooms(data.data.rooms ?? []);
+  //     setHotelGallery(data.data.gallery ?? []);
+  //     const grouped: Record<string, CardImagesType[]> = {};
+
+  //     hotelRooms.forEach((v) => {
+  //       const tag = v.tag || "untagged";
+  //       if (!grouped[tag]) {
+  //         grouped[tag] = [];
+  //       }
+  //       grouped[tag].push(v);
+  //     });
+
+  //     Object.entries(grouped).forEach(([tag, photos]) => {
+  //       ROOM_PHOTOS_DATA.push({ tag, photos });
+  //     });
+
+  //     console.log(ROOM_PHOTOS_DATA);
+  //   }
+  // }, [data]);
 
   if (error) {
     // handle error
@@ -96,9 +120,7 @@ Object.entries(grouped).forEach(([tag, photos]) => {
             Gallery
           </h2>
           <GalleryMasonry allImages={hotelGallery} />
-
         </div>
-
       </div>
     </div>
   );

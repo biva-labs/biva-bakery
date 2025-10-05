@@ -2,16 +2,16 @@ import ProductCategoryCircle from "./products-category-circle";
 
 export default function ProductCategoryRow() {
   const categories = [
-    { id: 1, name: 'Patties', image: '/patties.png' },
-    { id: 2, name: 'Pastries', image: '/pastries.png' },
-    { id: 3, name: 'Birthday Cakes', image: '/birthday-cakes.png' },
-    { id: 4, name: 'Egg-less Cakes', image: '/eggless-cakes.png' },
-    { id: 5, name: 'Bento Cakes', image: '/bento-cakes.png' },
-    { id: 6, name: 'Muffins', image: '/muffins.png' },
-    { id: 7, name: 'Sweets', image: '/sweets.png' },
+    { id: 1, name: 'Patties', image: '/patties.webp' },
+    { id: 2, name: 'Pastries', image: '/pastries.webp' },
+    { id: 3, name: 'Birthday Cakes', image: '/birthday-cakes.webp' },
+    { id: 4, name: 'Egg-less Cakes', image: '/eggless-cakes.webp' },
+    { id: 5, name: 'Bento Cakes', image: '/bento-cakes.webp' },
+    { id: 6, name: 'Muffins', image: '/muffins.webp' },
+    { id: 7, name: 'Sweets', image: '/sweets.webp' },
     { id: 8, name: 'Pastries', image: '/pastries.jpg' },
-    { id: 9, name: 'Cakes', image: '/cakes.png' },
-    { id: 10, name: 'Cookies', image: '/cookies.png' },
+    { id: 9, name: 'Cakes', image: '/cakes.webp' },
+    { id: 10, name: 'Cookies', image: '/cookies.webp' },
   ];
 
   const firstRow = categories.slice(0, 3);

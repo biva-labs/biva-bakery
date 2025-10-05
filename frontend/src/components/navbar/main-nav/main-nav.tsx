@@ -68,8 +68,7 @@ export default function MainNav() {
 
         <div className="flex-1 flex justify-center lg:justify-start">
 
-          <img src="/biva-hero.png" className="w-10 scale-[200%] h-auto" />
-
+          <img src="/biva-main-logo.webp" className="w-10 scale-[200%] h-auto" />
 
         </div>
 
