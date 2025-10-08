@@ -54,7 +54,7 @@ export const checkFoodCourtData = async (email: string, phone_number: string) =>
             ).limit(1);
 
         if (result.length > 0) {
-            return true;
+            return result;
         }
         return false;
     } catch (err: any) {

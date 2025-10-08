@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createOrder, loadRazorpayScript } from "@/utils/razorpay";
 import { instance } from "@/utils/axios";
-
+import { toast } from "sonner";
 
 declare global {
     interface Window {
@@ -23,11 +23,10 @@ interface RazorpayResponse {
 export default function usePay({ onSuccess, onError }: UsePayProps = {}) {
     const [isProcessing, setIsProcessing] = useState(false);
 
-    const initiatePayment = async (amount: number) => {
+    const initiatePayment = async (amount: number, userId: string) => {
         setIsProcessing(true);
 
         try {
-     
             const isScriptLoaded = await loadRazorpayScript(
                 "https://checkout.razorpay.com/v1/checkout.js"
             );
@@ -35,41 +34,52 @@ export default function usePay({ onSuccess, onError }: UsePayProps = {}) {
                 throw new Error("Razorpay SDK failed to load. Please check your connection.");
             }
 
-           
+
             const order = await createOrder(amount);
-            const razorpaykey = import.meta.env.VITE_RAZORPAY_ID;
-            
-            if (!razorpaykey) {
+            const razorpayKey = import.meta.env.VITE_RAZORPAY_ID;
+
+            if (!razorpayKey) {
                 throw new Error("Razorpay key is missing in environment variables.");
             }
 
-   
             const options = {
-                key: razorpaykey,
+                key: razorpayKey,
                 amount: order.amount,
                 currency: order.currency,
-                name: "Biva",
+                name: "The Biva",
                 description: "Food Court Booking",
                 order_id: order.id,
+                notes: {
+                    userId: userId,
+                },
                 handler: async function (paymentResponse: RazorpayResponse) {
-                    console.log("Payment successful!", paymentResponse);
-                    
                     try {
-               
+                
                         const verificationResponse = await instance.post('/api/verify-payment', {
-                            body: JSON.stringify(paymentResponse),
+                            razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                            razorpay_order_id: paymentResponse.razorpay_order_id,
+                            razorpay_signature: paymentResponse.razorpay_signature,
                         });
 
                         if (verificationResponse.data?.status === 'success') {
+                            toast.success("Booking confirmed! Payment successful.");
                             onSuccess?.(paymentResponse);
                         } else {
                             throw new Error('Payment verification failed.');
                         }
                     } catch (error) {
                         console.error('Verification error:', error);
+                        toast.error('Payment completed but verification failed. Please contact support.');
                         onError?.('Payment completed but verification failed. Please contact support.');
+                    } finally {
+                        setIsProcessing(false);
                     }
-                    setIsProcessing(false);
+                },
+                modal: {
+                    ondismiss: function() {
+                        console.log('Payment modal was closed by user');
+                        setIsProcessing(false);
+                    }
                 },
                 theme: {
                     color: "#2563eb",
@@ -77,17 +87,15 @@ export default function usePay({ onSuccess, onError }: UsePayProps = {}) {
             };
 
             const paymentObject = new window.Razorpay(options);
-            
-            paymentObject.on('close', function () {
-                console.log('Payment modal was closed');
-                setIsProcessing(false);
-            });
 
             paymentObject.open();
-            
+
         } catch (paymentError) {
             console.error("Payment error:", paymentError);
-            const errorMessage = paymentError instanceof Error ? paymentError.message : "Payment failed. Please try again.";
+            const errorMessage = paymentError instanceof Error
+                ? paymentError.message
+                : "Payment failed. Please try again.";
+            toast.error(errorMessage);
             onError?.(errorMessage);
             setIsProcessing(false);
         }
