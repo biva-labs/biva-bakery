@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function SeatDetail() {
   return (
-    <div className="max-w-6xl max-w-sm">
+    <div className="max-w-6xl ">
 
       <div className="w-full h-48 overflow-hidden rounded-lg">
         <img
