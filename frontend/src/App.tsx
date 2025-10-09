@@ -13,6 +13,7 @@ import About from "./pages/about";
 import { useEffect } from "react";
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
+import { Toaster } from "@/components/ui/sonner";
 
 const queryClient = new QueryClient({
   defaultOptions:{
@@ -69,6 +70,7 @@ function App() {
           </Route>
         </Routes>
         <ChatBot />
+        <Toaster richColors position="top-center"/>
       </BrowserRouter>
     </PersistQueryClientProvider>
   );

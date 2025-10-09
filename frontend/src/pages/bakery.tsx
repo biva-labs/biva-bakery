@@ -30,7 +30,7 @@ export default function Bakery() {
   }
 
   if (isLoading) {
-    return <div className="text-center py-10">Loading bakery products...</div>
+     // do soemthing
   }
 
   return (
