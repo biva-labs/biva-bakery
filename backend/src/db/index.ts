@@ -49,6 +49,22 @@ export const insertEvent = async (
   }
 };
 
+export const updateAfterPayment = async (userId: string) => {
+  try {
+    const res = await db
+      .update(foodCourtTable)
+      .set({ paid: true })
+      .where(eq(foodCourtTable.id, parseInt(userId)))
+      .returning();
+
+    console.log(`Payment marked as paid for user ID: ${userId}`);
+    return res[0];
+  } catch (error) {
+    console.error("Error inserting event:", error);
+    throw new Error("Failed to book the event.");
+  }
+};
+
 export const checkFoodCourtData = async (
   email: string,
   phone_number: string,
@@ -67,7 +83,7 @@ export const checkFoodCourtData = async (
       .limit(1);
 
     if (result.length > 0) {
-      return true;
+      return result;
     }
     return false;
   } catch (err: any) {
@@ -75,46 +91,3 @@ export const checkFoodCourtData = async (
     throw err;
   }
 };
-
-export const updateAfterPayment = async (userId: string) => {
-  try {
-    await db
-      .update(foodCourtTable)
-      .set({ paid: true })
-      .where(eq(foodCourtTable.id, parseInt(userId)));
-
-        const [inserted] = await db.insert(foodCourtEventTable)
-            .values({
-                ...data,
-                table_id: tableIdArray,
-            }).returning();
-
-        console.log(`Event inserted with table IDs: [${tableIdArray.join(', ')}]`);
-        return inserted;
-    } catch (error) {
-        console.error('Error inserting event:', error);
-        throw new Error('Failed to book the event.');
-    }
-}
-
-export const checkFoodCourtData = async (email: string, phone_number: string) => {
-    try {
-        const result = await db.select()
-            .from(foodCourtTable)
-            .where(
-                and(
-                    eq(foodCourtTable.email, email),
-                    eq(foodCourtTable.phone_number, phone_number),
-                    eq(foodCourtTable.paid, false),
-                )
-            ).limit(1);
-
-        if (result.length > 0) {
-            return result;
-        }
-        return false;
-    } catch (err: any) {
-        console.error('Database error:', err);
-        throw err;
-    }
-}

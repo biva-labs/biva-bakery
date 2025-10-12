@@ -1,1 +1,1 @@
-export { db, updateAfterPayment } from "../../../src/db/index.ts";
+export { foodCourtTable } from "../../../src/db/schema.ts";
