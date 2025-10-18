@@ -1,7 +1,8 @@
 import type { Context } from "hono";
-import { CloudinaryService, type UploadFileResult } from "../utils/cloudinary-service.ts";
-import { isGelSchema } from "drizzle-orm/gel-core";
-import { countReset } from "console";
+import {
+  CloudinaryService,
+  type UploadFileResult,
+} from "../utils/cloudinary-service.ts";
 
 const MAX_BYTES = 5 * 1024 * 1024;
 
@@ -17,32 +18,27 @@ const roomTypes = [
 ];
 
 type BakeryItem = {
-  title: string,
-  public_id: string,
-  url: string,
-  desc: string,
-}
+  title: string;
+  public_id: string;
+  url: string;
+  desc: string;
+};
 
 type GroupedBakeryItems = {
-  bread: BakeryItem[],
-  biscuit: BakeryItem[],
-  rusk: BakeryItem[],
-  puff_and_snacks: BakeryItem[],
-}
+  bread: BakeryItem[];
+  biscuit: BakeryItem[];
+  rusk: BakeryItem[];
+  puff_and_snacks: BakeryItem[];
+};
 
-const bakeryTypes = [
-  "bread",
-  "biscuit",
-  "rusk",
-  "puff_and_snacks",
-]
+const bakeryTypes = ["bread", "biscuit", "rusk", "puff_and_snacks"];
 
 type GroupedRooms = {
-  public_id: string,
-  url: string,
-  desc: string,
-  price: string
-  tag: string,
+  public_id: string;
+  url: string;
+  desc: string;
+  price: string;
+  tag: string;
 };
 
 export const getImage = async (c: Context) => {
@@ -51,14 +47,14 @@ export const getImage = async (c: Context) => {
 
     if (param.toLowerCase().includes("hotel")) {
       const hotelHero = await cloudService.listImages("hotel-hero", true);
-      const hotelEvents = await cloudService.listImages("events", true)
-      const hotelGallery = await cloudService.listImages("gallery", true)
+      const hotelEvents = await cloudService.listImages("events", true);
+      const hotelGallery = await cloudService.listImages("gallery", true);
 
       const groupedRoom: GroupedRooms[] = [];
 
       const taggedImages = await cloudService.listImagesByTags(roomTypes);
-      console.log("Tagged images",taggedImages)
-      
+      console.log("Tagged images", taggedImages);
+
       taggedImages.forEach((room) => {
         const isTag = room.tags[0];
 
@@ -66,8 +62,14 @@ export const getImage = async (c: Context) => {
           return; // Skip if no tag
         }
 
-        const desc = room.context && room.context.alt ? room.context.alt : "description not available";
-        const price = room.context && room.context.Price ? room.context.Price : "no price available"
+        const desc =
+          room.context && room.context.alt
+            ? room.context.alt
+            : "description not available";
+        const price =
+          room.context && room.context.Price
+            ? room.context.Price
+            : "no price available";
 
         groupedRoom.push({
           public_id: room.public_id,
@@ -78,7 +80,7 @@ export const getImage = async (c: Context) => {
         });
       });
 
-      console.log("gp",groupedRoom)
+      console.log("gp", groupedRoom);
 
       return c.json({
         data: {
@@ -107,14 +109,8 @@ export const getImage = async (c: Context) => {
       //   true,
       // ); // unused for now
 
-      const foodCourtEvents = await cloudService.listImages(
-        "events",
-        true
-      )
-      const foodCourtGallery = await cloudService.listImages(
-        "gallery",
-        true
-      )
+      const foodCourtEvents = await cloudService.listImages("events", true);
+      const foodCourtGallery = await cloudService.listImages("gallery", true);
 
       return c.json({
         data: {
@@ -128,44 +124,47 @@ export const getImage = async (c: Context) => {
           })),
           gallery: foodCourtGallery.map((img) => ({
             public_id: img.public_id,
-            url: img.secure_url
+            url: img.secure_url,
           })),
         },
       });
     } else if (param.toLowerCase().includes("bakery")) {
-      const bakeryImages = await cloudService.listImagesByTags(bakeryTypes)
+      const bakeryImages = await cloudService.listImagesByTags(bakeryTypes);
       const groupedItems: GroupedBakeryItems = {
         bread: [],
         biscuit: [],
         puff_and_snacks: [],
         rusk: [],
-      }
+      };
 
       bakeryImages.forEach((image) => {
-        const primaryTag = image.tags && image.tags.length > 0 ? image.tags[0] : null;
+        const primaryTag =
+          image.tags && image.tags.length > 0 ? image.tags[0] : null;
 
         if (!primaryTag || !bakeryTypes.includes(primaryTag)) {
           console.log(`Skipping ${image.public_id}: Invalid or no tag found`);
           return;
         }
 
-        const desc = image.context && image.context.alt ? image.context.alt : 'Description not available';
+        const desc =
+          image.context && image.context.alt
+            ? image.context.alt
+            : "Description not available";
 
         const item: BakeryItem = {
           title: image.context.caption,
           public_id: image.public_id,
           desc: desc,
-          url: image.secure_url
+          url: image.secure_url,
         };
 
-        groupedItems[primaryTag as keyof GroupedBakeryItems].push(item)
+        groupedItems[primaryTag as keyof GroupedBakeryItems].push(item);
       });
 
-      console.log('Grouped Items:', groupedItems);
+      console.log("Grouped Items:", groupedItems);
       return c.json({
         data: groupedItems,
-      })
-
+      });
     } else {
       const images = await cloudService.listImages(param);
       return c.json({
@@ -183,19 +182,19 @@ export const getImage = async (c: Context) => {
   }
 };
 
-
-export const uploadImage = async(imgFile: File, folder: string): Promise<UploadFileResult> => {
+export const uploadImage = async (
+  imgFile: File,
+  folder: string,
+): Promise<UploadFileResult> => {
   try {
-
     const res = await cloudService.uploadImage(imgFile, {
-      maxSizeBytes: 3 * 1028 * 1024, folder: folder
-  });
+      maxSizeBytes: 3 * 1028 * 1024,
+      folder: folder,
+    });
 
-  
-  return res; 
-  }
-  catch(err: any) {
+    return res;
+  } catch (err: any) {
     console.error(err);
-    throw new Error('Image upload failed');
+    throw new Error("Image upload failed");
   }
-}
+};
