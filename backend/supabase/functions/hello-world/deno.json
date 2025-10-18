@@ -1,0 +1,12 @@
+{
+  "imports": {
+    "drizzle-orm": "npm:drizzle-orm@0.30.10",
+    "drizzle-orm/": "npm:drizzle-orm@0.30.10/",
+    "drizzle-orm/neon-http": "npm:drizzle-orm@0.30.10/neon-http",
+    "drizzle-orm/sql": "npm:drizzle-orm@0.30.10/sql",
+    "drizzle-orm/pg-core": "npm:drizzle-orm@0.30.10/pg-core",
+    "@neondatabase/serverless": "npm:@neondatabase/serverless@0.9.0",
+    "drizzle-orm@0.30.10/node_modules/@neondatabase/serverless": "npm:@neondatabase/serverless@0.9.0",
+    "zod": "npm:zod@3.22.4"
+  }
+}
