@@ -15,7 +15,7 @@ import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js"
 const app = new Hono();
 app.use(secureHeaders());
 
-const allowedOrigin = "http://localhost:5173";
+const allowedOrigin = "https://biva-bakery.onrender.com";
 
 app.use(
   cors({
