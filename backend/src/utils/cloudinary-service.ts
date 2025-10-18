@@ -39,6 +39,14 @@ export class CloudinaryService {
     });
   }
 
+  private getOptimizedUrl(resource: any): string {
+    return cloudinary.url(resource.public_id, {
+      resource_type: resource.resource_type,
+      secure: true,
+      transformation: [{ fetch_format: "auto", quality: "auto" }],
+    });
+  }
+
   async listImages(folderPrefix = "", dynamicMode = false): Promise<any[]> {
     let resources: any[] = [];
     let nextCursor: string | undefined = undefined;
@@ -57,7 +65,10 @@ export class CloudinaryService {
       } while (nextCursor);
     }
 
-    return resources;
+    return resources.map((res) => ({
+      ...res,
+      optimized_url: this.getOptimizedUrl(res),
+    }));
   }
 
   async listImagesByTags(tags: string[]): Promise<any[]> {
@@ -69,10 +80,13 @@ export class CloudinaryService {
         .expression(expression)
         .with_field("tags")
         .with_field("context")
-        .max_results(500)
+        .max_results(100)
         .execute();
 
-      return result.resources;
+      return result.resources.map((res) => ({
+        ...res,
+        optimized_url: this.getOptimizedUrl(res),
+      }));
     } catch (error) {
       console.error("Error fetching images by tags:", error);
       return [];
@@ -86,18 +100,45 @@ export class CloudinaryService {
     return cloudinary.url(publicId, options);
   }
 
-  async uploadImage(
+  async listByMetadata(
+    metadataKey: string,
+    metadataValue: string,
+    folder: string,
+  ): Promise<any[]> {
+    try {
+      console.log(metadataKey, metadataValue);
+      const expr = `context.${metadataKey}=${metadataValue}`;
+
+      const exp = `folder:"${folder}" AND ${expr}`;
+
+      const res = await cloudinary.search
+        .expression(exp)
+        .with_field("context")
+        .max_results(100)
+        .execute();
+
+      return res.resources.map((res) => ({
+        ...res,
+        optimized_url: this.getOptimizedUrl(res),
+      }));
+    } catch (err: any) {
+      console.error("Error fetching metadata ", err.message);
+      return [];
+    }
+  }
+
+  async uploadMedia(
     source: File | Buffer | ArrayBuffer | Uint8Array | string,
     options: UploadOptions = {},
   ) {
     const {
       folder,
       public_id,
+      tags,
       allowedMimeTypes,
       context,
       forceResourceType,
       maxSizeBytes,
-      tags,
     } = options;
 
     const toBuffer = async (
@@ -108,7 +149,6 @@ export class CloudinaryService {
       originalName?: string | null;
     }> => {
       if (typeof src === "string") {
-        // string will be handled separately (remote URL or data URL)
         return { buffer: undefined };
       }
 
@@ -117,7 +157,6 @@ export class CloudinaryService {
         return { buffer: src, detectedMime: detected?.mime ?? null };
       }
 
-      // web File-like (Bun/Hono File has arrayBuffer())
       if (typeof (src as any)?.arrayBuffer === "function") {
         const arr = await (src as any).arrayBuffer();
         const buf = Buffer.from(arr);
@@ -135,6 +174,7 @@ export class CloudinaryService {
         const detected = await fileTypeFromBuffer(buf);
         return { buffer: buf, detectedMime: detected?.mime ?? null };
       }
+
       if (src instanceof Uint8Array) {
         const buf = Buffer.from(src);
         const detected = await fileTypeFromBuffer(buf);
@@ -150,14 +190,13 @@ export class CloudinaryService {
       resource_type,
       folder,
     };
+
     if (public_id) uploadOpts.public_id = public_id;
     if (tags) uploadOpts.tags = tags;
     if (context) uploadOpts.context = context;
 
-    // convert to buffer if possible
     const { buffer, detectedMime, originalName } = await toBuffer(source);
 
-    // size check (if buffer available)
     if (
       typeof maxSizeBytes === "number" &&
       buffer &&
@@ -168,7 +207,6 @@ export class CloudinaryService {
       );
     }
 
-    // mime whitelist check (if detected)
     if (
       allowedMimeTypes &&
       detectedMime &&
@@ -207,12 +245,11 @@ export class CloudinaryService {
       public_id: result.public_id,
       resource_type: result.resource_type,
       bytes: result.bytes,
-      // prefer detected mime from buffer if available, else try Cloudinary's format
       mime_type: detectedMime ?? (result.format ? `${result.format}` : null),
       original_filename: result.original_filename ?? originalName ?? null,
       raw: result,
+      optimized_url: this.getOptimizedUrl(result),
     };
-
     return out;
   }
 }

@@ -8,15 +8,6 @@ const MAX_BYTES = 5 * 1024 * 1024;
 
 const cloudService = new CloudinaryService();
 
-const roomTypes = [
-  "suite_room",
-  "executive_room",
-  "studio_room",
-  "deluxe_room",
-  "super_deluxe_room",
-  "twin_room",
-];
-
 type BakeryItem = {
   title: string;
   public_id: string;
@@ -38,7 +29,14 @@ type GroupedRooms = {
   url: string;
   desc: string;
   price: string;
-  tag: string;
+  room_id: string | undefined;
+  room_type: string | undefined;
+};
+
+type HotelHero = {
+  public_id: string;
+  url: string;
+  position: string;
 };
 
 export const getImage = async (c: Context) => {
@@ -46,125 +44,196 @@ export const getImage = async (c: Context) => {
     const param = c.req.param("folder") || "";
 
     if (param.toLowerCase().includes("hotel")) {
-      const hotelHero = await cloudService.listImages("hotel-hero", true);
-      const hotelEvents = await cloudService.listImages("events", true);
-      const hotelGallery = await cloudService.listImages("gallery", true);
+      if (param === "hotel") {
+        const HotelHeroItems = await cloudService.listByMetadata(
+          "position",
+          "hero",
+          param,
+        );
+        const HotelBanquetItems = await cloudService.listByMetadata(
+          "position",
+          "banquet",
+          param,
+        );
 
-      const groupedRoom: GroupedRooms[] = [];
+        const hero: HotelHero[] = HotelHeroItems.map((itm) => ({
+          public_id: itm.public_id,
+          url: itm.secure_url,
+          position: itm.context.position,
+        }));
+        const banquet: HotelHero[] = HotelBanquetItems.map((itm) => ({
+          public_id: itm.public_id,
+          url: itm.secure_url,
+          position: itm.context.position,
+        }));
+        const hotelEvents = await cloudService.listImages("events", true);
+        const hotelGallery = await cloudService.listImages("gallery", true);
+        const hotelRooms = await cloudService.listByMetadata(
+          "position",
+          "rooms",
+          "hotel-rooms",
+        );
+        // const groupedRoom: GroupedRooms[] = [];
 
-      const taggedImages = await cloudService.listImagesByTags(roomTypes);
-      console.log("Tagged images", taggedImages);
+        // const taggedImages = await cloudService.listImagesByTags(roomTypes);
+        // console.log("Tagged images", taggedImages);
 
-      taggedImages.forEach((room) => {
-        const isTag = room.tags[0];
+        // taggedImages.forEach((room) => {
+        //   const isTag = room.tags[0];
 
-        if (!isTag) {
-          return; // Skip if no tag
-        }
+        //   if (!isTag) {
+        //     return; // Skip if no tag
+        //   }
 
-        const desc =
-          room.context && room.context.alt
-            ? room.context.alt
-            : "description not available";
-        const price =
-          room.context && room.context.Price
-            ? room.context.Price
-            : "no price available";
+        //   const desc =
+        //     room.context && room.context.alt
+        //       ? room.context.alt
+        //       : "description not available";
+        //   const price =
+        //     room.context && room.context.Price
+        //       ? room.context.Price
+        //       : "no price available";
 
-        groupedRoom.push({
-          public_id: room.public_id,
-          url: room.secure_url,
-          desc: desc,
-          price: price,
-          tag: isTag,
+        //   groupedRoom.push({
+        //     public_id: room.public_id,
+        //     url: room.secure_url,
+        //     desc: desc,
+        //     price: price,
+        //     tag: isTag,
+        //   });
+        // });
+
+        // console.log("gp", groupedRoom);
+
+        const rooms: GroupedRooms[] = hotelRooms.map((itm) => ({
+          public_id: itm.public_id,
+          url: itm.secure_url,
+          desc: itm.context?.description ?? "description not available",
+          price: itm.context?.price ?? "no price available",
+          room_id: itm.context?.id,
+          room_type: itm.context?.room_type,
+          room_number: itm.context?.room_number,
+          position: itm.context?.position,
+        }));
+
+        return c.json({
+          data: {
+            hero: hero,
+            events: hotelEvents.map((img) => ({
+              event_id: img.context?.custom?.event_id,
+              ticket_price: img.context?.custom?.ticket_price,
+              event_name: img.context?.custom?.event_name,
+              group_name: img.context?.custom?.group_name,
+              date: img.context?.custom?.date,
+              time: img.context?.custom?.time,
+              public_id: img.public_id,
+              position: img.context?.custom?.position,
+              url: img.optimized_url,
+            })),
+            gallery: hotelGallery.map((img) => ({
+              public_id: img.public_id,
+              url: img.optimized_url,
+              position: img.context?.position,
+            })),
+            rooms: rooms,
+            banquet: banquet,
+          },
         });
-      });
+      } else if (param.toLowerCase().includes("food-court")) {
+        const FoodCourtHeroItems = await cloudService.listByMetadata(
+          "position",
+          "hero",
+          param,
+        );
+        const FoodCourtPreference = await cloudService.listByMetadata(
+          "position",
+          "preference",
+          param,
+        );
+        const foodCourtEvents = await cloudService.listImages("events", true);
+        const foodCourtGallery = await cloudService.listImages("gallery", true);
 
-      console.log("gp", groupedRoom);
+        return c.json({
+          data: {
+            hero: FoodCourtHeroItems.map((img) => ({
+              public_id: img.public_id,
+              url: img.optimized_url,
+              position: img.context?.position,
+            })),
+            events: foodCourtEvents.map((img) => ({
+              pevent_id: img.context?.custom?.event_id,
+              ticket_price: img.context?.custom?.ticket_price,
+              event_name: img.context?.custom?.event_name,
+              group_name: img.context?.custom?.group_name,
+              date: img.context?.custom?.date,
+              time: img.context?.custom?.time,
+              public_id: img.public_id,
+              position: img.context?.custom?.position,
+              url: img.optimized_url,
+            })),
+            gallery: foodCourtGallery.map((img) => ({
+              public_id: img.public_id,
+              url: img.optimized_url,
+              position: img.context?.position,
+            })),
+            preference: FoodCourtPreference.map((pre) => ({
+              public_id: pre.public_id,
+              url: pre.optimized_url,
+              name: pre.context?.name,
+            })),
+          },
+        });
+      } else if (param.toLowerCase().includes("bakery")) {
+        const bakeryImages = await cloudService.listImagesByTags(bakeryTypes);
+        const bakeryHero = await cloudService.listByMetadata(
+          "position",
+          "hero",
+          param,
+        );
+        const bakeryCategory = await cloudService.listByMetadata(
+          "position",
+          "category",
+          param,
+        );
 
-      return c.json({
-        data: {
-          hero: hotelHero.map((img) => ({
-            public_id: img.public_id,
-            url: img.secure_url,
-          })),
-          events: hotelEvents.map((img) => ({
-            public_id: img.public_id,
-            url: img.secure_url,
-          })),
-          gallery: hotelGallery.map((img) => ({
-            public_id: img.public_id,
-            url: img.secure_url,
-          })),
-          rooms: groupedRoom,
-        },
-      });
-    } else if (param.toLowerCase().includes("food-court")) {
-      const foodCourtHero = await cloudService.listImages(
-        "food-court-hero",
-        true,
-      );
-      // const foodCourtTables = await cloudService.listImages(
-      //   "food-court-tables",
-      //   true,
-      // ); // unused for now
+        const hero: HotelHero[] = bakeryHero.map((itm) => ({
+          public_id: itm.public_id,
+          url: itm.optimized_url,
+          position: itm.context.position,
+        }));
 
-      const foodCourtEvents = await cloudService.listImages("events", true);
-      const foodCourtGallery = await cloudService.listImages("gallery", true);
+        const category = bakeryCategory.map((cat) => ({
+          public_id: cat.public_id,
+          url: cat.optimized_url,
+          position: cat.context?.position,
+        }));
 
-      return c.json({
-        data: {
-          hero: foodCourtHero.map((img) => ({
-            public_id: img.public_id,
-            url: img.secure_url,
-          })),
-          events: foodCourtEvents.map((img) => ({
-            public_id: img.public_id,
-            url: img.secure_url,
-          })),
-          gallery: foodCourtGallery.map((img) => ({
-            public_id: img.public_id,
-            url: img.secure_url,
-          })),
-        },
-      });
-    } else if (param.toLowerCase().includes("bakery")) {
-      const bakeryImages = await cloudService.listImagesByTags(bakeryTypes);
-      const groupedItems: GroupedBakeryItems = {
-        bread: [],
-        biscuit: [],
-        puff_and_snacks: [],
-        rusk: [],
-      };
-
-      bakeryImages.forEach((image) => {
-        const primaryTag =
-          image.tags && image.tags.length > 0 ? image.tags[0] : null;
-
-        if (!primaryTag || !bakeryTypes.includes(primaryTag)) {
-          console.log(`Skipping ${image.public_id}: Invalid or no tag found`);
-          return;
-        }
-
-        const desc =
-          image.context && image.context.alt
-            ? image.context.alt
-            : "Description not available";
-
-        const item: BakeryItem = {
-          title: image.context.caption,
-          public_id: image.public_id,
-          desc: desc,
-          url: image.secure_url,
+        const groupedItems: GroupedBakeryItems = {
+          bread: [],
+          biscuit: [],
+          rusk: [],
+          puff_and_snacks: [],
         };
 
-        groupedItems[primaryTag as keyof GroupedBakeryItems].push(item);
-      });
+        bakeryImages.forEach((img) => {
+          const primaryTag = img.tags?.[0];
+          if (!primaryTag || !bakeryTypes.includes(primaryTag)) {
+            return;
+          }
+          const desc = img.context?.alt ?? "Description not available";
 
-      console.log("Grouped Items:", groupedItems);
-      return c.json({
-        data: groupedItems,
-      });
+          groupedItems[primaryTag as keyof GroupedBakeryItems].push({
+            title: img.context?.caption ?? "",
+            public_id: img.public_id,
+            desc,
+            url: img.optimized_url,
+          });
+        });
+
+        return c.json({
+          data: { hero: hero, groupedItems, category },
+        });
+      }
     } else {
       const images = await cloudService.listImages(param);
       return c.json({
@@ -187,7 +256,7 @@ export const uploadImage = async (
   folder: string,
 ): Promise<UploadFileResult> => {
   try {
-    const res = await cloudService.uploadImage(imgFile, {
+    const res = await cloudService.uploadMedia(imgFile, {
       maxSizeBytes: 3 * 1028 * 1024,
       folder: folder,
     });
