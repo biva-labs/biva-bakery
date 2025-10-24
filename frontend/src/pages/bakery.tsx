@@ -5,6 +5,10 @@ import { useEffect } from "react";
 import BakerySections from "@/components/bakery/bakery-sections/bakery-sections";
 
 import { type CardImagesType } from "@/types/card-images-types";
+// import { type CardImagesType } from "@/types/card-images-types";
+import { type HeroImagesType } from "@/types/hero-images-types";
+import { type GalleryImagesType } from "@/types/gallery-images-types";
+
 import ProductCategoryRow from "@/components/bakery/bakery-category/product-category-row";
 
 
@@ -14,14 +18,18 @@ type GroupedBakeryData = {
 }
 
 export default function Bakery() {
-  const [groupedBakeryData, setGroupedBakeryData] = useState<GroupedBakeryData>({})
+  // const [groupedBakeryData, setGroupedBakeryData] = useState<GroupedBakeryData>({});
+  const [bakeryHero, setBakeryHero] = useState<HeroImagesType[]>([]);
+  const [bakeryCategory, setBakeryCategory] = useState<HeroImagesType[]>([]);
+  const [bakeryItems, setBakeryItems] = useState<GroupedBakeryData>({});
 
   const { data, error, isLoading } = useImages("bakery");
 
   useEffect(() => {
     if (data) {
       console.log(data.data);
-      setGroupedBakeryData(data.data)
+      setBakeryHero(data.data.hero)
+      setBakeryItems(data.data.groupedItems)
     }
   }, [data]);
 
@@ -43,6 +51,7 @@ export default function Bakery() {
               Fresh from the oven, <br /> straight to your hearts
             </div>
           }
+          images={bakeryHero}
         />
 
         <div className="mb-8 text-center lg:text-left mt-10">
@@ -58,7 +67,7 @@ export default function Bakery() {
         </div>
 
         {
-          Object.entries(groupedBakeryData).map(([category, items]) => (
+          Object.entries(bakeryItems).map(([category, items]) => (
             <BakerySections
               title={category}
               products={items}

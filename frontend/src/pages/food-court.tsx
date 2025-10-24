@@ -9,20 +9,28 @@ import { type CardImagesType } from "@/types/card-images-types";
 import { type HeroImagesType } from "@/types/hero-images-types";
 import { type GalleryImagesType } from "@/types/gallery-images-types";
 
+type FoodCourtPreference = {
+  public_id: string;
+  name: string;
+  url: string;
+}
+
 export default function FoodCourt() {
   const [foodCourtHero, setfoodCourtHero] = useState<HeroImagesType[]>([]);
   const [events, setEvents] = useState<CardImagesType[]>([]);
   const [foodCourtGallery, setFoodCourtGallery] = useState<GalleryImagesType[]>([]);
+  const [foodCourtPreference, setFoodCourtPreference] = useState<FoodCourtPreference[]>([])
 
   const { data, error, isLoading } = useImages("food-court");
 
 
   useEffect(() => {
     if (data) {
-      console.log(data.data);
+      // console.log(data);
       setfoodCourtHero(data.data.hero ?? []);
       setEvents(data.data.events ?? []);
       setFoodCourtGallery(data.data.gallery ?? []);
+      setFoodCourtPreference(data.data.preference ?? []);
     }
   }, [data]);
 

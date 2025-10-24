@@ -50,14 +50,7 @@ export default function Hero({
   return (
     <div className="relative w-screen h-[40vh] lg:h-[60vh] -mt-14 right-4">
       <div className="absolute inset-0">
-        {isBakeryPage ? (
-          <>
-            <img
-              src="/bakery-hero.webp"
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 `}
-            />
-          </>
-        ) : (
+
           <>
             {images?.map((src, idx) => (
               <img
@@ -70,7 +63,7 @@ export default function Hero({
               />
             ))}
           </>
-        )}
+       
       </div>
 
       <div className="absolute inset-0 bg-black/40 z-10" />

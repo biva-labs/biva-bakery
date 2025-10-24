@@ -11,10 +11,17 @@ import { type CardImagesType } from "@/types/card-images-types";
 import { type HeroImagesType } from "@/types/hero-images-types";
 import { type GalleryImagesType } from "@/types/gallery-images-types";
 
+type BanquetImagesType = {
+  public_id: string;
+  url: string;
+  position: string;
+}
+
 export default function Hotel() {
   const [hotelHero, setHotelHero] = useState<HeroImagesType[]>([]);
   const [hotelRooms, setHotelRooms] = useState<CardImagesType[]>([]);
   const [hotelGallery, setHotelGallery] = useState<GalleryImagesType[]>([]);
+  const [hotelBanquet, setHotelBanquet] = useState<BanquetImagesType[]>([])
 
   const { data, error, isLoading } = useImages("hotel");
 
@@ -24,20 +31,22 @@ export default function Hotel() {
       console.warn('no valid data received', data);
       return;
     }
+    console.log(data)
 
-    const { hero, rooms, gallery } = data.data;
+    const { hero, rooms, gallery, banquet } = data.data;
     setHotelHero(hero ?? []);
     setHotelRooms(rooms ?? []);
     setHotelGallery(gallery ?? []);
+    setHotelBanquet(banquet ?? [])
 
-    const grouped: Record<string, CardImagesType[]> = {};
-    (rooms ?? []).forEach((v: any) => {
-      const tag = v.tag || "untagged";
-      if (!grouped[tag]) {
-        grouped[tag] = [];
-      }
-      grouped[tag].push(v);
-    });
+    // const grouped: Record<string, CardImagesType[]> = {};
+    // (rooms ?? []).forEach((v: any) => {
+    //   const tag = v.tag || "untagged";
+    //   if (!grouped[tag]) {
+    //     grouped[tag] = [];
+    //   }
+    //   grouped[tag].push(v);
+    // });
 
   }, [data]);
 
