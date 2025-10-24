@@ -26,7 +26,7 @@ export default function FoodCourt() {
 
   useEffect(() => {
     if (data) {
-      // console.log(data);
+      console.log(data);
       setfoodCourtHero(data.data.hero ?? []);
       setEvents(data.data.events ?? []);
       setFoodCourtGallery(data.data.gallery ?? []);
@@ -67,10 +67,14 @@ export default function FoodCourt() {
             Our Delicious Offerings
           </h2>
           <div className="mt-10">
-            <FoodCourtPreference preference="veg" />
+            <FoodCourtPreference preference="veg"     media={
+      foodCourtPreference.find((item) => item.name === "veg")?.url
+    }/>
           </div>
           <div className="mt-10">
-            <FoodCourtPreference preference="non-veg" />
+            <FoodCourtPreference preference="non-veg"     media={
+      foodCourtPreference.find((item) => item.name === "non-veg")?.url
+    }/>
           </div>
         </div>
         <div className="mt-16" id="gallery">

@@ -43,7 +43,7 @@ export class CloudinaryService {
     return cloudinary.url(resource.public_id, {
       resource_type: resource.resource_type,
       secure: true,
-      transformation: [{ fetch_format: "auto", quality: "auto" }],
+      transformation: [{ fetch_format: resource.resource_type === "video" ? "webm" : "webp", quality: "auto:best" }],
     });
   }
 

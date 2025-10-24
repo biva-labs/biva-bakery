@@ -154,7 +154,7 @@ export const getImage = async (c: Context) => {
       const foodCourtGallery = await cloudService.listImages("gallery", true);
 
 
-   
+      console.log(FoodCourtPreference)
 
       return c.json({
         data: {
