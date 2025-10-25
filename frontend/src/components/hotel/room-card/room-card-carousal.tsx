@@ -18,6 +18,7 @@ export default function RoomCardCarousel({ rooms }: RoomCardCarouselProps) {
   const navigate = useNavigate();
 
   const roomTypes = groupByTag(rooms);
+  console.log(roomTypes)
 
   return (
     <div className="w-full px-4 py-8">
@@ -26,7 +27,7 @@ export default function RoomCardCarousel({ rooms }: RoomCardCarouselProps) {
           <CarouselContent className="-ml-4 sm:-ml-2">
             {Object.keys(roomTypes).map((roomType) => {
               const room = roomTypes[roomType];
-              const { desc, price, url, public_id } = room;
+              const { desc, price, url, public_id, room_number } = room;
 
               return (
                 <CarouselItem
@@ -35,7 +36,8 @@ export default function RoomCardCarousel({ rooms }: RoomCardCarouselProps) {
                 >
                   <div className="h-full rounded-xl overflow-hidden bg-white shadow-md">
                     <RoomCard
-                      tag={roomType}
+                      room_type={roomType}
+                      room_number={room_number}
                       title={roomType}
                       public_id={public_id || roomType}
                       url={Array.isArray(url) ? url : [url]}
