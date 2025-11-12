@@ -12,23 +12,21 @@ import ChatBot from "./components/chatbot/chatbot";
 import About from "./pages/about";
 // import Complaint from "./components/complaint";
 import { useEffect } from "react";
-import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
-import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Toaster } from "@/components/ui/sonner";
 
 const queryClient = new QueryClient({
-  defaultOptions:{
+  defaultOptions: {
     queries: {
-      gcTime: 1000 * 60 * 5
-    }
-  }
+      gcTime: 1000 * 60 * 5,
+    },
+  },
 });
-
 
 const asyncStoragePersister = createAsyncStoragePersister({
   storage: window.localStorage,
-})
-
+});
 
 function ScrollToHash() {
   const { hash } = useLocation();
@@ -45,18 +43,14 @@ function ScrollToHash() {
   return null;
 }
 
-
-
-
-
 function App() {
-
-
   return (
-    <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: asyncStoragePersister }}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister: asyncStoragePersister }}
+    >
       <BrowserRouter>
-      
-          <ScrollToHash/>
+        <ScrollToHash />
         <Routes>
           <Route path="/" element={<Main />}>
             <Route path="/" element={<Biva />}>
@@ -72,7 +66,7 @@ function App() {
           </Route>
         </Routes>
         <ChatBot />
-        <Toaster richColors position="top-center"/>
+        <Toaster richColors position="top-center" />
       </BrowserRouter>
     </PersistQueryClientProvider>
   );
