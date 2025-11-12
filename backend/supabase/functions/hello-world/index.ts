@@ -71,7 +71,7 @@ Deno.serve(async (req: Request) => {
   }
 
   const payload = JSON.parse(rawBody);
-  const userId = payload.payload.payment.entity.notes.userId;
+  const userId = payload.payload.payment.entity.notes.userId.id;
   console.log("✅ Verified Razorpay webhook:", payload.event);
   console.log("userId: ", userId);
 
