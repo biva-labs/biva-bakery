@@ -73,7 +73,14 @@ export default function SeatBookingPage() {
                                 disabled={isPending || isProcessing}
                                 className="w-full"
                             >
-                                {isPending || isProcessing ? "Processing..." : `Pay Now ${parseInt(data.number_of_guest) * 500 === 0 ? "" : "₹" + parseInt(data.number_of_guest) * 500}`}
+                                {isPending || isProcessing
+                                    ? "Processing..."
+                                    : (() => {
+                                        const guests = parseInt(data.number_of_guest);
+                                        const total = guests * 500;
+                                        return !guests || isNaN(total) ? "Pay Now" : `Pay Now ₹${total}`;
+                                    })()}
+
                             </Button>
                         </div>
                     </div>
@@ -87,7 +94,7 @@ export default function SeatBookingPage() {
                     muted
                     loop
                 >
-                    <source src="/video.mp4" type="video/mp4" />
+                    <source src="/food-court-booking-page.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
             </div>
