@@ -11,6 +11,8 @@ import { foodCourtForm } from "./controllers/foodCourtForm.ts";
 import { bivaAiChat } from "./controllers/biva-ai.ts";
 import { eventFormData } from "./controllers/eventFormData.ts";
 import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js";
+import { qstash_message } from "./controllers/qstash-message.ts";
+import { sendEmail } from "./utils/resend.ts";
 
 const app = new Hono();
 app.use(secureHeaders());
@@ -29,6 +31,9 @@ app.use(
 app.get("/images/:folder", getImage);
 app.route("/api/orders", orders);
 app.route("/api/verify-payment", verifyPayment);
+
+app.post("/qstash-message", qstash_message);
+app.post("/send-email", sendEmail);
 
 app.post("/wh", async (c) => {
   const rawBody = await c.req.arrayBuffer();

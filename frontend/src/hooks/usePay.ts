@@ -43,7 +43,7 @@ export default function usePay({ onSuccess, onError }: UsePayProps = {}) {
         throw new Error("Razorpay key is missing in environment variables.");
       }
 
-      console.log("userId --> ", userId);
+      console.log("userId --> ", userId.data);
       const options = {
         key: razorpayKey,
         amount: order.amount,
@@ -52,7 +52,13 @@ export default function usePay({ onSuccess, onError }: UsePayProps = {}) {
         description: "Food Court Booking",
         order_id: order.id,
         notes: {
-          userId: userId.data,
+          userId: userId.data.id,
+          userName: userId.data.name,
+          userEmail: userId.data.email,
+          userPreference: userId.data.food_preference,
+          userTimeSlot: userId.data.timeSlot,
+          userTotalAmount: userId.data.totalAmount,
+          userTotalPeople: userId.data.total_people,
         },
         handler: async function (paymentResponse: RazorpayResponse) {
           try {
