@@ -297,6 +297,7 @@ export default function EventSeatForm() {
                     <div className="space-y-2">
                         <div className="relative">
                             <Button
+                                type="button"
                                 variant="outline"
                                 onClick={() =>
                                     setOpenDropdown(
@@ -306,15 +307,16 @@ export default function EventSeatForm() {
                                     )
                                 }
                                 className={cn(
-                                    "border-input focus-visible:border-ring focus-visible:ring-ring/50 flex w-full items-center justify-between gap-2 rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 h-9",
+                                    "w-full justify-between h-10",
                                     field.disabled &&
                                         "bg-gray-100 text-gray-600 cursor-not-allowed",
                                 )}
                                 disabled={field.disabled}
                             >
                                 <span className="text-muted-foreground">
-                                    {(fieldValue as string[]).length > 0
-                                        ? `${(fieldValue as string[]).length} seat(s) selected`
+                                    {Array.isArray(fieldValue) &&
+                                    fieldValue.length > 0
+                                        ? `${fieldValue.length} seat(s) selected`
                                         : field.placeholder}
                                 </span>
                                 <span
@@ -329,60 +331,78 @@ export default function EventSeatForm() {
                             </Button>
 
                             {openDropdown === field.id && !field.disabled && (
-                                <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-popover border border-input rounded-md shadow-md">
+                                <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
                                     <div className="p-2 space-y-1 max-h-48 overflow-y-auto">
                                         {field.options?.map(
-                                            (option: any, index: number) => (
-                                                <Label
-                                                    key={index}
-                                                    className="flex items-center gap-2 cursor-pointer rounded px-2 py-1.5 hover:bg-accent hover:text-accent-foreground"
-                                                >
-                                                    <Input
-                                                        type="checkbox"
-                                                        checked={(
-                                                            fieldValue as string[]
-                                                        ).includes(
-                                                            String(option),
-                                                        )}
-                                                        onChange={() =>
-                                                            toggleSeatSelection(
-                                                                String(option),
-                                                                fieldValue as string[],
-                                                            )
-                                                        }
-                                                        className="w-4 h-4 rounded border-input border accent-primary cursor-pointer"
-                                                    />
-                                                    <span className="text-sm">
-                                                        {String(option)}
-                                                    </span>
-                                                </Label>
-                                            ),
+                                            (
+                                                option: string | number,
+                                                index: number,
+                                            ) => {
+                                                const isChecked =
+                                                    Array.isArray(fieldValue) &&
+                                                    fieldValue.includes(
+                                                        String(option),
+                                                    );
+
+                                                return (
+                                                    <label
+                                                        key={index}
+                                                        className="flex items-center gap-2 cursor-pointer rounded px-2 py-1.5 hover:bg-gray-100 transition-colors"
+                                                    >
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={isChecked}
+                                                            onChange={(e) => {
+                                                                e.stopPropagation();
+                                                                toggleSeatSelection(
+                                                                    String(
+                                                                        option,
+                                                                    ),
+                                                                    Array.isArray(
+                                                                        fieldValue,
+                                                                    )
+                                                                        ? fieldValue
+                                                                        : [],
+                                                                );
+                                                            }}
+                                                            className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                        />
+                                                        <span className="text-sm text-gray-700">
+                                                            {String(option)}
+                                                        </span>
+                                                    </label>
+                                                );
+                                            },
                                         )}
                                     </div>
                                 </div>
                             )}
                         </div>
 
-                        {(fieldValue as string[]).length > 0 && (
+                        {Array.isArray(fieldValue) && fieldValue.length > 0 && (
                             <div className="flex flex-wrap gap-2">
-                                {(fieldValue as string[]).map((seatId) => (
-                                    <Button
-                                        // type="button"
-                                        size="sm"
-                                        onClick={() =>
-                                            toggleSeatSelection(
-                                                seatId,
-                                                fieldValue as string[],
-                                            )
-                                        }
-                                        className="ml-0.5 hover:opacity-80 "
+                                {fieldValue.map((seatId) => (
+                                    <div
+                                        key={seatId}
+                                        className="inline-flex items-center gap-1 bg-blue-600 text-white px-2 py-1 rounded-md text-sm"
                                     >
-                                        {seatId}
-                                        <X
-                                            // size={14}
-                                            className="stroke-[3]"
-                                        />
-                                    </Button>
+                                        <span>{seatId}</span>
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleSeatSelection(
+                                                    seatId,
+                                                    Array.isArray(fieldValue)
+                                                        ? fieldValue
+                                                        : [],
+                                                );
+                                            }}
+                                            className="ml-1 hover:bg-blue-700 rounded p-0.5 transition-colors"
+                                        >
+                                            <X size={12} />
+                                        </button>
+                                    </div>
                                 ))}
                             </div>
                         )}
