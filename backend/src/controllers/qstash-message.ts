@@ -43,6 +43,7 @@ export const qstash_message = async (c: Context) => {
           timeSlot: userData.userTimeSlot,
           subject: "invoice",
         },
+        retries: 3,
       });
 
       // const email = await sendEmail(

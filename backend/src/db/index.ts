@@ -3,7 +3,6 @@ import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import { foodCourtEventTable, foodCourtTable } from "./schema.ts";
 import { eq, and } from "drizzle-orm";
-import { adminFoodCourtTable } from "../../drizzle/schema.ts";
 
 const sql = neon(process.env.NEON_PG_URL!);
 export const db = drizzle({ client: sql });
@@ -11,7 +10,7 @@ export const schema = { foodCourtTable };
 
 export type NewFoodCourtTable = typeof foodCourtTable.$inferInsert;
 export type NewEventTable = typeof foodCourtEventTable.$inferInsert;
-type newAdminEventTable = typeof adminFoodCourtTable.$inferInsert;
+type newAdminEventTable = typeof foodCourtTable.$inferInsert;
 
 export const insertFoodCourt = async (
   data: NewFoodCourtTable,
