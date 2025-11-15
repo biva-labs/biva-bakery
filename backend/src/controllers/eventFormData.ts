@@ -2,8 +2,8 @@ import type { Context } from "hono";
 import type { UploadFileResult } from "../utils/cloudinary-service.ts";
 import { uploadImage } from "./image-controller.ts";
 import { db, insertEvent } from "../db/index.ts";
-import { adminEventTable } from "../../drizzle/schema.ts";
 import { eq } from "drizzle-orm";
+import { adminEventTable } from "../../drizzle/schema.ts";
 
 interface eventFormData {
   name: string;
@@ -21,6 +21,7 @@ interface eventFormData {
 export const eventFormData = async (c: Context) => {
   try {
     const body = await c.req.parseBody();
+    console.log(body);
     const eventId: string = body["event_id"] as string;
 
     const ticket_price_from_db = await db
