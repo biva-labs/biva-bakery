@@ -23,7 +23,6 @@
 //   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 //   const [isHovered, setIsHovered] = useState(false);
 
-
 //   const images = [
 //     "/room-2.png",
 //     "/room-1.png",
@@ -81,7 +80,6 @@
 //                     className="w-full h-full object-cover rounded-lg"
 //                   />
 //                 </div>
-
 
 //                 <div
 //                   className="absolute inset-0 z-6 transition-all duration-900 ease-out"
@@ -163,18 +161,15 @@
 //   );
 // }
 
-
-
-
 import { useState } from "react";
 import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogClose,
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -184,134 +179,150 @@ import Amenities from "../amenities";
 import { ScrollArea } from "../ui/scroll-area";
 
 export function RoomBookingPage({ url }: { url: string | string[] }) {
+    const [isHovered, setIsHovered] = useState(false);
+    const [galleryOpen, setGalleryOpen] = useState(false);
+    const [bookingOpen, setBookingOpen] = useState(false);
+    const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
 
-  const [isHovered, setIsHovered] = useState(false);
-  const [galleryOpen, setGalleryOpen] = useState(false);
-  const [bookingOpen, setBookingOpen] = useState(false);
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
+    const images = Array.isArray(url) ? url : [url];
 
-  const images = Array.isArray(url) ? url : [url];
+    return (
+        <>
+            <Dialog open={bookingOpen} onOpenChange={setBookingOpen}>
+                <DialogTrigger asChild>
+                    <Button
+                        variant="default"
+                        className="rounded-full px-4 py-2 nexa bg-[#002a3a] text-white hover:bg-[#002a3a] "
+                        size="sm"
+                    >
+                        Book
+                    </Button>
+                </DialogTrigger>
 
-  return (
-    <>
-      <Dialog open={bookingOpen} onOpenChange={setBookingOpen}>
-        <DialogTrigger asChild>
-          <Button variant="default" className="rounded-full px-4 py-2 nexa bg-[#002a3a] text-white hover:bg-[#002a3a] " size="sm">Book</Button>
-        </DialogTrigger>
+                <DialogContent className="rounded-2xl">
+                    <DialogHeader>
+                        <DialogTitle className="text-2xl font-semibold">
+                            Room Booking
+                        </DialogTitle>
+                        <DialogDescription>
+                            Choose your room, view images, and confirm booking.
+                        </DialogDescription>
+                    </DialogHeader>
 
-  
-        <DialogContent
-          className="rounded-2xl"
-        >
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-semibold">Room Booking</DialogTitle>
-            <DialogDescription>
-              Choose your room, view images, and confirm booking.
-            </DialogDescription>
-          </DialogHeader>
+                    <div className="flex flex-col lg:flex-row gap-10 mt-6">
+                        <div className="lg:w-1/2 relative">
+                            <div
+                                className="relative h-80 cursor-pointer"
+                                onMouseEnter={() => setIsHovered(true)}
+                                onMouseLeave={() => setIsHovered(false)}
+                            >
+                                <div className="w-full h-full rounded-lg overflow-hidden shadow-xl relative">
+                                    {images.slice(0, 3).map((img, index) => (
+                                        <img
+                                            key={index}
+                                            src={img}
+                                            alt={`Seat Image ${index + 1}`}
+                                            className={`absolute inset-0 w-full h-full object-cover rounded-lg transition-all duration-700 ease-out`}
+                                            style={{
+                                                zIndex: 10 - index,
+                                                opacity:
+                                                    index === 0
+                                                        ? 1
+                                                        : isHovered
+                                                          ? 1
+                                                          : 0,
+                                                transform:
+                                                    isHovered && index === 0
+                                                        ? "scale(0.95) translateX(-15px) translateY(-10px) rotate(-3deg)"
+                                                        : isHovered &&
+                                                            index === 1
+                                                          ? "scale(0.95)"
+                                                          : isHovered &&
+                                                              index === 2
+                                                            ? "scale(0.95) translateX(15px) translateY(10px) rotate(3deg)"
+                                                            : "scale(1)",
+                                            }}
+                                        />
+                                    ))}
+                                </div>
 
-          <div className="flex flex-col lg:flex-row gap-10 mt-6">
-         
-            <div className="lg:w-1/2 relative">
-              <div
-                className="relative h-80 cursor-pointer"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-              >
-                <div className="w-full h-full rounded-lg overflow-hidden shadow-xl relative">
-                  {images.slice(0, 3).map((img, index) => (
-                    <img
-                      key={index}
-                      src={img}
-                      alt={`Seat Image ${index + 1}`}
-                      className={`absolute inset-0 w-full h-full object-cover rounded-lg transition-all duration-700 ease-out`}
-                      style={{
-                        zIndex: 10 - index,
-                        opacity: index === 0 ? 1 : isHovered ? 1 : 0,
-                        transform:
-                          isHovered && index === 0
-                            ? "scale(0.95) translateX(-15px) translateY(-10px) rotate(-3deg)"
-                            : isHovered && index === 1
-                              ? "scale(0.95)"
-                              : isHovered && index === 2
-                                ? "scale(0.95) translateX(15px) translateY(10px) rotate(3deg)"
-                                : "scale(1)",
-                      }}
-                    />
-                  ))}
-                </div>
+                                <button
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setGalleryOpen(true);
+                                    }}
+                                    className="absolute top-3 left-3 bg-black/70 text-white text-sm px-3 py-1.5 rounded-lg backdrop-blur-sm hover:bg-black/90 transition-all duration-200 font-medium z-20"
+                                >
+                                    View More +
+                                </button>
+                            </div>
 
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setGalleryOpen(true);
-                  }}
-                  className="absolute top-3 left-3 bg-black/70 text-white text-sm px-3 py-1.5 rounded-lg backdrop-blur-sm hover:bg-black/90 transition-all duration-200 font-medium z-20"
-                >
-                  View More +
-                </button>
-              </div>
+                            <div className="space-y-1 mt-6">
+                                <h2 className="text-2xl font-semibold">
+                                    Seat A1
+                                </h2>
+                                <p className="text-sm text-muted-foreground">
+                                    Table: Round Table 5
+                                </p>
+                                <p className="text-sm text-green-600 font-medium">
+                                    Status: Available
+                                </p>
+                            </div>
 
-              <div className="space-y-1 mt-6">
-                <h2 className="text-2xl font-semibold">Seat A1</h2>
-                <p className="text-sm text-muted-foreground">Table: Round Table 5</p>
-                <p className="text-sm text-green-600 font-medium">Status: Available</p>
-              </div>
+                            <Amenities />
+                        </div>
 
-              <Amenities />
-            </div>
+                        <div className="lg:w-1/2 space-y-6">
+                            <SeatForm table="Round Table 5" />
+                            <Separator />
+                            <PayButton amount={10000} />
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
 
-            {/* RIGHT SIDE: Form + Payment */}
-            <div className="lg:w-1/2 space-y-6">
-              <SeatForm table="Round Table 5" />
-              <Separator />
-              <PayButton amount={10000} />
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Image Gallery Dialog - Separate from booking dialog */}
-      <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
-        <DialogContent className="max-w-screen max-h-screen overflow-hidden rounded-2xl">
-          <DialogHeader>
-            <DialogTitle>Seat Image Gallery</DialogTitle>
-          </DialogHeader>
-          <ScrollArea className="h-[80vh]">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-              {images.map((img, index) => (
-                <div
-                  key={index}
-                  className={`aspect-[4/3] rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:scale-105 ${selectedImageIndex === index ? "ring-2 ring-blue-500" : ""
-                    }`}
-                  onClick={() => setSelectedImageIndex(index)}
-                >
-                  <img
-                    src={img}
-                    alt={`Seat Image ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ))}
-            </div>
-            <div className="mt-6">
-              <img
-                src={images[selectedImageIndex]}
-                alt="Selected Seat"
-                className="w-full max-h-[70vh] object-cover rounded-lg"
-              />
-            </div>
-          </ScrollArea>
-          <DialogClose asChild>
-            <Button variant="outline" className="mt-4">
-              Close
-            </Button>
-          </DialogClose>
-        </DialogContent>
-      </Dialog>
-    </>
-  );
+            <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
+                <DialogContent className="max-w-screen max-h-screen overflow-hidden rounded-2xl">
+                    <DialogHeader>
+                        <DialogTitle>Seat Image Gallery</DialogTitle>
+                    </DialogHeader>
+                    <ScrollArea className="h-[80vh]">
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                            {images.map((img, index) => (
+                                <div
+                                    key={index}
+                                    className={`aspect-[4/3] rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:scale-105 ${
+                                        selectedImageIndex === index
+                                            ? "ring-2 ring-blue-500"
+                                            : ""
+                                    }`}
+                                    onClick={() => setSelectedImageIndex(index)}
+                                >
+                                    <img
+                                        src={img}
+                                        alt={`Seat Image ${index + 1}`}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        <div className="mt-6">
+                            <img
+                                src={images[selectedImageIndex]}
+                                alt="Selected Seat"
+                                className="w-full max-h-[70vh] object-cover rounded-lg"
+                            />
+                        </div>
+                    </ScrollArea>
+                    <DialogClose asChild>
+                        <Button variant="outline" className="mt-4">
+                            Close
+                        </Button>
+                    </DialogClose>
+                </DialogContent>
+            </Dialog>
+        </>
+    );
 }
-

@@ -1,22 +1,18 @@
 import { useLocation } from "react-router-dom";
-import { TimeSlotSelect } from "./time-slot";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "./ui/select";
-import {
-    FOOD_COURT_FORM_FIELDS,
-    EVENT_FORM_FIELDS,
-} from "../../data/form-fields-data";
+} from "../ui/select";
+
 import { useFoodCourtTableFormStore } from "@/store/food-court-store";
 import { useFoodCourtEventFormStore } from "@/store/seat-form-store";
 
-export default function SeatForm({ table }: { table?: string }) {
+export default function Form({ table }: { table?: string }) {
     const location = useLocation();
     const path = location.pathname;
     const isEventForm = path.includes("/events/booking");

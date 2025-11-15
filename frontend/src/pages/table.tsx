@@ -1,149 +1,222 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import Footer from "@/components/footer";
-import TableBlock from "@/components/table";
-import SeatForm from "@/components/seat-form";
-import PayButton from "@/components/pay-button";
+import { Button } from "@/components/ui/button";
+
+// import TableBlock from "@/components/table";
+// import { useFoodCourtEventFormStore } from "@/store/seat-form-store";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { useEventForm } from "@/hooks/useEventForm";
+import { toast } from "sonner";
+import usePay from "@/hooks/usePay";
 import { useFoodCourtEventFormStore } from "@/store/seat-form-store";
-import { Button } from "@radix-ui/themes";
+import EventSeatForm from "@/components/events/form";
+
+interface EventData {
+    eventId: string;
+    eventName: string;
+    groupName: string;
+    date: string;
+    time: string;
+    price: string;
+    publicId: string;
+    imageUrl: string;
+    venueImageUrl: string;
+}
+
+const IGNORE_VALUES = ["eventId", "publicId", "imageUrl", "venueImageUrl"];
+
+const KEY_VALUE_MAP = {
+    eventName: "Event Name",
+    groupName: "Group Name",
+    date: "Date",
+    time: "Time",
+    price: "Price",
+};
 
 export default function Table() {
-  const [selectedTables, setSelectedTables] = useState<string[]>([]);
-  const  { setField } = useFoodCourtEventFormStore();
-  const body = useFoodCourtEventFormStore();
+    const [searchParams] = useSearchParams();
+    const [eventData, setEventData] = useState<EventData | null>(null);
+    const [selectedTables, setSelectedTables] = useState<string[]>([]);
+    const { setField } = useFoodCourtEventFormStore();
+    const data = useFoodCourtEventFormStore();
+    const { mutate: submitForm, isPending, isError, error } = useEventForm();
 
-  // Update the store whenever selected tables change
-  useEffect(() => {
-    setField("table_id", selectedTables);
-  }, [selectedTables, setField]);
+    const { initiatePayment, isProcessing } = usePay();
 
-  const handleTableSelect = (label: string) => {
-    setSelectedTables(prev => {
-      if (prev.includes(label)) {
-        // Remove if already selected
-        return prev.filter(table => table !== label);
-      } else {
-        // Add if not selected
-        return [...prev, label];
-      }
-    });
-  };
+    // Get event data from URL params
+    useEffect(() => {
+        console.log("URL Search Params:", Object.fromEntries(searchParams));
 
-  return (
-    <>
-      <div className="flex flex-col lg:flex-row lg:justify-between w-full px-4 lg:px-8">
-        {/* Left column (Form & Guide) */}
-        <div className="lg:w-1/3 p-6 rounded-lg lg:mr-6">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-6">
-            Book Your Tables
-          </h1>
+        const params = Object.fromEntries(searchParams);
 
-          {selectedTables.length > 0 && (
-            <div className="mb-8">
-              <SeatForm />
-              <div className="mt-4">
-                {/* <PayButton amount={1000} /> */}
-                <Button onClick={() => console.log(body)}>cl</Button>
-              </div>
-            </div>
-          )}
+        if (params.eventId && params.eventName) {
+            const parsedEventData = {
+                eventId: params.eventId,
+                eventName: params.eventName,
+                groupName: params.groupName || "",
+                date: params.date || "",
+                time: params.time || "",
+                price: params.price || "",
+                publicId: decodeURIComponent(params.publicId || ""),
+                imageUrl: decodeURIComponent(params.imageUrl || ""),
+                venueImageUrl: decodeURIComponent(params.venueImageUrl || ""),
+            };
 
-          <div className="rounded-lg p-5 border border-gray-200 shadow-sm">
-            <h2 className="font-semibold text-lg text-gray-800 mb-3">
-              How to book? Quick guide:
-            </h2>
-            <ol className="list-decimal pl-5 space-y-1.5 text-sm text-gray-700 leading-relaxed">
-              <li>Select a floor from the drop-down menu.</li>
-              <li>Pick your desired table and click on it.</li>
-              <li>
-                Fill the form, choose time, then click{" "}
-                <span className="font-extrabold">Book</span>.
-              </li>
-              <li>Do not refresh — you’ll be guided to the payments page.</li>
-              <li>
-                After payment, you’ll receive an invoice. Show it to staff.
-              </li>
-              <li>
-                <span className="font-extrabold">**IMPORTANT:**</span> If you
-                face issues, contact support immediately.
-              </li>
-            </ol>
-          </div>
-        </div>
+            console.log("Parsed Event Data:", parsedEventData);
+            setEventData(parsedEventData);
 
-        {/* Right column (Table Map) */}
-        <div className="lg:w-2/3 mt-8 lg:mt-12">
-          {/*
-            KEY CHANGE:
-            - Added `min-h-[500px]` (or your desired height) to give it more vertical space.
-            - `flex items-center justify-center` will center the table grid vertically within this new height.
-          */}
-          <div className="bg-gray-200 rounded-3xl p-6 shadow-2xl min-h-[500px] flex items-center justify-center">
-            <div className="grid grid-cols-12 gap-x-4 gap-y-8 w-full max-w-3xl mx-auto">
-              <div className="col-start-2 col-span-2 flex justify-center items-center">
-                <div className="transform -rotate-25">
-                  {/* Stage - bigger and unselectable */}
-                  <div className="w-20 h-10 bg-gradient-to-br from-red-500 to-red-700 text-white border-red-800 shadow-lg flex items-center justify-center font-bold text-lg rounded-md">
-                    STAGE
-                  </div>
+            // Set event_id in store
+            setField("event_id", params.eventId);
+        }
+    }, [searchParams, setField]);
+
+    useEffect(() => {
+        setField("table_id", selectedTables);
+    }, [selectedTables, setField]);
+
+    if (!eventData) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center p-8">
+                    <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                        Loading Event...
+                    </h1>
+                    <p className="text-gray-600 mb-6">
+                        Please wait while we load the event details.
+                    </p>
+                    <Button onClick={() => window.history.back()}>
+                        Go Back
+                    </Button>
                 </div>
-              </div>
-              <div className="col-start-1 row-start-2 row-span-4 flex flex-col justify-between items-center gap-3">
-                {["T2", "T3", "T4", "T5"].map((label) => (
-                  <TableBlock
-                    key={`${label}-${selectedTables.includes(label)}`}
-                    size="lg"
-                    label={label}
-                    initialState={selectedTables.includes(label) ? "selected" : "available"}
-                    onSelect={handleTableSelect}
-                  />
-                ))}
-              </div>
-              <div className="col-start-12 row-start-2 row-span-4 flex flex-col justify-between items-center gap-3">
-                {["T6", "T7", "T8", "T9"].map((label) => (
-                  <TableBlock
-                    key={`${label}-${selectedTables.includes(label)}`}
-                    size="lg"
-                    label={label}
-                    initialState={selectedTables.includes(label) ? "selected" : "available"}
-                    onSelect={handleTableSelect}
-                  />
-                ))}
-              </div>
-              <div className="col-start-4 col-span-6 row-start-2 row-span-4 relative flex justify-center items-center">
-                {["T10", "T11", "T12", "T13", "T14"].map((label, i) => (
-                  <div
-                    key={label}
-                    className={`absolute ${
-                      i === 0
-                        ? "top-0"
-                        : i === 1
-                        ? "left-0"
-                        : i === 2
-                        ? "right-0"
-                        : i === 3
-                        ? "bottom-0"
-                        : "flex justify-center items-center"
-                    }`}
-                  >
-                    <TableBlock
-                      key={`${label}-${selectedTables.includes(label)}`}
-                      shape="round"
-                      size="lg"
-                      label={label}
-                      initialState={selectedTables.includes(label) ? "selected" : "available"}
-                      onSelect={handleTableSelect}
-                    />
-                  </div>
-                ))}
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
+        );
+    }
 
-      <div className="mt-10">
-        <Footer />
-      </div>
-    </>
-  );
+    const handleBookAndPay = async () => {
+        if (
+            !data.name ||
+            !data.email ||
+            !data.table_id ||
+            !data.event_id ||
+            !data.number_of_guest
+        ) {
+            toast.error("Please fill in all required fields");
+            return;
+        }
+
+        if (!data.adhaar_or_pan_card) {
+            toast.error("Please upload your Aadhar or PAN card");
+            return;
+        }
+
+        submitForm(
+            {
+                name: data.name,
+                email: data.email,
+                phone_number: data.phone_number,
+                adhaar_or_pan_card: data.adhaar_or_pan_card,
+                number_of_guest: data.number_of_guest,
+                event_id: data.event_id,
+                table_id: data.table_id,
+            },
+            {
+                onSuccess: async (response) => {
+                    const totalAmount =
+                        response.data?.data?.totalAmount ||
+                        response.data.data[0].totalAmount;
+                    const user = response.data || response.data.data[0];
+                    console.log(user);
+                    await initiatePayment(totalAmount, user);
+                },
+                onError: (error) => {
+                    console.error("Form submission error:", error);
+                    toast.error("Form submission failed. Please try again.");
+                },
+            },
+        );
+    };
+
+    return (
+        <>
+            <div className="max-w-7xl mx-auto px-4 py-10">
+                {/* FLEX: FORM LEFT + IMAGE + INFO RIGHT */}
+                <div className="flex flex-col lg:flex-row items-start gap-10 lg:gap-16">
+                    {/* LEFT — EVENT FORM */}
+                    <div className="w-full lg:w-1/2 space-y-6">
+                        <EventSeatForm />
+
+                        {/* Pay Button - moved inside the form section */}
+                        <Button
+                            onClick={handleBookAndPay}
+                            disabled={isPending || isProcessing}
+                            className="w-full  text-lg "
+                            size="default"
+                        >
+                            {isPending || isProcessing
+                                ? "Processing..."
+                                : (() => {
+                                      const guests = parseInt(
+                                          data.number_of_guest,
+                                      );
+                                      const total =
+                                          guests * parseInt(eventData.price);
+                                      return !guests || isNaN(total)
+                                          ? "Pay Now"
+                                          : `Pay Now ₹${total}`;
+                                  })()}
+                        </Button>
+                    </div>
+
+                    {/* RIGHT — IMAGE + INFO (SAME WIDTH) */}
+                    <div className="w-full lg:w-1/2 flex flex-col items-center">
+                        {/* IMAGE */}
+                        <img
+                            src={eventData.venueImageUrl}
+                            alt="Venue"
+                            className="
+                                w-full
+                                max-w-xl
+                                rounded-xl
+                                shadow-md
+                                object-cover
+                                aspect-[4/3]
+                            "
+                        />
+
+                        {/* EVENT INFO — SAME WIDTH AS IMAGE */}
+                        <div className="w-full max-w-xl mt-6 bg-blue-50 p-6 rounded-lg border border-blue-200">
+                            <h3 className="text-lg font-semibold text-blue-900 mb-4">
+                                Event Information
+                            </h3>
+
+                            <div className="grid grid-cols-1 gap-4">
+                                {Object.entries(eventData)
+                                    .filter(([v]) => !IGNORE_VALUES.includes(v))
+                                    .map(([key, value]) => (
+                                        <div key={key} className="space-y-2">
+                                            <Label className="text-sm font-medium text-blue-800">
+                                                {
+                                                    KEY_VALUE_MAP[
+                                                        key as keyof typeof KEY_VALUE_MAP
+                                                    ]
+                                                }
+                                            </Label>
+                                            <Input
+                                                value={value}
+                                                disabled={true}
+                                                className="bg-white border-blue-200"
+                                            />
+                                        </div>
+                                    ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <Footer />
+        </>
+    );
 }

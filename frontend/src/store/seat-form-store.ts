@@ -1,31 +1,44 @@
 import { create } from "zustand";
 
 interface FoodCourtEventForm {
-  table_id: string[];
-  name: string;
-  email: string;
-  phone: string;
-  adhaar_or_pan_card: File | null;
-  number_of_guest: string;
+    table_id: string[];
+    name: string;
+    email: string;
 
-  setField: (
-    field: "table_id" | "name" | "email" | "phone" | "number_of_guest",
-    value: string | string[],
-  ) => void;
-  
-  setFile: (file: File | null) => void;
+    adhaar_or_pan_card: File | null;
+    number_of_guest: string;
+    phone_number: string;
+    event_id: string;
+
+    setField: (
+        field:
+            | "table_id"
+            | "name"
+            | "email"
+            | "phone"
+            | "number_of_guest"
+            | "phone_number"
+            | "event_id",
+        value: string | string[],
+    ) => void;
+
+    setFile: (file: File | null) => void;
 }
 
+export const useFoodCourtEventFormStore = create<FoodCourtEventForm>()(
+    (set) => ({
+        table_id: [],
+        name: "",
+        email: "",
+        adhaar_or_pan_card: null,
+        number_of_guest: "",
+        phone_number: "",
+        event_id: "",
 
-export const useFoodCourtEventFormStore = create<FoodCourtEventForm>()((set) => ({
-  table_id: [],
-  name: "",
-  email: "",
-  phone: "",
-  adhaar_or_pan_card: null,
-  number_of_guest: "",
+        setField: (field, value) =>
+            set((state) => ({ ...state, [field]: value })),
 
-  setField: (field, value) => set((state) => ({ ...state, [field]: value })),
-  
-  setFile: (file) => set((state) => ({ ...state, adhaar_or_pan_card: file }))
-}))
+        setFile: (file) =>
+            set((state) => ({ ...state, adhaar_or_pan_card: file })),
+    }),
+);

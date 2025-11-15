@@ -5,106 +5,114 @@ import { useState } from "react";
 import { useEffect } from "react";
 import GalleryMasonry from "@/components/gallery/masonary";
 import Banquet from "@/components/hotel/banquet";
-
+import EventCardCarousel from "@/components/events/event-card-carousal";
 
 import { type CardImagesType } from "@/types/card-images-types";
 import { type HeroImagesType } from "@/types/hero-images-types";
 import { type GalleryImagesType } from "@/types/gallery-images-types";
 
 type BanquetImagesType = {
-  public_id: string;
-  url: string;
-  position: string;
-}
+    public_id: string;
+    url: string;
+    position: string;
+};
 
 export default function Hotel() {
-  const [hotelHero, setHotelHero] = useState<HeroImagesType[]>([]);
-  const [hotelRooms, setHotelRooms] = useState<CardImagesType[]>([]);
-  const [hotelGallery, setHotelGallery] = useState<GalleryImagesType[]>([]);
-  const [hotelBanquet, setHotelBanquet] = useState<BanquetImagesType[]>([])
+    const [hotelHero, setHotelHero] = useState<HeroImagesType[]>([]);
+    const [hotelRooms, setHotelRooms] = useState<CardImagesType[]>([]);
+    const [hotelGallery, setHotelGallery] = useState<GalleryImagesType[]>([]);
+    const [hotelBanquet, setHotelBanquet] = useState<BanquetImagesType[]>([]);
+    const [events, setEvents] = useState<CardImagesType[]>([]);
 
-  const { data, error, isLoading } = useImages("hotel");
+    const { data, error, isLoading } = useImages("hotel");
 
-  useEffect(() => {
+    useEffect(() => {
+        if (!data || !data.data) {
+            console.warn("no valid data received", data);
+            return;
+        }
+        console.log("HOTEL", data);
 
-    if (!data || !data.data) {
-      console.warn('no valid data received', data);
-      return;
+        const { hero, rooms, gallery, banquet, events } = data.data;
+        setHotelHero(hero ?? []);
+        setHotelRooms(rooms ?? []);
+        setHotelGallery(gallery ?? []);
+        setHotelBanquet(banquet ?? []);
+        setEvents(events ?? []);
+
+        // const grouped: Record<string, CardImagesType[]> = {};
+        // (rooms ?? []).forEach((v: any) => {
+        //   const tag = v.tag || "untagged";
+        //   if (!grouped[tag]) {
+        //     grouped[tag] = [];
+        //   }
+        //   grouped[tag].push(v);
+        // });
+    }, [data]);
+
+    if (error) {
+        // handle error
     }
-    console.log(data)
 
-    const { hero, rooms, gallery, banquet } = data.data;
-    setHotelHero(hero ?? []);
-    setHotelRooms(rooms ?? []);
-    setHotelGallery(gallery ?? []);
-    setHotelBanquet(banquet ?? [])
+    if (isLoading) {
+        // handle loading
+    }
 
-    // const grouped: Record<string, CardImagesType[]> = {};
-    // (rooms ?? []).forEach((v: any) => {
-    //   const tag = v.tag || "untagged";
-    //   if (!grouped[tag]) {
-    //     grouped[tag] = [];
-    //   }
-    //   grouped[tag].push(v);
-    // });
+    return (
+        <div>
+            <div className="mx-auto px-4 lg:mr-0 ">
+                <Hero
+                    title={
+                        <>
+                            Experience <br /> Luxury
+                        </>
+                    }
+                    description={
+                        <>
+                            Experience luxury and
+                            <br /> comfort in the heart of the city
+                        </>
+                    }
+                    buttonText={<>Contact Us</>}
+                    redirect="#footer"
+                    buttonDescription={<>Available at just ₹4999/-</>}
+                    images={hotelHero}
+                />
 
-  }, [data]);
+                <div className="mb-8 text-center lg:text-left mt-10">
+                    <h2 className="text-4xl lg:text-4xl outfit font-extrabold ml-4 text-start lg:ml-6 text-green-950 mb-2">
+                        Our Premium Rooms
+                    </h2>
+                    <p className="text-gray-600 ml-4 text-start lg:ml-6  font-medium text-lg">
+                        Experience luxury and comfort in the heart of the city
+                    </p>
+                </div>
+                <RoomCardCarousel rooms={hotelRooms} />
 
+                <div className="mt-10" id="banquet">
+                    <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-green-950 ">
+                        Banquet
+                    </h2>
+                    <Banquet media={hotelBanquet[0]?.url} />
+                </div>
 
+                <div
+                    id="events"
+                    className="mb-8 text-center lg:text-left mt-10"
+                >
+                    <h2 className="text-2xl lg:text-4xl text-start outfit font-extrabold lg:ml-6 ml-4 text-green-950 mb-2">
+                        Upcoming Events
+                    </h2>
+                </div>
+                <EventCardCarousel events={events} />
 
-  if (error) {
-    // handle error
-  }
-
-  if (isLoading) {
-    // handle loading
-  }
-
-  return (
-    <div>
-      <div className="mx-auto px-4 lg:mr-0 ">
-        <Hero
-          title={
-            <>
-              Experience <br /> Luxury
-            </>
-          }
-          description={
-            <>
-              Experience luxury and
-              <br /> comfort in the heart of the city
-            </>
-          }
-          buttonText={<>Contact Us</>}
-          redirect="#footer"
-          buttonDescription={<>Available at just ₹4999/-</>}
-          images={hotelHero}
-        />
-
-        <div className="mb-8 text-center lg:text-left mt-10">
-          <h2 className="text-4xl lg:text-4xl outfit font-extrabold ml-4 text-start lg:ml-6 text-green-950 mb-2">
-            Our Premium Rooms
-          </h2>
-          <p className="text-gray-600 ml-4 text-start lg:ml-6  font-medium text-lg">
-            Experience luxury and comfort in the heart of the city
-          </p>
+                <div className="mt-16" id="gallery">
+                    <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-green-950 ">
+                        Gallery
+                    </h2>
+                    <GalleryMasonry allImages={hotelGallery} />
+                </div>
+            </div>
         </div>
-        <RoomCardCarousel rooms={hotelRooms} />
-
-        <div className="mt-10" id="banquet">
-          <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-green-950 ">
-            Banquet
-          </h2>
-          <Banquet media={hotelBanquet[0]?.url}/>
-        </div>
-
-        <div className="mt-16" id="gallery">
-          <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-green-950 ">
-            Gallery
-          </h2>
-          <GalleryMasonry allImages={hotelGallery} />
-        </div>
-      </div>
-    </div>
-  );
+    );
 }
