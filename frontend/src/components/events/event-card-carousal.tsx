@@ -7,20 +7,19 @@ import {
 } from "@/components/ui/carousel";
 import EventCard from "./event-card";
 
-type EventData = {
+export type EventData = {
     date: string;
     event_name: string;
     group_name: string;
-    pevent_id: string;
+    event_id: string;
     position: string;
     public_id: string;
     ticket_price: string;
     time: string;
     url: string;
-    venue_img_url: string;
 };
 
-interface EventCardCarouselProps {
+export interface EventCardCarouselProps {
     events: EventData[];
 }
 

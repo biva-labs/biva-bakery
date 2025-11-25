@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,10 +10,6 @@ import {
 } from "@/components/ui/select";
 import { useFoodCourtEventFormStore } from "@/store/seat-form-store";
 
-import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
-
 interface EventFormData {
     eventId: string;
     eventName: string;
@@ -24,7 +19,6 @@ interface EventFormData {
     price: string;
     publicId: string;
     imageUrl: string;
-    venueImageUrl: string;
 }
 
 const EVENT_FORM_FIELDS = [
@@ -103,31 +97,7 @@ const EVENT_FORM_FIELDS = [
         disabled: false,
         required: true,
     },
-    {
-        id: "seat-id",
-        title: "Seat ID",
-        element: "multi-select",
-        placeholder: "Select seat(s)",
-        options: [
-            "A1",
-            "A2",
-            "A3",
-            "A4",
-            "A5",
-            "B1",
-            "B2",
-            "B3",
-            "B4",
-            "B5",
-            "C1",
-            "C2",
-            "C3",
-            "C4",
-            "C5",
-        ],
-        disabled: false,
-        required: true,
-    },
+
     {
         id: "adhaar-pan",
         title: "Adhaar/Pan Card Image",
@@ -141,11 +111,10 @@ const EVENT_FORM_FIELDS = [
 export default function EventSeatForm() {
     const [searchParams] = useSearchParams();
     const eventStore = useFoodCourtEventFormStore();
-    const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
     // State for event data from URL
     const eventData: EventFormData = {
-        eventId: searchParams.get("eventId") || "",
+        eventId: searchParams.get("event_id") || "",
         eventName: searchParams.get("eventName") || "",
         groupName: searchParams.get("groupName") || "",
         date: searchParams.get("date") || "",
@@ -153,7 +122,6 @@ export default function EventSeatForm() {
         price: searchParams.get("price") || "",
         publicId: searchParams.get("publicId") || "",
         imageUrl: searchParams.get("imageUrl") || "",
-        venueImageUrl: searchParams.get("venueImageUrl") || "",
     };
 
     // Helper function to get field value
@@ -179,8 +147,6 @@ export default function EventSeatForm() {
                 return eventStore.phone_number; // Use phone_number from store
             case "guest-no":
                 return eventStore.number_of_guest;
-            case "seat-id":
-                return eventStore.table_id;
             case "adhaar-pan":
                 return eventStore.adhaar_or_pan_card?.name || "";
             default:
@@ -203,19 +169,9 @@ export default function EventSeatForm() {
             case "guest-no":
                 eventStore.setField("number_of_guest", value as string);
                 break;
-            case "seat-id":
-                eventStore.setField("table_id", value as string[]);
-                break;
             default:
                 break;
         }
-    };
-
-    const toggleSeatSelection = (seatId: string, currentSeats: string[]) => {
-        const updatedSeats = currentSeats.includes(seatId)
-            ? currentSeats.filter((id) => id !== seatId)
-            : [...currentSeats, seatId];
-        setFieldValue("seat-id", updatedSeats);
     };
 
     const renderField = (field: any) => {
@@ -270,9 +226,9 @@ export default function EventSeatForm() {
                     <Select
                         disabled={field.disabled}
                         value={fieldValue as string}
-                        onValueChange={(value) =>
-                            setFieldValue(field.id, value)
-                        }
+                        onValueChange={(value) => {
+                            setFieldValue(field.id, value);
+                        }}
                     >
                         <SelectTrigger className="w-full h-10">
                             <SelectValue placeholder={field.placeholder} />
@@ -293,120 +249,6 @@ export default function EventSeatForm() {
                             )}
                         </SelectContent>
                     </Select>
-                ) : field.element === "multi-select" ? (
-                    <div className="space-y-2">
-                        <div className="relative">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() =>
-                                    setOpenDropdown(
-                                        openDropdown === field.id
-                                            ? null
-                                            : field.id,
-                                    )
-                                }
-                                className={cn(
-                                    "w-full justify-between h-10",
-                                    field.disabled &&
-                                        "bg-gray-100 text-gray-600 cursor-not-allowed",
-                                )}
-                                disabled={field.disabled}
-                            >
-                                <span className="text-muted-foreground">
-                                    {Array.isArray(fieldValue) &&
-                                    fieldValue.length > 0
-                                        ? `${fieldValue.length} seat(s) selected`
-                                        : field.placeholder}
-                                </span>
-                                <span
-                                    className={cn(
-                                        "text-xs transition-transform",
-                                        openDropdown === field.id &&
-                                            "rotate-180",
-                                    )}
-                                >
-                                    ▼
-                                </span>
-                            </Button>
-
-                            {openDropdown === field.id && !field.disabled && (
-                                <div className="absolute top-full left-0 right-0 z-50 mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
-                                    <div className="p-2 space-y-1 max-h-48 overflow-y-auto">
-                                        {field.options?.map(
-                                            (
-                                                option: string | number,
-                                                index: number,
-                                            ) => {
-                                                const isChecked =
-                                                    Array.isArray(fieldValue) &&
-                                                    fieldValue.includes(
-                                                        String(option),
-                                                    );
-
-                                                return (
-                                                    <label
-                                                        key={index}
-                                                        className="flex items-center gap-2 cursor-pointer rounded px-2 py-1.5 hover:bg-gray-100 transition-colors"
-                                                    >
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={isChecked}
-                                                            onChange={(e) => {
-                                                                e.stopPropagation();
-                                                                toggleSeatSelection(
-                                                                    String(
-                                                                        option,
-                                                                    ),
-                                                                    Array.isArray(
-                                                                        fieldValue,
-                                                                    )
-                                                                        ? fieldValue
-                                                                        : [],
-                                                                );
-                                                            }}
-                                                            className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                                        />
-                                                        <span className="text-sm text-gray-700">
-                                                            {String(option)}
-                                                        </span>
-                                                    </label>
-                                                );
-                                            },
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
-                        {Array.isArray(fieldValue) && fieldValue.length > 0 && (
-                            <div className="flex flex-wrap gap-2">
-                                {fieldValue.map((seatId) => (
-                                    <div
-                                        key={seatId}
-                                        className="inline-flex items-center gap-1 bg-blue-600 text-white px-2 py-1 rounded-md text-sm"
-                                    >
-                                        <span>{seatId}</span>
-                                        <button
-                                            type="button"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                toggleSeatSelection(
-                                                    seatId,
-                                                    Array.isArray(fieldValue)
-                                                        ? fieldValue
-                                                        : [],
-                                                );
-                                            }}
-                                            className="ml-1 hover:bg-blue-700 rounded p-0.5 transition-colors"
-                                        >
-                                            <X size={12} />
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
                 ) : null}
             </div>
         );

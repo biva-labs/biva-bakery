@@ -6,13 +6,12 @@ type EventCardProps = {
     date: string;
     event_name: string;
     group_name: string;
-    pevent_id: string;
+    event_id: string;
     position: string;
     public_id: string;
     ticket_price: string;
     time: string;
     url: string;
-    venue_img_url: string;
 };
 
 export default function EventCard(props: EventCardProps) {
@@ -22,7 +21,7 @@ export default function EventCard(props: EventCardProps) {
 
     const handleBookNow = () => {
         const searchParams = new URLSearchParams({
-            eventId: props.pevent_id,
+            eventId: props.event_id,
             eventName: props.event_name,
             groupName: props.group_name,
             date: props.date,
@@ -30,7 +29,6 @@ export default function EventCard(props: EventCardProps) {
             price: props.ticket_price,
             publicId: props.public_id,
             imageUrl: props.url,
-            venueImageUrl: props.venue_img_url,
         });
         navigate(`/events/booking?${searchParams.toString()}`);
     };

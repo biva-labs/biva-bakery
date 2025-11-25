@@ -169,7 +169,7 @@ export const getImage = async (c: Context) => {
                         position: img.context?.position,
                     })),
                     events: foodCourtEvents.map((img) => ({
-                        pevent_id: img.context?.custom?.event_id,
+                        event_id: img.context?.custom?.event_id,
                         ticket_price: img.context?.custom?.ticket_price,
                         event_name: img.context?.custom?.event_name,
                         group_name: img.context?.custom?.group_name,

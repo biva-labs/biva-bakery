@@ -11,7 +11,9 @@ import { useEventForm } from "@/hooks/useEventForm";
 import { toast } from "sonner";
 import usePay from "@/hooks/usePay";
 import { useFoodCourtEventFormStore } from "@/store/seat-form-store";
-import EventSeatForm from "@/components/events/form";
+import EventSeatForm from "@/components/events/event-form";
+
+import GuestEventSeatForm from "@/components/events/guest-form";
 
 interface EventData {
     eventId: string;
@@ -22,10 +24,9 @@ interface EventData {
     price: string;
     publicId: string;
     imageUrl: string;
-    venueImageUrl: string;
 }
 
-const IGNORE_VALUES = ["eventId", "publicId", "imageUrl", "venueImageUrl"];
+const IGNORE_VALUES = ["eventId", "publicId", "imageUrl"];
 
 const KEY_VALUE_MAP = {
     eventName: "Event Name",
@@ -38,13 +39,13 @@ const KEY_VALUE_MAP = {
 export default function Table() {
     const [searchParams] = useSearchParams();
     const [eventData, setEventData] = useState<EventData | null>(null);
-    const [selectedTables, setSelectedTables] = useState<string[]>([]);
-    const { setField } = useFoodCourtEventFormStore();
+    const { setField, number_of_guest } = useFoodCourtEventFormStore();
     const data = useFoodCourtEventFormStore();
-    const { mutate: submitForm, isPending, isError, error } = useEventForm();
+    const { mutate: submitForm, isPending } = useEventForm();
 
     const { initiatePayment, isProcessing } = usePay();
 
+    // const guest = useGuestStore().guest;
     // Get event data from URL params
     useEffect(() => {
         console.log("URL Search Params:", Object.fromEntries(searchParams));
@@ -61,7 +62,6 @@ export default function Table() {
                 price: params.price || "",
                 publicId: decodeURIComponent(params.publicId || ""),
                 imageUrl: decodeURIComponent(params.imageUrl || ""),
-                venueImageUrl: decodeURIComponent(params.venueImageUrl || ""),
             };
 
             console.log("Parsed Event Data:", parsedEventData);
@@ -71,10 +71,6 @@ export default function Table() {
             setField("event_id", params.eventId);
         }
     }, [searchParams, setField]);
-
-    useEffect(() => {
-        setField("table_id", selectedTables);
-    }, [selectedTables, setField]);
 
     if (!eventData) {
         return (
@@ -95,10 +91,22 @@ export default function Table() {
     }
 
     const handleBookAndPay = async () => {
+        // Debug: Log store state before submission
+        console.log("Store state before submission:", {
+            guest: data.guest,
+            name: data.name,
+            email: data.email,
+            phone_number: data.phone_number,
+            event_id: data.event_id,
+            number_of_guest: data.number_of_guest,
+            adhaar_or_pan_card: data.adhaar_or_pan_card
+                ? "File present"
+                : "No file",
+        });
+
         if (
             !data.name ||
             !data.email ||
-            !data.table_id ||
             !data.event_id ||
             !data.number_of_guest
         ) {
@@ -119,13 +127,13 @@ export default function Table() {
                 adhaar_or_pan_card: data.adhaar_or_pan_card,
                 number_of_guest: data.number_of_guest,
                 event_id: data.event_id,
-                table_id: data.table_id,
+                guest: data.guest,
             },
             {
                 onSuccess: async (response) => {
                     const totalAmount =
-                        response.data?.data?.totalAmount ||
-                        response.data.data[0].totalAmount;
+                        response.data?.data?.total_amount ||
+                        response.data.data[0].total_amount;
                     const user = response.data || response.data.data[0];
                     console.log(user);
                     await initiatePayment(totalAmount, user);
@@ -144,24 +152,55 @@ export default function Table() {
                 {/* FLEX: FORM LEFT + IMAGE + INFO RIGHT */}
                 <div className="flex flex-col lg:flex-row items-start gap-10 lg:gap-16">
                     {/* LEFT — EVENT FORM */}
+                    {/* LEFT — EVENT FORM */}
                     <div className="w-full lg:w-1/2 space-y-6">
+                        {/* Main Event Form */}
                         <EventSeatForm />
 
-                        {/* Pay Button - moved inside the form section */}
+                        {/* Guest Forms - Render based on number_of_guest */}
+                        {parseInt(data.number_of_guest) > 0 && (
+                            <div className="space-y-4">
+                                <h3 className="text-lg font-semibold text-gray-900">
+                                    Guest Information ({data.number_of_guest}{" "}
+                                    guests)
+                                </h3>
+                                {Array.from(
+                                    { length: parseInt(data.number_of_guest) },
+                                    (_, index) => {
+                                        const guestId = `guest-${index + 1}`;
+                                        return (
+                                            <div
+                                                key={guestId}
+                                                className="border border-gray-200 rounded-lg p-4"
+                                            >
+                                                <h4 className="text-md font-medium text-gray-700 mb-3">
+                                                    Guest {index + 1}
+                                                </h4>
+                                                <GuestEventSeatForm
+                                                    guestId={guestId}
+                                                />
+                                            </div>
+                                        );
+                                    },
+                                )}
+                            </div>
+                        )}
+
+                        {/* Pay Button */}
                         <Button
                             onClick={handleBookAndPay}
                             disabled={isPending || isProcessing}
-                            className="w-full  text-lg "
+                            className="w-full text-lg"
                             size="default"
                         >
                             {isPending || isProcessing
                                 ? "Processing..."
                                 : (() => {
-                                      const guests = parseInt(
-                                          data.number_of_guest,
-                                      );
+                                      const guests =
+                                          parseInt(data.number_of_guest) || 0;
                                       const total =
-                                          guests * parseInt(eventData.price);
+                                          guests *
+                                          parseInt(eventData.price || "0");
                                       return !guests || isNaN(total)
                                           ? "Pay Now"
                                           : `Pay Now ₹${total}`;
@@ -173,7 +212,7 @@ export default function Table() {
                     <div className="w-full lg:w-1/2 flex flex-col items-center">
                         {/* IMAGE */}
                         <img
-                            src={eventData.venueImageUrl}
+                            src={eventData.imageUrl}
                             alt="Venue"
                             className="
                                 w-full

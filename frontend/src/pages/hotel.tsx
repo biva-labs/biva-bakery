@@ -5,7 +5,9 @@ import { useState } from "react";
 import { useEffect } from "react";
 import GalleryMasonry from "@/components/gallery/masonary";
 import Banquet from "@/components/hotel/banquet";
-import EventCardCarousel from "@/components/events/event-card-carousal";
+import EventCardCarousel, {
+    type EventData,
+} from "@/components/events/event-card-carousal";
 
 import { type CardImagesType } from "@/types/card-images-types";
 import { type HeroImagesType } from "@/types/hero-images-types";
@@ -22,7 +24,7 @@ export default function Hotel() {
     const [hotelRooms, setHotelRooms] = useState<CardImagesType[]>([]);
     const [hotelGallery, setHotelGallery] = useState<GalleryImagesType[]>([]);
     const [hotelBanquet, setHotelBanquet] = useState<BanquetImagesType[]>([]);
-    const [events, setEvents] = useState<CardImagesType[]>([]);
+    const [events, setEvents] = useState<EventData[]>([]);
 
     const { data, error, isLoading } = useImages("hotel");
 
