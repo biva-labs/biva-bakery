@@ -3,8 +3,8 @@ import { drizzle } from "drizzle-orm/neon-http";
 import { foodCourtTable, foodCourtEventTable } from "./db.ts";
 import { neon } from "@neondatabase/serverless";
 import { Client } from "@upstash/qstash";
-
 import { eq } from "drizzle-orm";
+import { inArray } from "drizzle-orm";
 
 const sql = neon(Deno.env.get("NEON_PG_URL")!);
 
@@ -17,16 +17,18 @@ const TYPE_TO_TABLE = {
   "food-court": foodCourtTable,
 };
 
-async function markPaymentPaid(userId: string, type: string) {
+async function markPaymentPaid(userId: string[], type: string) {
   const tableToUpdate = TYPE_TO_TABLE[type];
+  console.log(tableToUpdate);
   try {
-    const [updated] = await db
+    const numericUserIds = userId.map((id) => parseInt(id));
+    const updated = await db
       .update(tableToUpdate)
       .set({ paid: true })
-      .where(eq(tableToUpdate.id, parseInt(userId)))
+      .where(inArray(tableToUpdate.id, numericUserIds))
       .returning();
 
-    console.log("Payment updated for userId:", userId);
+    console.log("Payment updated for userId:", updated);
     return updated;
   } catch (err) {
     console.error("Failed to update payment:", err);
@@ -80,7 +82,7 @@ Deno.serve(async (req: Request) => {
   }
 
   const payload = JSON.parse(rawBody);
-  const userId = payload.payload.payment.entity.notes.userId;
+  const userId = payload.payload.payment.entity.notes.users;
   const tableType = payload.payload.payment.entity.notes.type;
   console.log("✅ Verified Razorpay webhook:", payload.event);
   console.log("userId: ", userId);
@@ -88,10 +90,14 @@ Deno.serve(async (req: Request) => {
   switch (payload.event) {
     // testing qstash messaging
     case "payment.captured":
-      await markPaymentPaid(userId, tableType);
+      const userIdArray = JSON.parse(userId);
+      const paymentConfirmedData = await markPaymentPaid(
+        userIdArray,
+        tableType,
+      );
       const res = await upstashClient.publishJSON({
         url: "https://oscitant-conner-gingelly.ngrok-free.dev/qstash-message",
-        body: { hello: "payment recieved!!!!", data: payload },
+        body: { hello: "payment recieved!!!!", data: paymentConfirmedData },
         headers: { "my-header": "my-value" },
       });
       console.log("updated successfully for user:", userId);
