@@ -1,1 +1,1 @@
-export { foodCourtTable } from "../../../src/db/schema.ts";
+export { foodCourtTable, foodCourtEventTable } from "../../../src/db/schema.ts";

@@ -1,6 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { drizzle } from "drizzle-orm/neon-http";
-import { foodCourtTable } from "./db.ts";
+import { foodCourtTable, foodCourtEventTable } from "./db.ts";
 import { neon } from "@neondatabase/serverless";
 import { Client } from "@upstash/qstash";
 
@@ -12,12 +12,18 @@ const db = drizzle(sql);
 
 const upstashClient = new Client({ token: Deno.env.get("QSTASH_TOKEN") });
 
-async function markPaymentPaid(userId: string) {
+const TYPE_TO_TABLE = {
+  events: foodCourtEventTable,
+  "food-court": foodCourtTable,
+};
+
+async function markPaymentPaid(userId: string, type: string) {
+  const tableToUpdate = TYPE_TO_TABLE[type];
   try {
     const [updated] = await db
-      .update(foodCourtTable)
+      .update(tableToUpdate)
       .set({ paid: true })
-      .where(eq(foodCourtTable.id, parseInt(userId)))
+      .where(eq(tableToUpdate.id, parseInt(userId)))
       .returning();
 
     console.log("Payment updated for userId:", userId);
@@ -75,13 +81,14 @@ Deno.serve(async (req: Request) => {
 
   const payload = JSON.parse(rawBody);
   const userId = payload.payload.payment.entity.notes.userId;
+  const tableType = payload.payload.payment.entity.notes.type;
   console.log("✅ Verified Razorpay webhook:", payload.event);
   console.log("userId: ", userId);
 
   switch (payload.event) {
     // testing qstash messaging
     case "payment.captured":
-      await markPaymentPaid(userId);
+      await markPaymentPaid(userId, tableType);
       const res = await upstashClient.publishJSON({
         url: "https://oscitant-conner-gingelly.ngrok-free.dev/qstash-message",
         body: { hello: "payment recieved!!!!", data: payload },
