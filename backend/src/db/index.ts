@@ -29,13 +29,15 @@ export const insertFoodCourt = async (
 
 export const insertEvent = async (
     data: NewEventTable,
-): Promise<NewEventTable | null> => {
+): Promise<NewEventTable[] | null> => {
     try {
-        const [inserted] = await db
+        const inserted = await db
             .insert(foodCourtEventTable)
             .values(data)
             .returning();
-
+        // console.log("----------");
+        // console.log("insterted", inserted);
+        // console.log("---------------");
         return inserted;
     } catch (error) {
         console.error("Error inserting event:", error);
