@@ -1,8 +1,10 @@
 import { Resend } from "resend";
 import { foodCourtEmailTemplate } from "./foodCourtEmailTemplate.ts";
-import type { Context } from "hono";
+import { type Context } from "hono";
+import { sendFoodCourtMail } from "./food-court-mail.ts";
+import { sendEventMail } from "./event-mail.ts";
 
-const resend = new Resend(process.env.RESEND_KEY!);
+export const resend = new Resend(process.env.RESEND_KEY!);
 export const sendEmail = async (
   c: Context,
   // userId: string,
@@ -16,33 +18,36 @@ export const sendEmail = async (
 ) => {
   const body = await c.req.json();
 
-  console.log("in resend.ts", body);
+  // switch (body.type) {
+  //   case "events": {
 
-  const { data, error } = await resend.emails.send({
-    from: "noreply@thebiva.com",
-    to: [
-      body.email,
-      "db1833@srmist.edu.in",
-      "hello@thebiva.com",
-      "quickpromoteagency@gmail.com",
-    ],
-    subject: body.subject,
-    html: foodCourtEmailTemplate(
-      body.amount,
-      body.name,
-      body.email,
-      body.userId,
-      body.preference,
-      body.timeSlot,
-      body.totalPeople,
-    ),
-  });
+  //   }
+  // }
 
-  if (error) {
-    console.log(error);
-    return c.json({ error: error }, 400);
-  } else {
-    console.log("resend got it", data);
-    return c.json({ success: "message delivered!" }, 200);
+  const bodyData = body.userData;
+
+  switch (bodyData.type) {
+    case "events":
+      const event_res = await sendEventMail(bodyData.data, c);
+      if (event_res) {
+        return c.json({ message: "success in sending mails!" }, 200);
+      } else {
+        return c.json({ error: "failed to send messag!" }, 400);
+      }
+    case "food-court":
+      const food_res = await sendFoodCourtMail(bodyData.data, c);
+      if (food_res) {
+        return c.json(
+          { message: "success in sending food court messages!" },
+          200,
+        );
+      } else {
+        return c.json({ error: "failed to send messag!" }, 400);
+      }
+    // case "hotel":
+    //   await sendHotelMail();
+    //   break;
   }
+  // console.log("in resend.ts", body.userData.data);
+  // console.log("in resend.ts", body.data[0]);
 };

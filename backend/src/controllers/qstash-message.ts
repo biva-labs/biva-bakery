@@ -28,20 +28,10 @@ export const qstash_message = async (c: Context) => {
 
     if (isValid) {
       const userData = body;
-
-      console.log("QSTASH DATA!!!", userData);
-
       const email = await qstashClient.publishJSON({
         url: "https://oscitant-conner-gingelly.ngrok-free.dev/send-email",
         body: {
-          name: userData.userName,
-          userId: userData.userId,
-          amount: userData.userTotalAmount,
-          email: userData.userEmail,
-          preference: userData.userPreference,
-          totalPeople: userData.userTotalPeople,
-          timeSlot: userData.userTimeSlot,
-          subject: "invoice",
+          userData,
         },
         retries: 3,
       });
