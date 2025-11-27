@@ -95,9 +95,15 @@ Deno.serve(async (req: Request) => {
         userIdArray,
         tableType,
       );
+
+      console.log(paymentConfirmedData);
       const res = await upstashClient.publishJSON({
         url: "https://oscitant-conner-gingelly.ngrok-free.dev/qstash-message",
-        body: { hello: "payment recieved!!!!", data: paymentConfirmedData },
+        body: {
+          hello: "payment recieved!!!!",
+          data: paymentConfirmedData,
+          type: tableType,
+        },
         headers: { "my-header": "my-value" },
       });
       console.log("updated successfully for user:", userId);
