@@ -62,8 +62,13 @@ export const get_room_details = async (room_type: string) => {
           eq(adminHotelRoomReservation.occupied, false),
         ),
       );
-    return [occupied, unoccupied];
+    return [occupied, unoccupied]; // remove this if there is issue!
   });
+
+  return {
+    occupied,
+    unoccupied,
+  };
 };
 
 export const updateAfterPayment = async (userId: string) => {

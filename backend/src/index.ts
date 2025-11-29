@@ -32,7 +32,7 @@ app.use(
 app.get("/images/:folder", getImage);
 app.route("/api/orders", orders);
 app.route("/api/verify-payment", verifyPayment);
-app.get("/room-details", getHotelRoomDetails);
+app.get("/room-details/:room_type", getHotelRoomDetails);
 
 app.post("/qstash-message", qstash_message);
 app.post("/send-email", sendEmail);
