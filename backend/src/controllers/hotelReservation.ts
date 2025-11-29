@@ -10,8 +10,14 @@ import { inArray } from "drizzle-orm";
 
 export const getHotelRoomDetails = async (c: Context) => {
   try {
-    const body = await c.req.json();
-    const room_type = body["room_type"];
+    const room_type = c.req.query("room_type");
+
+    if (room_type === undefined || room_type.trim() === "") {
+      return c.json(
+        { error: "Missing required query parameter: room_type" },
+        400,
+      );
+    }
     const res = await get_room_details(room_type);
     if (res) {
       return c.json({ res }, 200);
