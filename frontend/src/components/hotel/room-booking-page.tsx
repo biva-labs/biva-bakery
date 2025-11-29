@@ -1,194 +1,131 @@
-// import { Separator } from "@/components/ui/separator";
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogHeader,
-//   DialogTitle,
-//   DialogTrigger,
-//   DialogDescription,
-//   DialogFooter,
-//   DialogClose
-// } from "@/components/ui/dialog";
-// import { Button } from "../ui/button";
-// import { useState } from "react";
-// import SeatForm from "../seat-form";
-// import { useParams } from "react-router-dom";
-// import PayButton from "../pay-button";
-// import Amenities from "../amenities";
-// import { Label } from "../ui/label";
-// import { Input } from "../ui/input";
-
-// export default function RoomBookingPage() {
-//   const { id } = useParams();
-//   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-//   const [isHovered, setIsHovered] = useState(false);
-
-//   const images = [
-//     "/room-2.png",
-//     "/room-1.png",
-//     "/room-3.png",
-//     "/room-4.png",
-//     // "/room.jpg",
-//     // "/room.jpg"
-//   ];
-
-//   return (
-//     <div className="max-w-6xl mx-auto px-6 py-10">
-//       <h1 className="text-2xl font-bold mb-6">Book Your {id?.[0] === "H" ? (
-//         <>Room</>
-//       ) : id?.[0] === "E" ? (
-//         <>Ticket</>
-//       ) : (
-//         <>Table</>
-//       )}
-//       </h1>
-
-//       {id ? (
-//         <div className="flex flex-col lg:flex-row gap-8">
-
-//           <div className="lg:w-1/2">
-//             <div
-//               className="relative h-64 cursor-pointer"
-//               onMouseEnter={() => setIsHovered(true)}
-//               onMouseLeave={() => setIsHovered(false)}
-//             >
-//               {/* Base container that maintains layout */}
-//               <div className="w-full h-full rounded-lg overflow-hidden shadow-lg">
-//                 {/* Main image - always visible */}
-//                 <div className="absolute inset-0 z-10">
-//                   <img
-//                     src={images[0]}
-//                     alt={`Seat ${id}`}
-//                     className="w-full h-full object-cover rounded-lg transition-all duration-500 ease-out"
-//                     style={{
-//                       transform: isHovered ? 'scale(0.95) translateX(-15px) translateY(-10px) rotate(-3deg)' : 'scale(1) translateX(0) translateY(0) rotate(0deg)'
-//                     }}
-//                   />
-//                 </div>
-
-//                 {/* Second card - appears on hover */}
-//                 <div
-//                   className="absolute inset-0 z-8 transition-all duration-700 ease-out"
-//                   style={{
-//                     transform: isHovered ? 'scale(0.95) translateX(0px) translateY(0px) rotate(0deg)' : 'scale(1) translateX(0px) translateY(0px) rotate(0deg)',
-//                     opacity: isHovered ? 1 : 0
-//                   }}
-//                 >
-//                   <img
-//                     src={images[1]}
-//                     alt={`Seat ${id} - Image 2`}
-//                     className="w-full h-full object-cover rounded-lg"
-//                   />
-//                 </div>
-
-//                 <div
-//                   className="absolute inset-0 z-6 transition-all duration-900 ease-out"
-//                   style={{
-//                     transform: isHovered ? 'scale(0.95) translateX(15px) translateY(10px) rotate(3deg)' : 'scale(1) translateX(0px) translateY(0px) rotate(0deg)',
-//                     opacity: isHovered ? 1 : 0
-//                   }}
-//                 >
-//                   <img
-//                     src={images[2]}
-//                     alt={`Seat ${id} - Image 3`}
-//                     className="w-full h-full object-cover rounded-lg"
-//                   />
-//                 </div>
-//               </div>
-
-//               {/* View More Button */}
-//               <Dialog>
-//                 <DialogTrigger asChild>
-//                   <button className="absolute top-3 left-3 bg-black/70 text-white text-sm px-3 py-1.5 rounded-lg backdrop-blur-sm hover:bg-black/90 transition-all duration-200 font-medium z-20">
-//                     view more +
-//                   </button>
-//                 </DialogTrigger>
-//                 <DialogContent className="max-w-4xl max-h-[90vh]">
-//                   <DialogHeader>
-//                     <DialogTitle>Seat {id} - Image Gallery</DialogTitle>
-//                   </DialogHeader>
-
-//                   {/* Image Grid */}
-//                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4 max-h-96 overflow-y-auto">
-//                     {images.map((img, index) => (
-//                       <div
-//                         key={index}
-//                         className={`aspect-[4/3] rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:scale-105 ${selectedImageIndex === index ? 'ring-2 ring-blue-500' : ''
-//                           }`}
-//                         onClick={() => setSelectedImageIndex(index)}
-//                       >
-//                         <img
-//                           src={img}
-//                           alt={`Seat ${id} - Image ${index + 1}`}
-//                           className="w-full h-full object-cover"
-//                         />
-//                       </div>
-//                     ))}
-//                   </div>
-
-//                   {/* Selected Image Display */}
-//                   <div className="mt-6">
-//                     <img
-//                       src={images[selectedImageIndex]}
-//                       alt={`Seat ${id} - Selected`}
-//                       className="w-full max-h-80 object-cover rounded-lg"
-//                     />
-//                   </div>
-//                 </DialogContent>
-//               </Dialog>
-//             </div>
-
-//             <div className="space-y-1 mt-6">
-//               <h2 className="text-xl font-semibold">Seat {id}</h2>
-//               <p className="text-sm text-muted-foreground">Table: Round Table 5</p>
-//               <p className="text-sm text-green-600 font-medium">Status: Available</p>
-//             </div>
-
-//             <Amenities />
-//           </div>
-
-//           {/* RIGHT SIDE: Form + Button */}
-//           <div className="lg:w-1/2 space-y-6">
-//             <SeatForm table={id || ""} />
-//             <Separator />
-//             <PayButton amount={10000} />
-//           </div>
-//         </div>
-//       ) : (
-//         <p className="text-red-500">Invalid seat ID.</p>
-//       )}
-//     </div>
-//   );
-// }
-
-import { useState } from "react";
+import { useState, useMemo, useCallback, memo } from "react";
 import {
     Dialog,
     DialogTrigger,
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogDescription,
     DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import SeatForm from "../seat-form";
+import { ScrollArea } from "../ui/scroll-area";
+import Form from "./form";
 import PayButton from "../pay-button";
 import Amenities from "../amenities";
-import { ScrollArea } from "../ui/scroll-area";
+import { useHotelForm } from "@/hooks/useHotelForm";
+import usePay from "@/hooks/usePay";
+import { toast } from "sonner";
+import { useHotelStore } from "@/store/hotel-store";
 
-export function RoomBookingPage({ url }: { url: string | string[] }) {
-    const [isHovered, setIsHovered] = useState(false);
+interface RoomBookingPageProps {
+    url: string | string[];
+    type: string;
+    price: string;
+}
+
+export const RoomBookingPage = memo(function RoomBookingPage({
+    url,
+    type,
+    price,
+}: RoomBookingPageProps) {
     const [galleryOpen, setGalleryOpen] = useState(false);
     const [bookingOpen, setBookingOpen] = useState(false);
-    const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-    const images = Array.isArray(url) ? url : [url];
+    // Memoize images array to prevent recreation on every render
+    const images = useMemo(() => {
+        return Array.isArray(url) ? url : [url];
+    }, [url]);
+
+    // Memoize the first 3 images for the preview
+    const previewImages = useMemo(() => {
+        return images.slice(0, 3);
+    }, [images]);
+
+    // Memoize callback functions to prevent child re-renders
+    const handleGalleryOpen = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setGalleryOpen(true);
+    }, []);
+
+    const handleImageSelect = useCallback((index: number) => {
+        setSelectedImageIndex(index);
+    }, []);
+
+    const handleBookingOpenChange = useCallback((open: boolean) => {
+        setBookingOpen(open);
+    }, []);
+
+    const handleGalleryOpenChange = useCallback((open: boolean) => {
+        setGalleryOpen(open);
+    }, []);
+
+    // Memoize the selected image to prevent lookups
+    const selectedImage = useMemo(() => {
+        return images[selectedImageIndex];
+    }, [images, selectedImageIndex]);
+
+    const data = useHotelStore();
+    const { mutate: submitForm, isPending, isError, error } = useHotelForm();
+
+    const { initiatePayment, isProcessing } = usePay();
+
+    const handleBookAndPay = async () => {
+        // if (data) {
+        //     console.log(data);
+        //     return;
+        // }
+
+        if (
+            !data.name ||
+            !data.email ||
+            !data.phone_number ||
+            !data.join_date ||
+            !data.leave_date ||
+            !data.total_people
+        ) {
+            toast.error("Please fill in all required fields");
+            return;
+        }
+
+        if (!data.adhaar_or_pan_card) {
+            toast.error("Please upload your Aadhar or PAN card");
+            return;
+        }
+
+        submitForm(
+            {
+                name: data.name,
+                email: data.email,
+                phone_number: data.phone_number,
+                adhaar_or_pan_card: data.adhaar_or_pan_card,
+                total_people: data.total_people,
+                join_date: data.join_date,
+                leave_date: data.leave_date,
+                type: type,
+            },
+            {
+                onSuccess: async (response) => {
+                    console.log(response.data.data);
+                    const totalAmount = response.data?.data[0]?.totalAmount;
+                    console.log(totalAmount);
+                    const user = response.data?.data?.map((v) => v.id);
+                    console.log(user);
+                    await initiatePayment(totalAmount, user, "hotel");
+                },
+                onError: (error) => {
+                    console.error("Form submission error:", error);
+                    toast.error("Form submission failed. Please try again.");
+                },
+            },
+        );
+    };
 
     return (
         <>
-            <Dialog open={bookingOpen} onOpenChange={setBookingOpen}>
+            <Dialog open={bookingOpen} onOpenChange={handleBookingOpenChange}>
                 <DialogTrigger asChild>
                     <Button
                         variant="default"
@@ -204,105 +141,95 @@ export function RoomBookingPage({ url }: { url: string | string[] }) {
                         <DialogTitle className="text-2xl font-semibold">
                             Room Booking
                         </DialogTitle>
-                        <DialogDescription>
-                            Choose your room, view images, and confirm booking.
-                        </DialogDescription>
                     </DialogHeader>
 
                     <div className="flex flex-col lg:flex-row gap-10 mt-6">
-                        <div className="lg:w-1/2 relative">
-                            <div
-                                className="relative h-80 cursor-pointer"
-                                onMouseEnter={() => setIsHovered(true)}
-                                onMouseLeave={() => setIsHovered(false)}
-                            >
-                                <div className="w-full h-full rounded-lg overflow-hidden shadow-xl relative">
-                                    {images.slice(0, 3).map((img, index) => (
-                                        <img
-                                            key={index}
-                                            src={img}
-                                            alt={`Seat Image ${index + 1}`}
-                                            className={`absolute inset-0 w-full h-full object-cover rounded-lg transition-all duration-700 ease-out`}
-                                            style={{
-                                                zIndex: 10 - index,
-                                                opacity:
-                                                    index === 0
-                                                        ? 1
-                                                        : isHovered
-                                                          ? 1
-                                                          : 0,
-                                                transform:
-                                                    isHovered && index === 0
-                                                        ? "scale(0.95) translateX(-15px) translateY(-10px) rotate(-3deg)"
-                                                        : isHovered &&
-                                                            index === 1
-                                                          ? "scale(0.95)"
-                                                          : isHovered &&
-                                                              index === 2
-                                                            ? "scale(0.95) translateX(15px) translateY(10px) rotate(3deg)"
-                                                            : "scale(1)",
-                                            }}
-                                        />
-                                    ))}
-                                </div>
+                        <div className="lg:w-1/2 relative group">
+                            <div className="relative h-80 w-full overflow-hidden rounded-lg shadow-xl">
+                                {/* Show stacked images; use CSS for hover effect */}
+                                {previewImages.map((img, index) => (
+                                    <img
+                                        key={`preview-${index}`}
+                                        src={img}
+                                        alt={`Room image ${index + 1}`}
+                                        className={`
+                                            absolute inset-0 w-full h-full object-cover rounded-lg transition-all duration-700 ease-out
+                                            ${
+                                                index === 0
+                                                    ? "group-hover:scale-[0.95] group-hover:-translate-x-[15px] group-hover:-translate-y-[10px] group-hover:-rotate-3"
+                                                    : index === 1
+                                                      ? "group-hover:scale-[0.95] group-hover:opacity-100"
+                                                      : "group-hover:scale-[0.95] group-hover:translate-x-[15px] group-hover:translate-y-[10px] group-hover:rotate-3"
+                                            }
+                                        `}
+                                        style={{
+                                            zIndex: 10 - index,
+                                            opacity: index === 0 ? 1 : 0,
+                                        }}
+                                    />
+                                ))}
 
                                 <button
                                     type="button"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        setGalleryOpen(true);
-                                    }}
+                                    onClick={handleGalleryOpen}
                                     className="absolute top-3 left-3 bg-black/70 text-white text-sm px-3 py-1.5 rounded-lg backdrop-blur-sm hover:bg-black/90 transition-all duration-200 font-medium z-20"
                                 >
                                     View More +
                                 </button>
                             </div>
 
-                            <div className="space-y-1 mt-6">
-                                <h2 className="text-2xl font-semibold">
-                                    Seat A1
-                                </h2>
-                                <p className="text-sm text-muted-foreground">
-                                    Table: Round Table 5
-                                </p>
-                                <p className="text-sm text-green-600 font-medium">
-                                    Status: Available
-                                </p>
-                            </div>
-
                             <Amenities />
                         </div>
 
                         <div className="lg:w-1/2 space-y-6">
-                            <SeatForm table="Round Table 5" />
+                            <Form type={type} />
                             <Separator />
-                            <PayButton amount={10000} />
+                            <Button
+                                onClick={handleBookAndPay}
+                                disabled={isPending || isProcessing}
+                                className="w-full"
+                            >
+                                {isPending || isProcessing
+                                    ? "Processing..."
+                                    : (() => {
+                                          const guests = parseInt(
+                                              data.total_people,
+                                          );
+                                          const priceInt = parseInt(price);
+
+                                          if (isNaN(guests) || guests <= 0)
+                                              return "Pay Now";
+
+                                          const total = guests * priceInt;
+
+                                          return `Pay Now ₹${total}`;
+                                      })()}
+                            </Button>
                         </div>
                     </div>
                 </DialogContent>
             </Dialog>
 
-            <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
+            <Dialog open={galleryOpen} onOpenChange={handleGalleryOpenChange}>
                 <DialogContent className="max-w-screen max-h-screen overflow-hidden rounded-2xl">
                     <DialogHeader>
-                        <DialogTitle>Seat Image Gallery</DialogTitle>
+                        <DialogTitle>Room Image Gallery</DialogTitle>
                     </DialogHeader>
                     <ScrollArea className="h-[80vh]">
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
                             {images.map((img, index) => (
                                 <div
-                                    key={index}
+                                    key={`gallery-${index}`}
                                     className={`aspect-[4/3] rounded-lg overflow-hidden cursor-pointer transition-all duration-200 hover:scale-105 ${
                                         selectedImageIndex === index
                                             ? "ring-2 ring-blue-500"
                                             : ""
                                     }`}
-                                    onClick={() => setSelectedImageIndex(index)}
+                                    onClick={() => handleImageSelect(index)}
                                 >
                                     <img
                                         src={img}
-                                        alt={`Seat Image ${index + 1}`}
+                                        alt={`Room image ${index + 1}`}
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
@@ -310,8 +237,8 @@ export function RoomBookingPage({ url }: { url: string | string[] }) {
                         </div>
                         <div className="mt-6">
                             <img
-                                src={images[selectedImageIndex]}
-                                alt="Selected Seat"
+                                src={selectedImage}
+                                alt="Selected room"
                                 className="w-full max-h-[70vh] object-cover rounded-lg"
                             />
                         </div>
@@ -325,4 +252,4 @@ export function RoomBookingPage({ url }: { url: string | string[] }) {
             </Dialog>
         </>
     );
-}
+});
