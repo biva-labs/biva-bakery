@@ -50,7 +50,7 @@ export const reserveHotelRoom = async (c: Context) => {
       leaveDate: body["leave_date"],
     })
     .returning({
-      application_id: hotelRoomReservation.applicationId,
+      id: hotelRoomReservation.id,
       status: hotelRoomReservation.roomType,
     });
 
@@ -62,7 +62,7 @@ export const reserveHotelRoom = async (c: Context) => {
 
   return c.json({
     success: true,
-    reservation_id: newReservation.application_id,
+    id: newReservation.id,
     total_amount: total_amt,
     message: "user data stored, havent paid yet!",
   });

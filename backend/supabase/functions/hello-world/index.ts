@@ -5,6 +5,7 @@ import { neon } from "@neondatabase/serverless";
 import { Client } from "@upstash/qstash";
 import { eq } from "drizzle-orm";
 import { inArray } from "drizzle-orm";
+import { hotelRoomReservation } from "../../../drizzle/schema.ts";
 
 const sql = neon(Deno.env.get("NEON_PG_URL")!);
 
@@ -15,6 +16,7 @@ const upstashClient = new Client({ token: Deno.env.get("QSTASH_TOKEN") });
 const TYPE_TO_TABLE = {
   events: foodCourtEventTable,
   "food-court": foodCourtTable,
+  hotel: hotelRoomReservation,
 };
 
 async function markPaymentPaid(userId: string[], type: string) {
