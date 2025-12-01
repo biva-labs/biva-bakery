@@ -1,1 +1,0 @@
-ALTER TABLE "foodCourtEventTable" ADD COLUMN "total_amount" integer NOT NULL;

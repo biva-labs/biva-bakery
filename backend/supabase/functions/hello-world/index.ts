@@ -5,7 +5,7 @@ import { neon } from "@neondatabase/serverless";
 import { Client } from "@upstash/qstash";
 import { eq } from "drizzle-orm";
 import { inArray } from "drizzle-orm";
-import { hotelRoomReservation } from "../../../drizzle/schema.ts";
+import { hotelRoomReservation } from "./db.ts";
 
 const sql = neon(Deno.env.get("NEON_PG_URL")!);
 
