@@ -104,7 +104,7 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
                     const id = response.data?.id;
 
                     if (amount && id) {
-                        await initiatePayment(amount, id, "hotel");
+                      await initiatePayment(amount, JSON.stringify([id]), "hotel");
                     } else {
                         toast.error("Invalid server response");
                     }
@@ -117,7 +117,7 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
     return (
         <div className="flex flex-col lg:flex-row gap-10 w-full max-w-7xl mx-auto px-4">
             {/* LEFT SIDE — GALLERY */}
-            <div className="lg:w-1/2 space-y-6">
+            <div className="lg:w-1/2 space-y-10 mt-10">
                 {/* MAIN IMAGE CARD */}
                 <div
                     className="relative bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer group"
@@ -221,7 +221,7 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
             </div>
 
             {/* RIGHT SIDE — FORM */}
-            <div className="lg:w-1/2 space-y-6">
+            <div className="lg:w-1/2 space-y-10 mt-10">
                 <h2 className="text-2xl font-semibold">Book {roomType} Room</h2>
 
                 <Form type={room_type} />
