@@ -104,7 +104,7 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
                     const id = response.data?.id;
 
                     if (amount && id) {
-                      await initiatePayment(amount, JSON.stringify([id]), "hotel");
+                        await initiatePayment(amount, id, "hotel");
                     } else {
                         toast.error("Invalid server response");
                     }
