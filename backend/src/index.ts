@@ -15,6 +15,7 @@ import { qstash_message } from "./controllers/qstash-message.ts";
 import { sendEmail } from "./utils/resend.ts";
 import {
   getHotelRoomDetails,
+  reserveHotelRoom,
   storeUnpaidData,
 } from "./controllers/hotelReservation.ts";
 
@@ -40,6 +41,7 @@ app.post("hotels/emergency", storeUnpaidData);
 
 app.post("/qstash-message", qstash_message);
 app.post("/send-email", sendEmail);
+app.post("/hotel", reserveHotelRoom);
 
 app.post("/wh", async (c) => {
   const rawBody = await c.req.arrayBuffer();
