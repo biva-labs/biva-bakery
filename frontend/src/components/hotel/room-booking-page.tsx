@@ -17,16 +17,14 @@ import { toast } from "sonner";
 import { useHotelStore } from "@/store/hotel-store";
 import { useRoomStore } from "@/store/hotel-card-store";
 import { useLocation } from "react-router-dom";
+import { X } from "lucide-react";
 
 export const RoomBookingPage = memo(function RoomBookingPage() {
-    // 1️⃣ URL → Determine Room Type
     const location = useLocation();
     const pathname = location.pathname.toLowerCase();
     const roomType = pathname.replace("/booking/", "").trim();
 
-    // 2️⃣ Get Room Card Data from Zustand
     const cardData = useRoomStore((s) => s.rooms[roomType]);
-
     if (!cardData) {
         return (
             <p className="text-red-500 text-center mt-10">Invalid Room Type</p>
@@ -35,22 +33,18 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
 
     const { url, price, room_type } = cardData;
 
-    // 3️⃣ Local UI States
+    // UI states
     const [galleryOpen, setGalleryOpen] = useState(false);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-    // 4️⃣ Prepare Image List
     const images = useMemo(() => (Array.isArray(url) ? url : [url]), [url]);
     const selectedImage = images[selectedImageIndex];
 
-    // 5️⃣ Zustand Form Data
     const data = useHotelStore();
 
-    // 6️⃣ Form & Payment Hooks
     const { mutate: submitForm, isPending } = useHotelForm();
     const { initiatePayment, isProcessing } = usePay();
 
-    // 7️⃣ Button Text Memo
     const buttonText = useMemo(() => {
         if (isPending || isProcessing) return "Processing...";
 
@@ -63,8 +57,7 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
             return "Pay Now";
         }
 
-        const totalAmount = rooms * priceInt * days;
-        return `Pay Now ₹${totalAmount}`;
+        return `Pay Now ₹${rooms * priceInt * days}`;
     }, [
         isPending,
         isProcessing,
@@ -74,7 +67,6 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
         price,
     ]);
 
-    // 8️⃣ Book & Pay Handler
     const handleBookAndPay = useCallback(() => {
         if (
             !data.name ||
@@ -84,7 +76,7 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
             !data.leave_date ||
             !data.total_people
         ) {
-            toast.error("Please fill in all required fields");
+            toast.error("Please fill all required fields");
             return;
         }
 
@@ -109,7 +101,8 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
             {
                 onSuccess: async (response) => {
                     const amount = response.data?.total_amount;
-                    const id = response.data?.reservation_id;
+                    const id = response.data?.id;
+
                     if (amount && id) {
                         await initiatePayment(amount, id, "hotel");
                     } else {
@@ -121,80 +114,115 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
         );
     }, [data, room_type]);
 
-    // 9️⃣ Handlers
-    const handleImageSelect = (i: number) => setSelectedImageIndex(i);
-    const openGallery = () => setGalleryOpen(true);
-
     return (
-        <>
-            {/* ---------- IMAGES + THUMBNAILS ---------- */}
-            <div className="flex flex-col space-y-4">
-                <img
-                    src={selectedImage}
-                    className="w-full h-72 object-cover rounded-xl cursor-pointer"
-                    onClick={openGallery}
-                    alt={roomType}
-                />
+        <div className="flex flex-col lg:flex-row gap-10 w-full max-w-7xl mx-auto px-4">
+            {/* LEFT SIDE — GALLERY */}
+            <div className="lg:w-1/2 space-y-6">
+                {/* MAIN IMAGE CARD */}
+                <div
+                    className="relative bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer group"
+                    onClick={() => setGalleryOpen(true)}
+                >
+                    <img
+                        src={selectedImage}
+                        className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
+                        alt="Selected room"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
+                    <div className="absolute top-4 right-4 bg-black/70 text-white text-sm px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        View Gallery
+                    </div>
+                    <div className="absolute bottom-4 left-4 bg-black/70 text-white text-sm px-3 py-1 rounded-full">
+                        {selectedImageIndex + 1} of {images.length}
+                    </div>
+                </div>
 
-                <div className="flex gap-2 overflow-x-auto">
+                {/* THUMBNAILS */}
+                <div className="flex gap-3 overflow-x-auto pb-2">
                     {images.map((img, i) => (
                         <img
                             key={i}
                             src={img}
-                            onClick={() => handleImageSelect(i)}
-                            className={`w-20 h-20 object-cover rounded-md cursor-pointer border
-                                ${i === selectedImageIndex ? "border-black" : "border-transparent"}`}
-                            alt={roomType + i}
+                            onClick={() => setSelectedImageIndex(i)}
+                            className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 transition-all duration-200 flex-shrink-0
+                                ${
+                                    i === selectedImageIndex
+                                        ? "border-blue-500"
+                                        : "border-gray-200 hover:border-gray-300"
+                                }`}
+                            alt={`Room ${i + 1}`}
                         />
                     ))}
                 </div>
 
+                {/* AMENITIES */}
                 <Amenities />
-            </div>
 
-            {/* ---------- FULL SCREEN GALLERY ---------- */}
-            <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
-                <DialogContent className="max-w-screen max-h-screen rounded-2xl">
-                    <DialogHeader>
-                        <DialogTitle>Room Images</DialogTitle>
-                    </DialogHeader>
+                {/* SIMPLE GALLERY MODAL */}
+                <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
+                    <DialogContent className="max-w-4xl w-[90vw] max-h-[90vh] p-6 m-4">
+                        <DialogHeader className="mb-4">
+                            <div className="flex items-center justify-between">
+                                <DialogTitle className="text-xl font-semibold">
+                                    {roomType.charAt(0).toUpperCase() +
+                                        roomType.slice(1)}{" "}
+                                    Room
+                                </DialogTitle>
+                                {/*<DialogClose asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="p-2"
+                                    >
+                                        <X className="h-5 w-5" />
+                                    </Button>
+                                </DialogClose>*/}
+                            </div>
+                        </DialogHeader>
 
-                    <ScrollArea className="h-[80vh]">
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-                            {images.map((img, index) => (
-                                <div
-                                    key={index}
-                                    className={`aspect-[4/3] rounded-lg overflow-hidden cursor-pointer
-                                    ${selectedImageIndex === index ? "ring-2 ring-blue-500" : ""}`}
-                                    onClick={() => handleImageSelect(index)}
-                                >
+                        <ScrollArea className="max-h-[70vh]">
+                            <div className="space-y-6">
+                                {/* CURRENT SELECTED IMAGE */}
+                                <div className="w-full">
                                     <img
-                                        src={img}
-                                        className="w-full h-full object-cover"
+                                        src={selectedImage}
+                                        className="w-full max-h-96 object-cover rounded-lg"
+                                        alt="Selected room view"
                                     />
                                 </div>
-                            ))}
-                        </div>
 
-                        <div className="mt-6">
-                            <img
-                                src={selectedImage}
-                                className="w-full max-h-[70vh] object-cover rounded-lg"
-                            />
-                        </div>
-                    </ScrollArea>
+                                {/* ALL IMAGES GRID */}
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    {images.map((img, i) => (
+                                        <div
+                                            key={i}
+                                            className={`rounded-lg overflow-hidden cursor-pointer border-2 transition-all
+                                                ${
+                                                    selectedImageIndex === i
+                                                        ? "border-blue-500"
+                                                        : "border-gray-200 hover:border-gray-300"
+                                                }`}
+                                            onClick={() =>
+                                                setSelectedImageIndex(i)
+                                            }
+                                        >
+                                            <img
+                                                src={img}
+                                                className="w-full h-32 object-cover"
+                                                alt={`Room view ${i + 1}`}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </ScrollArea>
+                    </DialogContent>
+                </Dialog>
+            </div>
 
-                    <DialogClose asChild>
-                        <Button variant="outline" className="mt-4">
-                            Close
-                        </Button>
-                    </DialogClose>
-                </DialogContent>
-            </Dialog>
-
-            {/* ---------- BOOKING FORM ---------- */}
-            <div className="lg:w-1/2 space-y-6 mt-6">
-                <h2 className="text-xl font-semibold">Book {roomType} Room</h2>
+            {/* RIGHT SIDE — FORM */}
+            <div className="lg:w-1/2 space-y-6">
+                <h2 className="text-2xl font-semibold">Book {roomType} Room</h2>
 
                 <Form type={room_type} />
 
@@ -203,11 +231,11 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
                 <Button
                     onClick={handleBookAndPay}
                     disabled={isPending || isProcessing}
-                    className="w-full"
+                    className="w-full py-3 text-lg"
                 >
                     {buttonText}
                 </Button>
             </div>
-        </>
+        </div>
     );
 });
