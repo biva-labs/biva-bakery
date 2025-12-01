@@ -13,7 +13,11 @@ import { eventFormData } from "./controllers/eventFormData.ts";
 import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js";
 import { qstash_message } from "./controllers/qstash-message.ts";
 import { sendEmail } from "./utils/resend.ts";
-import { getHotelRoomDetails } from "./controllers/hotelReservation.ts";
+import {
+  getHotelRoomDetails,
+  reserveHotelRoom,
+  storeUnpaidData,
+} from "./controllers/hotelReservation.ts";
 
 const app = new Hono();
 app.use(secureHeaders());
@@ -33,9 +37,11 @@ app.get("/images/:folder", getImage);
 app.route("/api/orders", orders);
 app.route("/api/verify-payment", verifyPayment);
 app.get("/room-details/:room_type", getHotelRoomDetails);
+app.post("hotels/emergency", storeUnpaidData);
 
 app.post("/qstash-message", qstash_message);
 app.post("/send-email", sendEmail);
+app.post("/hotel", reserveHotelRoom);
 
 app.post("/wh", async (c) => {
   const rawBody = await c.req.arrayBuffer();
