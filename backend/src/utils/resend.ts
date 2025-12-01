@@ -3,6 +3,7 @@ import { foodCourtEmailTemplate } from "./foodCourtEmailTemplate.ts";
 import { type Context } from "hono";
 import { sendFoodCourtMail } from "./food-court-mail.ts";
 import { sendEventMail } from "./event-mail.ts";
+import { sendHotelMail } from "./hotel-mail.ts";
 
 export const resend = new Resend(process.env.RESEND_KEY!);
 export const sendEmail = async (
@@ -44,9 +45,13 @@ export const sendEmail = async (
       } else {
         return c.json({ error: "failed to send messag!" }, 400);
       }
-    // case "hotel":
-    //   await sendHotelMail();
-    //   break;
+    case "hotel":
+      const hotel_res = await sendHotelMail(bodyData.data, c);
+      if (hotel_res) {
+        return c.json({ message: "success in sending hotel messages!" }, 200);
+      } else {
+        return c.json({ error: "failed to send messag!" }, 400);
+      }
   }
   // console.log("in resend.ts", body.userData.data);
   // console.log("in resend.ts", body.data[0]);

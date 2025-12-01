@@ -6,6 +6,7 @@ import {
   pgTable,
   boolean,
   timestamp,
+  unique,
 } from "drizzle-orm/pg-core";
 import { number } from "zod";
 
@@ -49,13 +50,13 @@ export const hotelRoomReservation = pgTable(
     applicationId: text("application_id")
       .default(`gen_random_uuid()`)
       .notNull(),
-    name: text().notNull(),
-    email: text().notNull(),
+    name: text("name").notNull(),
+    email: text("email").notNull(),
     aadharOrPanImgUrl: text("aadhar_or_pan_img_url").notNull(),
     phoneNumber: text("phone_number").notNull(),
     totalPeople: integer("total_people").default(1).notNull(),
     totalRooms: integer("total_rooms").default(1).notNull(),
-    paid: boolean().default(false).notNull(),
+    paid: boolean("paid").default(false).notNull(),
     totalAmount: integer("total_amount").notNull(),
     createdAt: timestamp("created_at", { mode: "string" })
       .defaultNow()
