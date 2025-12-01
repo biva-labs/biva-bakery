@@ -15,61 +15,69 @@ import { useEffect } from "react";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Toaster } from "@/components/ui/sonner";
+import { RoomBookingPage } from "./components/hotel/room-booking-page";
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      gcTime: 1000 * 60 * 5,
+    defaultOptions: {
+        queries: {
+            gcTime: 1000 * 60 * 5,
+        },
     },
-  },
 });
 
 const asyncStoragePersister = createAsyncStoragePersister({
-  storage: window.localStorage,
+    storage: window.localStorage,
 });
 
 function ScrollToHash() {
-  const { hash } = useLocation();
+    const { hash } = useLocation();
 
-  useEffect(() => {
-    if (hash) {
-      const element = document.querySelector(hash);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  }, [hash]);
+    useEffect(() => {
+        if (hash) {
+            const element = document.querySelector(hash);
+            if (element) {
+                element.scrollIntoView({ behavior: "smooth" });
+            }
+        }
+    }, [hash]);
 
-  return null;
+    return null;
 }
 
 function App() {
-  return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={{ persister: asyncStoragePersister }}
-    >
-      <BrowserRouter>
-        <ScrollToHash />
-        <Routes>
-          <Route path="/" element={<Main />}>
-            <Route path="/" element={<Biva />}>
-              <Route path="/" element={<Hotel />} />
-              <Route path="/food" element={<FoodCourt />} />
-              <Route path="/bakery" element={<Bakery />} />
-            </Route>
-            {/* <Route path="/test/:id" element={<RoomBookingPage />} /> */}
-            <Route path="/table/booking" element={<SeatBookingPage />}/>
-            <Route path="/events/booking" element={<Table />}/>
-            <Route path="/about" element={<About/>} />
-            {/* <Route path="/complaint" element={<Complaint />} /> */}
-          </Route>
-        </Routes>
-        <ChatBot />
-        <Toaster richColors position="top-center" />
-      </BrowserRouter>
-    </PersistQueryClientProvider>
-  );
+    return (
+        <PersistQueryClientProvider
+            client={queryClient}
+            persistOptions={{ persister: asyncStoragePersister }}
+        >
+            <BrowserRouter>
+                <ScrollToHash />
+                <Routes>
+                    <Route path="/" element={<Main />}>
+                        <Route path="/" element={<Biva />}>
+                            <Route path="/" element={<Hotel />} />
+                            <Route path="/food" element={<FoodCourt />} />
+                            <Route path="/bakery" element={<Bakery />} />
+                        </Route>
+                        {/* <Route path="/test/:id" element={<RoomBookingPage />} /> */}
+                        <Route
+                            path="/table/booking"
+                            element={<SeatBookingPage />}
+                        />
+                        <Route path="/events/booking" element={<Table />} />
+                        <Route path="/about" element={<About />} />
+                        <Route
+                            path="/booking/:type"
+                            element={<RoomBookingPage />}
+                        />
+                        {/* <Route path="/complaint" element={<Complaint />} /> */}
+                    </Route>
+                </Routes>
+                <ChatBot />
+                <Toaster richColors position="top-center" />
+            </BrowserRouter>
+        </PersistQueryClientProvider>
+    );
 }
 
 export default App;

@@ -6,21 +6,22 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ROOM_TYPE } from "../../../../data/room-data";
 
 import { type CardImagesType } from "@/types/card-images-types";
-import { RoomBookingPage } from "../room-booking-page";
+
+import { useNavigate } from "react-router-dom";
 
 export default function RoomCard({
     url = [],
     title,
     desc,
     price,
-    onAction,
 }: CardImagesType) {
     const [index, setIndex] = useState(0);
     const [hovering, setHovering] = useState(false);
     const [showFullDesc, setShowFullDesc] = useState(false);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!hovering || url.length <= 1) return;
@@ -100,18 +101,18 @@ export default function RoomCard({
             </CardContent>
 
             <div className="absolute sm:bottom-12 bottom-15 right-3   sm:right-4">
-                {/* <Button
-          onClick={onAction}
-          variant="default"
-          size="sm"
-          className="rounded-full px-4 py-2 nexa bg-[#002a3a]"
-        >
-          Book
-        </Button> */}
+                <Button
+                    onClick={() => navigate(`/booking/${title}`)}
+                    variant="default"
+                    size="sm"
+                    className="rounded-full px-4 py-2 nexa bg-[#002a3a]"
+                >
+                    Book
+                </Button>
 
-                {title && (
+                {/*{title && (
                     <RoomBookingPage url={url} type={title} price={price} />
-                )}
+                )}*/}
             </div>
         </Card>
     );
