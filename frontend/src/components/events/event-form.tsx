@@ -93,7 +93,7 @@ const EVENT_FORM_FIELDS = [
         title: "Number of Guests",
         element: "select",
         placeholder: "Select number of guests",
-        options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        options: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         disabled: false,
         required: true,
     },
