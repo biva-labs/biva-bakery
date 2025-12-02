@@ -4,6 +4,7 @@ import { getImage, uploadImage } from "./controllers/image-controller.ts";
 import { cors } from "hono/cors";
 import { secureHeaders } from "hono/secure-headers";
 import orders from "./controllers/paymentOrder.ts";
+import { getUserBookings } from "./controllers/userBookings.ts";
 import verifyPayment from "./controllers/verify-payment.ts";
 import { insertFoodCourt } from "./db/index.ts";
 import { CloudinaryService } from "./utils/cloudinary-service.ts";
@@ -38,6 +39,7 @@ app.route("/api/orders", orders);
 app.route("/api/verify-payment", verifyPayment);
 app.get("/room-details/:room_type", getHotelRoomDetails);
 app.post("hotels/emergency", storeUnpaidData);
+app.get("/all-bookings", getUserBookings);
 
 app.post("/qstash-message", qstash_message);
 app.post("/send-email", sendEmail);
