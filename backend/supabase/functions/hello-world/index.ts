@@ -103,7 +103,7 @@ Deno.serve(async (req: Request) => {
 
       console.log(paymentConfirmedData);
       const res = await upstashClient.publishJSON({
-        url: "https://biva-bakery.onrender.com/qstash-message",
+        url: "https://biva-bakery-backend.onrender.com/qstash-message",
         body: {
           hello: "payment recieved!!!!",
           data: paymentConfirmedData,
