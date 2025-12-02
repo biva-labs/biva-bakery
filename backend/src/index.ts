@@ -105,11 +105,11 @@ app.post("/eventTable", eventFormData);
 app.post("/biva-ai", bivaAiChat);
 
 serve(
-    {
-        fetch: app.fetch,
-        port: 4000,
-    },
-    (info) => {
-        console.log(`Server is running on http://localhost:${info.port}`);
-    },
+  {
+    fetch: app.fetch,
+    port: process.env.PORT || 4000,
+  },
+  (info) => {
+    console.log(`Server is running on http://localhost:${info.port}`);
+  },
 );
