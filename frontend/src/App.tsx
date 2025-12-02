@@ -10,6 +10,7 @@ import Bakery from "./pages/bakery";
 import SeatBookingPage from "./components/food-court/seat-booking-page";
 import ChatBot from "./components/chatbot/chatbot";
 import About from "./pages/about";
+import BookingConfirmation from "./components/bookings";
 // import Complaint from "./components/complaint";
 import { useEffect } from "react";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
@@ -63,6 +64,10 @@ function App() {
                         <Route
                             path="/table/booking"
                             element={<SeatBookingPage />}
+                        />
+                        <Route
+                            path="/booking-confirmation"
+                            element={<BookingConfirmation />}
                         />
                         <Route path="/events/booking" element={<Table />} />
                         <Route path="/about" element={<About />} />
