@@ -2,12 +2,12 @@ export function hotelEmailTemplate(
   name,
   amount,
   email,
+  id,
   total_rooms,
   totalPeople,
-  days,
   room_type,
-  amount,
-  image,
+  join_date,
+  leave_date,
 ) {
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html dir="ltr" lang="en">
@@ -83,7 +83,7 @@ export function hotelEmailTemplate(
                                 style="margin:0;padding:0;font-size:1em;padding-top:0.5em;padding-bottom:0.5em">
                                 <br />
                               </p>
-                              <div><img src=${image} /></div>
+
                               <p
                                 style="margin:0;padding:0;font-size:1em;padding-top:0.5em;padding-bottom:0.5em">
                                 <br />
@@ -93,7 +93,7 @@ export function hotelEmailTemplate(
                                 style="width:100%;border:none;border-top:1px solid #eaeaea;padding-bottom:1em;border-width:2px" />
                               <h1
                                 style="margin:0;padding:0;font-size:2.25em;line-height:1.44em;padding-top:0.389em;font-weight:600">
-                                <span>Invoice #</span>{{{userId}}}
+                                <span>Invoice #</span>${id}
                               </h1>
                               <p
                                 style="margin:0;padding:0;font-size:1em;padding-top:0.5em;padding-bottom:0.5em">
@@ -149,9 +149,20 @@ export function hotelEmailTemplate(
                                         style="width:100%;border:none;border-top:1px solid #eaeaea;padding-bottom:1em;border-width:2px" />
                                       <p
                                         style="margin:0;padding:0;font-size:1em;padding-top:0.5em;padding-bottom:0.5em">
-                                        <span><strong>Days: </strong></span
-                                        >${days}
+                                        <span
+                                          ><strong>Total Rooms : </strong></span
+                                        >${join_date}
                                       </p>
+                                      <hr
+                                        class="divider"
+                                        style="width:100%;border:none;border-top:1px solid #eaeaea;padding-bottom:1em;border-width:2px" />
+                                      <p
+                                        style="margin:0;padding:0;font-size:1em;padding-top:0.5em;padding-bottom:0.5em">
+                                        <span
+                                          ><strong>Total Rooms : </strong></span
+                                        >${leave_date}
+                                      </p>
+
                                       <hr
                                         class="divider"
                                         style="width:100%;border:none;border-top:1px solid #eaeaea;padding-bottom:1em;border-width:2px" />

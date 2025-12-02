@@ -5,6 +5,7 @@ import { neon } from "@neondatabase/serverless";
 import { Client } from "@upstash/qstash";
 import { eq } from "drizzle-orm";
 import { inArray } from "drizzle-orm";
+import { hotelRoomReservation } from "./db.ts";
 
 const sql = neon(Deno.env.get("NEON_PG_URL")!);
 
@@ -15,6 +16,7 @@ const upstashClient = new Client({ token: Deno.env.get("QSTASH_TOKEN") });
 const TYPE_TO_TABLE = {
   events: foodCourtEventTable,
   "food-court": foodCourtTable,
+  hotel: hotelRoomReservation,
 };
 
 async function markPaymentPaid(userId: string[], type: string) {
@@ -22,6 +24,7 @@ async function markPaymentPaid(userId: string[], type: string) {
   console.log(tableToUpdate);
   try {
     const numericUserIds = userId.map((id) => parseInt(id));
+    console.log(numericUserIds);
     const updated = await db
       .update(tableToUpdate)
       .set({ paid: true })
@@ -91,6 +94,8 @@ Deno.serve(async (req: Request) => {
     // testing qstash messaging
     case "payment.captured":
       const userIdArray = JSON.parse(userId);
+      console.log("INDEX>TS!!", userIdArray);
+      console.log("INDEX>TS!!", tableType);
       const paymentConfirmedData = await markPaymentPaid(
         userIdArray,
         tableType,

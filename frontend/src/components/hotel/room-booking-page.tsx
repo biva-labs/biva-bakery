@@ -1,10 +1,10 @@
 import { useState, useMemo, useCallback, memo } from "react";
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogClose,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -20,155 +20,152 @@ import { useLocation } from "react-router-dom";
 import { X } from "lucide-react";
 
 export const RoomBookingPage = memo(function RoomBookingPage() {
-    const location = useLocation();
-    const pathname = location.pathname.toLowerCase();
-    const roomType = pathname.replace("/booking/", "").trim();
+  const location = useLocation();
+  const pathname = location.pathname.toLowerCase();
+  const roomType = pathname.replace("/booking/", "").trim();
 
-    const cardData = useRoomStore((s) => s.rooms[roomType]);
-    if (!cardData) {
-        return (
-            <p className="text-red-500 text-center mt-10">Invalid Room Type</p>
-        );
+  const cardData = useRoomStore((s) => s.rooms[roomType]);
+  if (!cardData) {
+    return <p className="text-red-500 text-center mt-10">Invalid Room Type</p>;
+  }
+
+  const { url, price, room_type } = cardData;
+
+  // UI states
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  const images = useMemo(() => (Array.isArray(url) ? url : [url]), [url]);
+  const selectedImage = images[selectedImageIndex];
+
+  const data = useHotelStore();
+
+  const { mutate: submitForm, isPending } = useHotelForm();
+  const { initiatePayment, isProcessing } = usePay();
+
+  const buttonText = useMemo(() => {
+    if (isPending || isProcessing) return "Processing...";
+
+    const guests = parseInt(data.total_people);
+    const priceInt = parseInt(price);
+    const rooms = parseInt(data.total_rooms);
+    const days = parseInt(data.total_days);
+
+    if ([guests, priceInt, rooms, days].some(isNaN)) {
+      return "Pay Now";
     }
 
-    const { url, price, room_type } = cardData;
+    return `Pay Now ₹${rooms * priceInt * days}`;
+  }, [
+    isPending,
+    isProcessing,
+    data.total_people,
+    data.total_rooms,
+    data.total_days,
+    price,
+  ]);
 
-    // UI states
-    const [galleryOpen, setGalleryOpen] = useState(false);
-    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const handleBookAndPay = useCallback(() => {
+    if (
+      !data.name ||
+      !data.email ||
+      !data.phone_number ||
+      !data.join_date ||
+      !data.leave_date ||
+      !data.total_people
+    ) {
+      toast.error("Please fill all required fields");
+      return;
+    }
 
-    const images = useMemo(() => (Array.isArray(url) ? url : [url]), [url]);
-    const selectedImage = images[selectedImageIndex];
+    if (!data.adhaar_or_pan_card) {
+      toast.error("Please upload your Aadhar or PAN card");
+      return;
+    }
 
-    const data = useHotelStore();
+    submitForm(
+      {
+        name: data.name,
+        email: data.email,
+        phone_number: data.phone_number,
+        adhaar_or_pan_card: data.adhaar_or_pan_card,
+        total_people: data.total_people,
+        join_date: data.join_date,
+        leave_date: data.leave_date,
+        type: room_type,
+        total_days: data.total_days,
+        total_rooms: data.total_rooms,
+      },
+      {
+        onSuccess: async (response) => {
+          console.log("room booking page", response);
+          const amount = response.data?.total_amount;
+          const id = response.data?.id;
 
-    const { mutate: submitForm, isPending } = useHotelForm();
-    const { initiatePayment, isProcessing } = usePay();
+          if (amount && id) {
+            await initiatePayment(amount, [id], "hotel");
+          } else {
+            toast.error("Invalid server response");
+          }
+        },
+        onError: () => toast.error("Booking failed"),
+      },
+    );
+  }, [data, room_type]);
 
-    const buttonText = useMemo(() => {
-        if (isPending || isProcessing) return "Processing...";
+  return (
+    <div className="flex flex-col lg:flex-row gap-10 w-full max-w-7xl mx-auto px-4">
+      {/* LEFT SIDE — GALLERY */}
+      <div className="lg:w-1/2 space-y-10 mt-10">
+        {/* MAIN IMAGE CARD */}
+        <div
+          className="relative bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer group"
+          onClick={() => setGalleryOpen(true)}
+        >
+          <img
+            src={selectedImage}
+            className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
+            alt="Selected room"
+          />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
+          <div className="absolute top-4 right-4 bg-black/70 text-white text-sm px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            View Gallery
+          </div>
+          <div className="absolute bottom-4 left-4 bg-black/70 text-white text-sm px-3 py-1 rounded-full">
+            {selectedImageIndex + 1} of {images.length}
+          </div>
+        </div>
 
-        const guests = parseInt(data.total_people);
-        const priceInt = parseInt(price);
-        const rooms = parseInt(data.total_rooms);
-        const days = parseInt(data.total_days);
-
-        if ([guests, priceInt, rooms, days].some(isNaN)) {
-            return "Pay Now";
-        }
-
-        return `Pay Now ₹${rooms * priceInt * days}`;
-    }, [
-        isPending,
-        isProcessing,
-        data.total_people,
-        data.total_rooms,
-        data.total_days,
-        price,
-    ]);
-
-    const handleBookAndPay = useCallback(() => {
-        if (
-            !data.name ||
-            !data.email ||
-            !data.phone_number ||
-            !data.join_date ||
-            !data.leave_date ||
-            !data.total_people
-        ) {
-            toast.error("Please fill all required fields");
-            return;
-        }
-
-        if (!data.adhaar_or_pan_card) {
-            toast.error("Please upload your Aadhar or PAN card");
-            return;
-        }
-
-        submitForm(
-            {
-                name: data.name,
-                email: data.email,
-                phone_number: data.phone_number,
-                adhaar_or_pan_card: data.adhaar_or_pan_card,
-                total_people: data.total_people,
-                join_date: data.join_date,
-                leave_date: data.leave_date,
-                type: room_type,
-                total_days: data.total_days,
-                total_rooms: data.total_rooms,
-            },
-            {
-                onSuccess: async (response) => {
-                    const amount = response.data?.total_amount;
-                    const id = response.data?.id;
-
-                    if (amount && id) {
-                        await initiatePayment(amount, id, "hotel");
-                    } else {
-                        toast.error("Invalid server response");
-                    }
-                },
-                onError: () => toast.error("Booking failed"),
-            },
-        );
-    }, [data, room_type]);
-
-    return (
-        <div className="flex flex-col lg:flex-row gap-10 w-full max-w-7xl mx-auto px-4">
-            {/* LEFT SIDE — GALLERY */}
-            <div className="lg:w-1/2 space-y-10 mt-10">
-                {/* MAIN IMAGE CARD */}
-                <div
-                    className="relative bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer group"
-                    onClick={() => setGalleryOpen(true)}
-                >
-                    <img
-                        src={selectedImage}
-                        className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
-                        alt="Selected room"
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
-                    <div className="absolute top-4 right-4 bg-black/70 text-white text-sm px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        View Gallery
-                    </div>
-                    <div className="absolute bottom-4 left-4 bg-black/70 text-white text-sm px-3 py-1 rounded-full">
-                        {selectedImageIndex + 1} of {images.length}
-                    </div>
-                </div>
-
-                {/* THUMBNAILS */}
-                <div className="flex gap-3 overflow-x-auto pb-2">
-                    {images.map((img, i) => (
-                        <img
-                            key={i}
-                            src={img}
-                            onClick={() => setSelectedImageIndex(i)}
-                            className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 transition-all duration-200 flex-shrink-0
+        {/* THUMBNAILS */}
+        <div className="flex gap-3 overflow-x-auto pb-2">
+          {images.map((img, i) => (
+            <img
+              key={i}
+              src={img}
+              onClick={() => setSelectedImageIndex(i)}
+              className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 transition-all duration-200 flex-shrink-0
                                 ${
-                                    i === selectedImageIndex
-                                        ? "border-blue-500"
-                                        : "border-gray-200 hover:border-gray-300"
+                                  i === selectedImageIndex
+                                    ? "border-blue-500"
+                                    : "border-gray-200 hover:border-gray-300"
                                 }`}
-                            alt={`Room ${i + 1}`}
-                        />
-                    ))}
-                </div>
+              alt={`Room ${i + 1}`}
+            />
+          ))}
+        </div>
 
-                {/* AMENITIES */}
-                <Amenities />
+        {/* AMENITIES */}
+        <Amenities />
 
-                {/* SIMPLE GALLERY MODAL */}
-                <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
-                    <DialogContent className="max-w-4xl w-[90vw] max-h-[90vh] p-6 m-4">
-                        <DialogHeader className="mb-4">
-                            <div className="flex items-center justify-between">
-                                <DialogTitle className="text-xl font-semibold">
-                                    {roomType.charAt(0).toUpperCase() +
-                                        roomType.slice(1)}{" "}
-                                    Room
-                                </DialogTitle>
-                                {/*<DialogClose asChild>
+        {/* SIMPLE GALLERY MODAL */}
+        <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
+          <DialogContent className="max-w-4xl w-[90vw] max-h-[90vh] p-6 m-4">
+            <DialogHeader className="mb-4">
+              <div className="flex items-center justify-between">
+                <DialogTitle className="text-xl font-semibold">
+                  {roomType.charAt(0).toUpperCase() + roomType.slice(1)} Room
+                </DialogTitle>
+                {/*<DialogClose asChild>
                                     <Button
                                         variant="ghost"
                                         size="sm"
@@ -177,65 +174,63 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
                                         <X className="h-5 w-5" />
                                     </Button>
                                 </DialogClose>*/}
-                            </div>
-                        </DialogHeader>
+              </div>
+            </DialogHeader>
 
-                        <ScrollArea className="max-h-[70vh]">
-                            <div className="space-y-6">
-                                {/* CURRENT SELECTED IMAGE */}
-                                <div className="w-full">
-                                    <img
-                                        src={selectedImage}
-                                        className="w-full max-h-96 object-cover rounded-lg"
-                                        alt="Selected room view"
-                                    />
-                                </div>
+            <ScrollArea className="max-h-[70vh]">
+              <div className="space-y-6">
+                {/* CURRENT SELECTED IMAGE */}
+                <div className="w-full">
+                  <img
+                    src={selectedImage}
+                    className="w-full max-h-96 object-cover rounded-lg"
+                    alt="Selected room view"
+                  />
+                </div>
 
-                                {/* ALL IMAGES GRID */}
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                    {images.map((img, i) => (
-                                        <div
-                                            key={i}
-                                            className={`rounded-lg overflow-hidden cursor-pointer border-2 transition-all
+                {/* ALL IMAGES GRID */}
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {images.map((img, i) => (
+                    <div
+                      key={i}
+                      className={`rounded-lg overflow-hidden cursor-pointer border-2 transition-all
                                                 ${
-                                                    selectedImageIndex === i
-                                                        ? "border-blue-500"
-                                                        : "border-gray-200 hover:border-gray-300"
+                                                  selectedImageIndex === i
+                                                    ? "border-blue-500"
+                                                    : "border-gray-200 hover:border-gray-300"
                                                 }`}
-                                            onClick={() =>
-                                                setSelectedImageIndex(i)
-                                            }
-                                        >
-                                            <img
-                                                src={img}
-                                                className="w-full h-32 object-cover"
-                                                alt={`Room view ${i + 1}`}
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </ScrollArea>
-                    </DialogContent>
-                </Dialog>
-            </div>
+                      onClick={() => setSelectedImageIndex(i)}
+                    >
+                      <img
+                        src={img}
+                        className="w-full h-32 object-cover"
+                        alt={`Room view ${i + 1}`}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
+      </div>
 
-            {/* RIGHT SIDE — FORM */}
-            <div className="lg:w-1/2 space-y-10 mt-10">
-                <h2 className="text-2xl font-semibold">Book {roomType} Room</h2>
+      {/* RIGHT SIDE — FORM */}
+      <div className="lg:w-1/2 space-y-10 mt-10">
+        <h2 className="text-2xl font-semibold">Book {roomType} Room</h2>
 
-                <Form type={room_type} />
+        <Form type={room_type} />
 
-                <Separator />
+        <Separator />
 
-                <Button
-                    onClick={handleBookAndPay}
-                    disabled={isPending || isProcessing}
-                    className="w-full py-3 text-lg"
-                >
-                    {buttonText}
-                </Button>
-            </div>
-        </div>
-    );
+        <Button
+          onClick={handleBookAndPay}
+          disabled={isPending || isProcessing}
+          className="w-full py-3 text-lg"
+        >
+          {buttonText}
+        </Button>
+      </div>
+    </div>
+  );
 });
