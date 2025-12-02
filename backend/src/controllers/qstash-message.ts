@@ -21,7 +21,7 @@ export const qstash_message = async (c: Context) => {
     const isValid = await receiver.verify({
       body: rawBody,
       signature,
-      url: "https://biva-bakery.onrender.com/qstash-message",
+      url: "https://biva-bakery-backend.onrender.com/qstash-message",
     });
 
     // console.log(isValid);
@@ -29,7 +29,7 @@ export const qstash_message = async (c: Context) => {
     if (isValid) {
       const userData = body;
       const email = await qstashClient.publishJSON({
-        url: "https://biva-bakery.onrender.com/send-email",
+        url: "https://biva-bakery-backend.onrender.com/send-email",
         body: {
           userData,
         },
