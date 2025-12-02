@@ -1,6 +1,9 @@
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
+function NonVegetarianFood({ media }: { media: any }) {
+    const navigate = useNavigate();
 
-function NonVegetarianFood({media}:{media: any}) {
     return (
         <div className="w-full mt-16 mb-10 mx-auto">
             <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden ">
@@ -10,9 +13,7 @@ function NonVegetarianFood({media}:{media: any}) {
                     autoPlay
                     loop
                     muted
-                    
-                >
-                </video>
+                ></video>
 
                 <div className="absolute inset-0"></div>
 
@@ -24,14 +25,24 @@ function NonVegetarianFood({media}:{media: any}) {
                         Indulge in Rich & Savory Delights
                     </h3>
                 </div>
+
+                <div className="absolute bottom-4 right-4 md:right-10">
+                    <Button
+                        variant="orange"
+                        onClick={() => navigate("/table/booking")}
+                        className="hover:cursor-pointer mb-4 lg:mb-0 w-28 lg:w-max nexa rounded-full"
+                    >
+                        Book Now
+                    </Button>
+                </div>
             </div>
         </div>
     );
 }
 
+function VegetarianFood({ media }: { media: any }) {
+    const navigate = useNavigate();
 
-
-function VegetarianFood({media}:{media: any}) {
     return (
         <div className="w-full mt-16 mb-10 mx-auto">
             <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden ">
@@ -41,9 +52,7 @@ function VegetarianFood({media}:{media: any}) {
                     autoPlay
                     loop
                     muted
-                >
-
-                </video>
+                ></video>
 
                 <div className="absolute inset-0 "></div>
 
@@ -54,6 +63,16 @@ function VegetarianFood({media}:{media: any}) {
                     <h3 className="text-white text-base md:text-xl font-bold]">
                         Savor the Flavors of Nature's Bounty
                     </h3>
+                </div>
+
+                <div className="absolute bottom-4 right-4 md:right-10">
+                    <Button
+                        variant="orange"
+                        onClick={() => navigate("/table/booking")}
+                        className="hover:cursor-pointer mb-4 lg:mb-0 w-28 lg:w-max nexa rounded-full"
+                    >
+                        Book Now
+                    </Button>
                 </div>
             </div>
         </div>
@@ -84,15 +103,21 @@ function getOptimizedVideoUrl(url: string): string {
     }
 }
 
-
-export default function FoodCourtPreference({ preference, media }: { preference: string, media: any }) {
-    console.log(getOptimizedVideoUrl(media))
+export default function FoodCourtPreference({
+    preference,
+    media,
+}: {
+    preference: string;
+    media: any;
+}) {
+    console.log(getOptimizedVideoUrl(media));
     return (
         <>
-            {
-                
-                preference === "veg" ? <VegetarianFood media={getOptimizedVideoUrl(media)}/> : <NonVegetarianFood media={getOptimizedVideoUrl(media)}/>
-            }
+            {preference === "veg" ? (
+                <VegetarianFood media={getOptimizedVideoUrl(media)} />
+            ) : (
+                <NonVegetarianFood media={getOptimizedVideoUrl(media)} />
+            )}
         </>
-    )
+    );
 }
