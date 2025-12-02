@@ -26,14 +26,14 @@ export type FoodCourtBookingType = {
     id: number;
     name: string;
     email: string;
-    food_preferences: string;
-    time_slot: string;
-    aadhar_or_pan_img_url: string;
-    phone_number: string;
-    total_people: number;
+    foodPreference: string;
+    timeSlot: string;
+    aadharOrPanImgUrl: string;
+    phoneNumber: string;
+    totalPeople: number;
     paid: boolean;
-    total_amount: number;
-    created_at: string;
+    totalAmount: number;
+    createdAt: string;
     status: string;
 };
 
@@ -41,13 +41,13 @@ export type EventBookingType = {
     id: number;
     name: string;
     email: string;
-    aadhar_or_pan_img_url: string;
-    phone_number: string;
-    total_people: number;
-    event_id: string;
+    aadharOrPanImgUrl: string;
+    phoneNumber: string;
+    totalPeople: number;
+    eventId: string;
     paid: boolean;
-    total_amount: number;
-    created_at: string;
+    totalAmount: number;
+    createdAt: string;
     status: string;
 };
 
@@ -82,13 +82,10 @@ export default function BookingConfirmation() {
             const response = await allBookingsMutation.mutateAsync({
                 email: emailToFetch.trim(),
             });
-
-            console.log("RESPONSE", response);
-            // The response should have the structure: {"hotel": [], "food-court": [], "events": []}
-            setBookingsData(response.data);
+            console.log(response);
+            setBookingsData(response.data.data);
         } catch (error) {
             console.error("Error fetching bookings:", error);
-            // Reset bookings data on error
             setBookingsData(null);
         }
     };
@@ -284,19 +281,19 @@ export default function BookingConfirmation() {
                                     {booking.email}
                                 </td>
                                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
-                                    {booking.phone_number}
+                                    {booking.phoneNumber}
                                 </td>
                                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
-                                    {booking.food_preferences}
+                                    {booking.foodPreference}
                                 </td>
                                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
-                                    {booking.time_slot}
+                                    {booking.timeSlot}
                                 </td>
                                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
-                                    {booking.total_people}
+                                    {booking.totalPeople}
                                 </td>
                                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900 font-medium">
-                                    {formatCurrency(booking.total_amount)}
+                                    {formatCurrency(booking.totalAmount)}
                                 </td>
                                 <td className="px-4 py-2 whitespace-nowrap">
                                     <span
@@ -311,7 +308,7 @@ export default function BookingConfirmation() {
                                     </span>
                                 </td>
                                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
-                                    {formatDate(booking.created_at)}
+                                    {formatDate(booking.createdAt)}
                                 </td>
                             </tr>
                         ))
@@ -378,16 +375,16 @@ export default function BookingConfirmation() {
                                     {booking.email}
                                 </td>
                                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
-                                    {booking.phone_number}
+                                    {booking.phoneNumber}
                                 </td>
                                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
-                                    {booking.event_id}
+                                    {booking.eventId}
                                 </td>
                                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
-                                    {booking.total_people}
+                                    {booking.totalPeople}
                                 </td>
                                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900 font-medium">
-                                    {formatCurrency(booking.total_amount)}
+                                    {formatCurrency(booking.totalAmount)}
                                 </td>
                                 <td className="px-4 py-2 whitespace-nowrap">
                                     <span
@@ -402,7 +399,7 @@ export default function BookingConfirmation() {
                                     </span>
                                 </td>
                                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
-                                    {formatDate(booking.created_at)}
+                                    {formatDate(booking.createdAt)}
                                 </td>
                             </tr>
                         ))
@@ -436,8 +433,6 @@ export default function BookingConfirmation() {
                 return [];
         }
     };
-
-    const currentTabData = getCurrentTabData();
 
     // Show error state if no email is provided
     if (!email) {
@@ -535,7 +530,7 @@ export default function BookingConfirmation() {
                                         (
                                             bookingsData["food-court"] || []
                                         ).reduce(
-                                            (sum, b) => sum + b.total_amount,
+                                            (sum, b) => sum + b.totalAmount,
                                             0,
                                         ),
                                     )}
@@ -553,7 +548,7 @@ export default function BookingConfirmation() {
                                     Total Revenue:{" "}
                                     {formatCurrency(
                                         (bookingsData.events || []).reduce(
-                                            (sum, b) => sum + b.total_amount,
+                                            (sum, b) => sum + b.totalAmount,
                                             0,
                                         ),
                                     )}

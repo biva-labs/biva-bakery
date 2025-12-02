@@ -39,7 +39,7 @@ app.route("/api/orders", orders);
 app.route("/api/verify-payment", verifyPayment);
 app.get("/room-details/:room_type", getHotelRoomDetails);
 app.post("hotels/emergency", storeUnpaidData);
-app.get("/all-bookings", getUserBookings);
+app.post("/all-bookings", getUserBookings);
 
 app.post("/qstash-message", qstash_message);
 app.post("/send-email", sendEmail);
@@ -107,11 +107,11 @@ app.post("/eventTable", eventFormData);
 app.post("/biva-ai", bivaAiChat);
 
 serve(
-  {
-    fetch: app.fetch,
-    port: process.env.PORT || 4000,
-  },
-  (info) => {
-    console.log(`Server is running on http://localhost:${info.port}`);
-  },
+    {
+        fetch: app.fetch,
+        port: process.env.PORT || 4000,
+    },
+    (info) => {
+        console.log(`Server is running on http://localhost:${info.port}`);
+    },
 );
