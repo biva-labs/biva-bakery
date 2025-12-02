@@ -11,6 +11,6 @@ export function useRoomDeatils(room_type: string) {
     return useQuery({
         queryKey: ["room-details", room_type],
         queryFn: () => fetchRoomDetails(room_type),
-        staleTime: 1000 * 60 * 5,
+        staleTime: 1000 * 60,
     });
 }
