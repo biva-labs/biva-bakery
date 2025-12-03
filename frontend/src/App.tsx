@@ -17,6 +17,7 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Toaster } from "@/components/ui/sonner";
 import { RoomBookingPage } from "./components/hotel/room-booking-page";
+import Ticket from "./ticket";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -75,6 +76,7 @@ function App() {
                             path="/booking/:type"
                             element={<RoomBookingPage />}
                         />
+                        <Route path="/ticket" element={<Ticket />} />
                         {/* <Route path="/complaint" element={<Complaint />} /> */}
                     </Route>
                 </Routes>

@@ -219,9 +219,7 @@ export default function Table() {
                         </Button>
                     </div>
 
-                    {/* RIGHT — IMAGE + INFO (SAME WIDTH) */}
                     <div className="w-full lg:w-1/2 flex flex-col items-center">
-                        {/* IMAGE */}
                         <img
                             src={eventData.imageUrl}
                             alt="Venue"
@@ -231,7 +229,7 @@ export default function Table() {
                                 rounded-xl
                                 shadow-md
                                 object-cover
-                                aspect-[4/3]
+                                aspect-[4/5]
                             "
                         />
 

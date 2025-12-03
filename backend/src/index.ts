@@ -20,6 +20,8 @@ import {
     storeUnpaidData,
 } from "./controllers/hotelReservation.ts";
 
+import createTicket from "./utils/create-ticket.ts";
+
 const app = new Hono();
 app.use(secureHeaders());
 
@@ -44,6 +46,8 @@ app.post("/all-bookings", getUserBookings);
 app.post("/qstash-message", qstash_message);
 app.post("/send-email", sendEmail);
 app.post("/hotel", reserveHotelRoom);
+
+app.post("/ticket", createTicket);
 
 app.post("/wh", async (c) => {
     const rawBody = await c.req.arrayBuffer();
