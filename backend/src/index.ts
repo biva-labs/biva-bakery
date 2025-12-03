@@ -25,7 +25,7 @@ import createTicket from "./utils/create-ticket.ts";
 const app = new Hono();
 app.use(secureHeaders());
 
-const allowedOrigin = "https://www.thebiva.com";
+const allowedOrigin = "https://thebiva.com";
 // https://biva-bakery.onrender.com
 app.use(
   cors({
@@ -108,11 +108,11 @@ app.post("/eventTable", eventFormData);
 app.post("/biva-ai", bivaAiChat);
 
 serve(
-    {
-        fetch: app.fetch,
-        port: process.env.PORT || 4000,
-    },
-    (info) => {
-        console.log(`Server is running on http://localhost:${info.port}`);
-    },
+  {
+    fetch: app.fetch,
+    port: process.env.PORT || 4000,
+  },
+  (info) => {
+    console.log(`Server is running on http://localhost:${info.port}`);
+  },
 );
