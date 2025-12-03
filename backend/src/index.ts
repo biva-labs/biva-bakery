@@ -25,7 +25,11 @@ import createTicket from "./utils/create-ticket.ts";
 const app = new Hono();
 app.use(secureHeaders());
 
-const allowedOrigin = "https://thebiva.com";
+const allowedOrigin = [
+  "https://thebiva.com",
+  "https://biva-bakery.onrender.com",
+  "https://www.thebiva.com",
+];
 // https://biva-bakery.onrender.com
 app.use(
   cors({
