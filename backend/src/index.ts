@@ -27,13 +27,17 @@ app.use(secureHeaders());
 
 const allowedOrigin = [
   "https://thebiva.com",
-  "https://biva-bakery.onrender.com",
   "https://www.thebiva.com",
+  "https://biva-bakery.onrender.com",
 ];
-// https://biva-bakery.onrender.com
+
 app.use(
   cors({
-    origin: allowedOrigin,
+    origin: (origin) => {
+      if (!origin) return "*"; // allow non-browser requests
+
+      return allowedOrigin.includes(origin) ? origin : "";
+    },
     credentials: true,
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowHeaders: ["Content-Type", "Authorization"],
