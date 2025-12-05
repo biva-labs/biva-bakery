@@ -15,9 +15,9 @@ import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js"
 import { qstash_message } from "./controllers/qstash-message.ts";
 import { sendEmail } from "./utils/resend.ts";
 import {
-  getHotelRoomDetails,
-  reserveHotelRoom,
-  storeUnpaidData,
+    getHotelRoomDetails,
+    reserveHotelRoom,
+    storeUnpaidData,
 } from "./controllers/hotelReservation.ts";
 import announcements from "./controllers/announcements.ts";
 
@@ -131,20 +131,20 @@ app.post("/wh", async (c) => {
 });
 
 app.post("/test", async (c) => {
-  try {
-    const data = await c.req.parseBody();
-    const insertedData = await insertFoodCourt(data);
-    return c.json(
-      {
-        message: "Food Court Table uploaded success!",
-        data: insertedData,
-      },
-      201,
-    );
-  } catch (error) {
-    console.error("Error at /test route", error);
-    return c.json({ message: "failed to add food court" }, 500);
-  }
+    try {
+        const data = await c.req.parseBody();
+        const insertedData = await insertFoodCourt(data);
+        return c.json(
+            {
+                message: "Food Court Table uploaded success!",
+                data: insertedData,
+            },
+            201,
+        );
+    } catch (error) {
+        console.error("Error at /test route", error);
+        return c.json({ message: "failed to add food court" }, 500);
+    }
 });
 
 app.post("/foodCourtTable", foodCourtForm);
@@ -152,11 +152,11 @@ app.post("/eventTable", eventFormData);
 app.post("/biva-ai", bivaAiChat);
 
 serve(
-  {
-    fetch: app.fetch,
-    port: process.env.PORT || 4000,
-  },
-  (info) => {
-    console.log(`Server is running on http://localhost:${info.port}`);
-  },
+    {
+        fetch: app.fetch,
+        port: process.env.PORT || 4000,
+    },
+    (info) => {
+        console.log(`Server is running on http://localhost:${info.port}`);
+    },
 );
