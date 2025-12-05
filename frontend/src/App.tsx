@@ -73,19 +73,30 @@ const SafeAnnouncementDisplay: React.FC = () => {
 };
 
 // Announcement Display Component
+// Announcement Display Component
 const AnnouncementDisplay: React.FC = () => {
-    const { data: announcement } = useAnnouncements();
-    console.log("ANNOUNCE", announcement);
+    const { data: announcements } = useAnnouncements();
+    console.log("ANNOUNCEMENTS", announcements);
     const [isDismissed, setIsDismissed] = useState(false);
+
+    // Get the first active announcement
+    const announcement =
+        announcements?.find((ann) => ann.isActive) || announcements?.[0];
 
     // Load dismissed state from sessionStorage on component mount
     useEffect(() => {
         try {
-            if (announcement?.id) {
+            if (announcement) {
+                // Create a unique ID if one doesn't exist
+                const announcementId =
+                    announcement.id ||
+                    `${announcement.title}-${announcement.body}`
+                        .replace(/\s/g, "-")
+                        .toLowerCase();
                 const dismissed = sessionStorage.getItem(
                     "dismissedAnnouncementId",
                 );
-                setIsDismissed(dismissed === announcement.id);
+                setIsDismissed(dismissed === announcementId);
             }
         } catch (error) {
             console.warn("Error accessing sessionStorage:", error);
@@ -100,13 +111,13 @@ const AnnouncementDisplay: React.FC = () => {
     const handleDismiss = () => {
         try {
             // Store the dismissed announcement ID in sessionStorage
-            if (announcement?.id) {
-                sessionStorage.setItem(
-                    "dismissedAnnouncementId",
-                    announcement.id,
-                );
-                setIsDismissed(true);
-            }
+            const announcementId =
+                announcement.id ||
+                `${announcement.title}-${announcement.body}`
+                    .replace(/\s/g, "-")
+                    .toLowerCase();
+            sessionStorage.setItem("dismissedAnnouncementId", announcementId);
+            setIsDismissed(true);
         } catch (error) {
             console.warn("Error saving to sessionStorage:", error);
             setIsDismissed(true); // Still dismiss the announcement
@@ -130,6 +141,10 @@ const AnnouncementDisplay: React.FC = () => {
                 case "popup":
                     return <PopupTemplate {...props} />;
                 default:
+                    console.warn(
+                        "Unknown display type:",
+                        announcement.displayType,
+                    );
                     return null;
             }
         } catch (error) {
