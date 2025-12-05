@@ -102,7 +102,7 @@ app.post("/wh", async (c) => {
   }
 
   const isValid = validateWebhookSignature(
-    new TextDecoder().decode(rawBody),
+    new TextDecoder().decode(rawBody
     signature,
     secret,
   );
