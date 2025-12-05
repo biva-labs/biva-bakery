@@ -14,7 +14,7 @@ export function useAnnouncements() {
         queryFn: async (): Promise<AnnouncementResponse[]> => {
             try {
                 const response = await axios.get(
-                    "https://oscitant-conner-gingelly.ngrok-free.dev/announcements",
+                    "https://biva-bakery-backend.onrender.com/announcements",
                 );
                 return response.data;
             } catch (error: any) {
