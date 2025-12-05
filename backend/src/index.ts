@@ -26,19 +26,22 @@ const app = new Hono();
 app.use(secureHeaders());
 
 const allowedOrigin = [
-    "https://thebiva.com",
-    "https://biva-bakery.onrender.com",
-    "https://www.thebiva.com",
-    "http://localhost:5173",
+  "https://thebiva.com",
+  "https://www.thebiva.com",
+  "https://biva-bakery.onrender.com",
 ];
 
 app.use(
-    cors({
-        origin: allowedOrigin,
-        credentials: true,
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization"],
-    }),
+  cors({
+    origin: (origin) => {
+      if (!origin) return "*"; // allow non-browser requests
+
+      return allowedOrigin.includes(origin) ? origin : "";
+    },
+    credentials: true,
+    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowHeaders: ["Content-Type", "Authorization"],
+  }),
 );
 
 app.get("/images/:folder", getImage);
