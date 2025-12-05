@@ -19,8 +19,10 @@ import {
   reserveHotelRoom,
   storeUnpaidData,
 } from "./controllers/hotelReservation.ts";
+import announcements from "./controllers/announcements.ts";
 
 import createTicket from "./utils/create-ticket.ts";
+import { Ping } from "./controllers/ping.ts";
 
 const app = new Hono();
 app.use(secureHeaders());
@@ -29,6 +31,7 @@ const allowedOrigin = [
   "https://thebiva.com",
   "https://www.thebiva.com",
   "https://biva-bakery.onrender.com",
+  "http://localhost:5173",
 ];
 
 app.use(
@@ -44,6 +47,39 @@ app.use(
   }),
 );
 
+// CONST VAR
+//
+export interface announce_data_type {
+  title: string;
+  body: string;
+  displayType: string;
+  image: string | File;
+  styling: {
+    backgroundColor: string;
+    textColor: string;
+    borderColor: string;
+    fontSize: string;
+    alignment: string;
+  };
+}
+
+export let announce_data: announce_data_type = {
+  title: "",
+  body: "",
+  displayType: "",
+  image: "",
+  styling: {
+    backgroundColor: "",
+    textColor: "",
+    borderColor: "",
+    fontSize: "",
+    alignment: "",
+  },
+};
+
+//ping route
+app.get("/ping", Ping);
+app.route("/announcements", announcements);
 app.get("/images/:folder", getImage);
 app.route("/api/orders", orders);
 app.route("/api/verify-payment", verifyPayment);
@@ -65,7 +101,7 @@ app.post("/wh", async (c) => {
     return c.json({ error: "Missing signature or secret" }, { status: 400 });
   }
 
-  const isValid = await validateWebhookSignature(
+  const isValid = validateWebhookSignature(
     new TextDecoder().decode(rawBody),
     signature,
     secret,
