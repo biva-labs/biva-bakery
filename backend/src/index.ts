@@ -19,8 +19,10 @@ import {
     reserveHotelRoom,
     storeUnpaidData,
 } from "./controllers/hotelReservation.ts";
+import announcements from "./controllers/announcements.ts";
 
 import createTicket from "./utils/create-ticket.ts";
+import { Ping } from "./controllers/ping.ts";
 
 const app = new Hono();
 app.use(secureHeaders());
@@ -29,6 +31,7 @@ const allowedOrigin = [
   "https://thebiva.com",
   "https://www.thebiva.com",
   "https://biva-bakery.onrender.com",
+  "http://localhost:5173",
 ];
 
 app.use(
@@ -44,6 +47,39 @@ app.use(
   }),
 );
 
+// CONST VAR
+//
+export interface announce_data_type {
+  title: string;
+  body: string;
+  displayType: string;
+  image: string | File;
+  styling: {
+    backgroundColor: string;
+    textColor: string;
+    borderColor: string;
+    fontSize: string;
+    alignment: string;
+  };
+}
+
+export let announce_data: announce_data_type = {
+  title: "",
+  body: "",
+  displayType: "",
+  image: "",
+  styling: {
+    backgroundColor: "",
+    textColor: "",
+    borderColor: "",
+    fontSize: "",
+    alignment: "",
+  },
+};
+
+//ping route
+app.get("/ping", Ping);
+app.route("/announcements", announcements);
 app.get("/images/:folder", getImage);
 app.route("/api/orders", orders);
 app.route("/api/verify-payment", verifyPayment);
@@ -58,43 +94,40 @@ app.post("/hotel", reserveHotelRoom);
 app.post("/ticket", createTicket);
 
 app.post("/wh", async (c) => {
-    const rawBody = await c.req.arrayBuffer();
-    const signature = c.req.raw.headers.get("x-razorpay-signature");
-    const secret = "biva";
-    if (!signature || !secret) {
-        return c.json(
-            { error: "Missing signature or secret" },
-            { status: 400 },
-        );
-    }
+  const rawBody = await c.req.arrayBuffer();
+  const signature = c.req.raw.headers.get("x-razorpay-signature");
+  const secret = "biva";
+  if (!signature || !secret) {
+    return c.json({ error: "Missing signature or secret" }, { status: 400 });
+  }
 
-    const isValid = await validateWebhookSignature(
-        new TextDecoder().decode(rawBody),
-        signature,
-        secret,
-    );
+  const isValid = validateWebhookSignature(
+    new TextDecoder().decode(rawBody),
+    signature,
+    secret,
+  );
 
-    if (!isValid) {
-        return c.json({ error: "Invalid signature" }, { status: 401 });
-    }
+  if (!isValid) {
+    return c.json({ error: "Invalid signature" }, { status: 401 });
+  }
 
-    let event;
-    try {
-        event = JSON.parse(new TextDecoder().decode(rawBody));
-    } catch (err) {
-        return c.json({ error: "Invalid JSON" }, { status: 400 });
-    }
+  let event;
+  try {
+    event = JSON.parse(new TextDecoder().decode(rawBody));
+  } catch (err) {
+    return c.json({ error: "Invalid JSON" }, { status: 400 });
+  }
 
-    if (event.event === "payment.captured") {
-        const { payload } = event;
-        const payment = payload.payment.entity;
-        console.log("Payment captured:", payment);
-        // Handle payment captured logic here
-    } else {
-        console.log("Unhandled event:", event.event);
-    }
+  if (event.event === "payment.captured") {
+    const { payload } = event;
+    const payment = payload.payment.entity;
+    console.log("Payment captured:", payment);
+    // Handle payment captured logic here
+  } else {
+    console.log("Unhandled event:", event.event);
+  }
 
-    return c.json({ message: "Event processed" });
+  return c.json({ message: "Event processed" });
 });
 
 app.post("/test", async (c) => {
