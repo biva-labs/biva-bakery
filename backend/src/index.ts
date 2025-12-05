@@ -15,9 +15,9 @@ import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils.js"
 import { qstash_message } from "./controllers/qstash-message.ts";
 import { sendEmail } from "./utils/resend.ts";
 import {
-  getHotelRoomDetails,
-  reserveHotelRoom,
-  storeUnpaidData,
+    getHotelRoomDetails,
+    reserveHotelRoom,
+    storeUnpaidData,
 } from "./controllers/hotelReservation.ts";
 
 import createTicket from "./utils/create-ticket.ts";
@@ -26,18 +26,19 @@ const app = new Hono();
 app.use(secureHeaders());
 
 const allowedOrigin = [
-  "https://thebiva.com",
-  "https://biva-bakery.onrender.com",
-  "https://www.thebiva.com",
+    "https://thebiva.com",
+    "https://biva-bakery.onrender.com",
+    "https://www.thebiva.com",
+    "http://localhost:5173",
 ];
-// https://biva-bakery.onrender.com
+
 app.use(
-  cors({
-    origin: allowedOrigin,
-    credentials: true,
-    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowHeaders: ["Content-Type", "Authorization"],
-  }),
+    cors({
+        origin: allowedOrigin,
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+    }),
 );
 
 app.get("/images/:folder", getImage);
@@ -54,57 +55,60 @@ app.post("/hotel", reserveHotelRoom);
 app.post("/ticket", createTicket);
 
 app.post("/wh", async (c) => {
-  const rawBody = await c.req.arrayBuffer();
-  const signature = c.req.raw.headers.get("x-razorpay-signature");
-  const secret = "biva";
-  if (!signature || !secret) {
-    return c.json({ error: "Missing signature or secret" }, { status: 400 });
-  }
+    const rawBody = await c.req.arrayBuffer();
+    const signature = c.req.raw.headers.get("x-razorpay-signature");
+    const secret = "biva";
+    if (!signature || !secret) {
+        return c.json(
+            { error: "Missing signature or secret" },
+            { status: 400 },
+        );
+    }
 
-  const isValid = await validateWebhookSignature(
-    new TextDecoder().decode(rawBody),
-    signature,
-    secret,
-  );
+    const isValid = await validateWebhookSignature(
+        new TextDecoder().decode(rawBody),
+        signature,
+        secret,
+    );
 
-  if (!isValid) {
-    return c.json({ error: "Invalid signature" }, { status: 401 });
-  }
+    if (!isValid) {
+        return c.json({ error: "Invalid signature" }, { status: 401 });
+    }
 
-  let event;
-  try {
-    event = JSON.parse(new TextDecoder().decode(rawBody));
-  } catch (err) {
-    return c.json({ error: "Invalid JSON" }, { status: 400 });
-  }
+    let event;
+    try {
+        event = JSON.parse(new TextDecoder().decode(rawBody));
+    } catch (err) {
+        return c.json({ error: "Invalid JSON" }, { status: 400 });
+    }
 
-  if (event.event === "payment.captured") {
-    const { payload } = event;
-    const payment = payload.payment.entity;
-    console.log("Payment captured:", payment);
-    // Handle payment captured logic here
-  } else {
-    console.log("Unhandled event:", event.event);
-  }
+    if (event.event === "payment.captured") {
+        const { payload } = event;
+        const payment = payload.payment.entity;
+        console.log("Payment captured:", payment);
+        // Handle payment captured logic here
+    } else {
+        console.log("Unhandled event:", event.event);
+    }
 
-  return c.json({ message: "Event processed" });
+    return c.json({ message: "Event processed" });
 });
 
 app.post("/test", async (c) => {
-  try {
-    const data = await c.req.parseBody();
-    const insertedData = await insertFoodCourt(data);
-    return c.json(
-      {
-        message: "Food Court Table uploaded success!",
-        data: insertedData,
-      },
-      201,
-    );
-  } catch (error) {
-    console.error("Error at /test route", error);
-    return c.json({ message: "failed to add food court" }, 500);
-  }
+    try {
+        const data = await c.req.parseBody();
+        const insertedData = await insertFoodCourt(data);
+        return c.json(
+            {
+                message: "Food Court Table uploaded success!",
+                data: insertedData,
+            },
+            201,
+        );
+    } catch (error) {
+        console.error("Error at /test route", error);
+        return c.json({ message: "failed to add food court" }, 500);
+    }
 });
 
 app.post("/foodCourtTable", foodCourtForm);
@@ -112,11 +116,11 @@ app.post("/eventTable", eventFormData);
 app.post("/biva-ai", bivaAiChat);
 
 serve(
-  {
-    fetch: app.fetch,
-    port: process.env.PORT || 4000,
-  },
-  (info) => {
-    console.log(`Server is running on http://localhost:${info.port}`);
-  },
+    {
+        fetch: app.fetch,
+        port: process.env.PORT || 4000,
+    },
+    (info) => {
+        console.log(`Server is running on http://localhost:${info.port}`);
+    },
 );
