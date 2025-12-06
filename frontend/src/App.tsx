@@ -92,11 +92,9 @@ const AnnouncementDisplay: React.FC = () => {
     const [isDismissed, setIsDismissed] = useState(false);
 
     console.log(data);
-    
+
     const announcement =
-        data && typeof data === "object" && data !== null && data?.id
-            ? data
-            : MOCK_ANNOUNCEMENT;
+        data && typeof data === "object" ? data : MOCK_ANNOUNCEMENT;
 
     console.log("Announcement:", announcement);
 
