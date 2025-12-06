@@ -72,89 +72,87 @@ const SafeAnnouncementDisplay: React.FC = () => {
     );
 };
 
+const MOCK_ANNOUNCEMENT = {
+    id: "mock-announcement-1",
+    title: "Welcome to the Event!",
+    body: "Enjoy exclusive discounts today.",
+    image: "",
+    displayType: "notification",
+    styling: {
+        alignment: "center",
+        backgroundColor: "#ffffff",
+        borderColor: "#e2e8f0",
+        fontSize: "md",
+        textColor: "#000000",
+    },
+};
+
 const AnnouncementDisplay: React.FC = () => {
     const { data, isError, isLoading } = useAnnouncements();
     const [isDismissed, setIsDismissed] = useState(false);
 
-    // ----------------------------
-    // Normalize announcement safely
-    // ----------------------------
+    // ---------------------------------------------------
+    // FIX: Your backend returns { data: announcementObj }
+    // ---------------------------------------------------
     const announcement =
-        typeof data === "object" && data !== null ? data : null;
+        data && typeof data === "object" && data !== null && data?.id
+            ? data
+            : MOCK_ANNOUNCEMENT;
 
-    // Generate ID ahead of time (safe even if announcement = null)
-    const announcementId = announcement
-        ? announcement.id ||
-          `${announcement.title}-${announcement.body}`
-              .replace(/\s/g, "-")
-              .toLowerCase()
-        : null;
+    console.log("Announcement:", announcement);
 
-    // ----------------------------
-    // useEffect MUST be before any return
-    // ----------------------------
+    // Generate ID early and safely
+    const announcementId =
+        announcement.id ||
+        `${announcement.title}-${announcement.body}`
+            .replace(/\s+/g, "-")
+            .toLowerCase();
+
+    // Always called hook (safe)
     useEffect(() => {
-        if (!announcementId) return; // safe — hook not conditional
         try {
             const dismissed = sessionStorage.getItem("dismissedAnnouncementId");
             setIsDismissed(dismissed === announcementId);
         } catch (err) {
-            console.warn("SessionStorage read error:", err);
+            console.warn("SessionStorage error:", err);
         }
     }, [announcementId]);
 
-    // ----------------------------
-    // Early returns AFTER all hooks
-    // ----------------------------
+    // Early exits after hooks
     if (isLoading) return null;
-
-    if (isError) {
-        console.warn("Announcements API returned an error");
-        return null;
-    }
-
+    if (isError) return null;
     if (!announcement) return null;
-
     if (isDismissed) return null;
 
-    // ----------------------------
     // Dismiss
-    // ----------------------------
     const handleDismiss = () => {
         try {
-            sessionStorage.setItem("dismissedAnnouncementId", announcementId!);
+            sessionStorage.setItem("dismissedAnnouncementId", announcementId);
         } catch (err) {
             console.warn("SessionStorage write error:", err);
         }
         setIsDismissed(true);
     };
 
-    // Safe props (announcement is guaranteed to be object now)
-    const props = {
-        ...announcement,
-        onClose: handleDismiss,
-    };
+    const props = { ...announcement, onClose: handleDismiss };
 
-    // ----------------------------
     // Render template
-    // ----------------------------
-    try {
-        switch (announcement.displayType) {
-            case "banner":
-                return <BannerTemplate {...props} />;
-            case "modal":
-                return <ModalTemplate {...props} />;
-            case "notification":
-                return <NotificationTemplate {...props} />;
-            case "popup":
-                return <PopupTemplate {...props} />;
-            default:
-                console.warn("Unknown displayType:", announcement.displayType);
-                return null;
-        }
-    } catch (err) {
-        console.warn("Error rendering announcement:", err);
-        return null;
+    switch (announcement.displayType) {
+        case "banner":
+            return <BannerTemplate {...props} />;
+
+        case "modal":
+            return <ModalTemplate {...props} />;
+
+        case "notification":
+            return <NotificationTemplate {...props} />;
+
+        case "popup":
+            return <PopupTemplate {...props} />;
+
+        default:
+            console.warn("Unknown displayType:", announcement.displayType);
+            return null;
     }
 };
 
