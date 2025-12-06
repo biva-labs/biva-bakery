@@ -17,6 +17,8 @@ export function useAnnouncements() {
                     "https://biva-bakery-backend.onrender.com/announcements",
                 );
 
+                console.log("RESPONSE", response);
+
                 // Transform the data to ensure it has the correct structure
                 const announcements = Array.isArray(response.data)
                     ? response.data
