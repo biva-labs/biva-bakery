@@ -38,26 +38,47 @@ export const BannerTemplate: React.FC<TemplateProps> = ({
     };
 
     return (
+        // Fixed so it is always visible at the top; use very high z-index to avoid being hidden
         <div
-            className="w-full p-4 shadow-sm border-b relative z-50"
-            style={style}
+            role="region"
+            aria-label="Announcement banner"
+            className="fixed top-0 left-0 w-full z-[9999] shadow-sm border-b"
+            style={{
+                backgroundColor: style.backgroundColor,
+                color: style.color,
+            }}
         >
-            <div className="flex items-center gap-3 max-w-7xl mx-auto">
+            <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
                 {image && (
                     <img
                         src={image}
                         alt="Announcement"
-                        className="w-12 h-12 rounded object-cover"
+                        className="w-12 h-12 rounded object-cover flex-shrink-0"
                     />
                 )}
                 <div className="flex-1">
-                    <h4 className="font-semibold mb-1">{title}</h4>
-                    <p className="text-sm opacity-90">{body}</p>
+                    <h4
+                        className="font-semibold mb-1"
+                        style={{
+                            fontSize: style.fontSize,
+                            textAlign: styling.alignment,
+                        }}
+                    >
+                        {title}
+                    </h4>
+                    <p
+                        className="text-sm opacity-90"
+                        style={{ textAlign: styling.alignment }}
+                    >
+                        {body}
+                    </p>
                 </div>
                 {onClose && (
                     <button
                         onClick={onClose}
-                        className="opacity-50 hover:opacity-75"
+                        aria-label="Close announcement"
+                        className="ml-4 opacity-70 hover:opacity-90 p-1 rounded"
+                        style={{ color: style.color }}
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -85,40 +106,64 @@ export const ModalTemplate: React.FC<TemplateProps> = ({
                   ? "18px"
                   : "16px",
     };
-
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Announcement modal"
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-[10000] p-4"
+        >
             <div
-                className="bg-white rounded-lg shadow-xl max-w-md w-full"
-                style={style}
+                // apply inline background color and text color; fallback to white if none
+                className="rounded-lg shadow-xl max-w-md w-full overflow-hidden"
+                style={{
+                    backgroundColor: style.backgroundColor,
+                    color: style.color,
+                }}
             >
                 {image && (
                     <img
                         src={image}
                         alt="Announcement"
-                        className="w-full h-48 object-cover rounded-t-lg"
+                        className="w-full h-48 object-cover"
+                        style={{ display: "block" }}
                     />
                 )}
                 <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
-                        <h4 className="font-semibold text-lg">{title}</h4>
+                        <h4
+                            className="font-semibold text-lg"
+                            style={{ fontSize: style.fontSize }}
+                        >
+                            {title}
+                        </h4>
                         {onClose && (
                             <button
                                 onClick={onClose}
-                                className="opacity-50 hover:opacity-75"
+                                aria-label="Close modal"
+                                className="opacity-70 hover:opacity-90 p-1 rounded"
+                                style={{ color: style.color }}
                             >
                                 <X className="w-5 h-5" />
                             </button>
                         )}
                     </div>
-                    <p className="mb-4">{body}</p>
+                    <p
+                        className="mb-4"
+                        style={{ textAlign: styling.alignment }}
+                    >
+                        {body}
+                    </p>
                     {onClose && (
-                        <button
-                            onClick={onClose}
-                            className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200"
-                        >
-                            Close
-                        </button>
+                        <div className="flex justify-end">
+                            <button
+                                onClick={onClose}
+                                className="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200"
+                                style={{ color: style.color }}
+                            >
+                                Close
+                            </button>
+                        </div>
                     )}
                 </div>
             </div>
@@ -144,21 +189,38 @@ export const NotificationTemplate: React.FC<TemplateProps> = ({
     };
 
     return (
-        <div className="fixed top-4 right-4 z-50 max-w-sm">
+        <div
+            aria-live="polite"
+            className="fixed top-4 right-4 z-[9999] max-w-sm"
+            style={{ pointerEvents: "auto" }}
+        >
             <div
-                className="p-4 bg-white rounded-lg shadow-lg border"
-                style={style}
+                className="p-4 rounded-lg shadow-lg border"
+                style={{
+                    backgroundColor: style.backgroundColor,
+                    color: style.color,
+                }}
+                role="status"
             >
                 <div className="flex items-start gap-3">
-                    <Bell className="w-5 h-5 mt-0.5" />
+                    <Bell className="w-5 h-5 mt-0.5 flex-shrink-0" />
                     <div className="flex-1">
-                        <h4 className="font-medium text-sm mb-1">{title}</h4>
-                        <p className="text-sm">{body}</p>
+                        <h4
+                            className="font-medium text-sm mb-1"
+                            style={{ fontSize: style.fontSize }}
+                        >
+                            {title}
+                        </h4>
+                        <p className="text-sm" style={{ color: style.color }}>
+                            {body}
+                        </p>
                     </div>
                     {onClose && (
                         <button
                             onClick={onClose}
-                            className="opacity-50 hover:opacity-75"
+                            aria-label="Close notification"
+                            className="opacity-50 hover:opacity-75 p-1 rounded"
+                            style={{ color: style.color }}
                         >
                             <X className="w-4 h-4" />
                         </button>
@@ -187,25 +249,42 @@ export const PopupTemplate: React.FC<TemplateProps> = ({
                   ? "18px"
                   : "16px",
     };
-
     return (
-        <div className="fixed bottom-4 right-4 z-50 max-w-sm">
+        <div
+            className="fixed bottom-4 right-4 z-[9999] max-w-sm"
+            style={{ pointerEvents: "auto" }}
+        >
             <div
-                className="p-4 bg-white rounded-lg shadow-lg border"
-                style={style}
+                className="p-4 rounded-lg shadow-lg border"
+                style={{
+                    backgroundColor: style.backgroundColor,
+                    color: style.color,
+                }}
             >
                 <div className="flex justify-between items-start mb-3">
-                    <h4 className="font-medium text-sm">{title}</h4>
+                    <h4
+                        className="font-medium text-sm"
+                        style={{ fontSize: style.fontSize }}
+                    >
+                        {title}
+                    </h4>
                     {onClose && (
                         <button
                             onClick={onClose}
-                            className="opacity-50 hover:opacity-75"
+                            aria-label="Close popup"
+                            className="opacity-50 hover:opacity-75 p-1 rounded"
+                            style={{ color: style.color }}
                         >
                             <X className="w-4 h-4" />
                         </button>
                     )}
                 </div>
-                <p className="text-sm mb-3">{body}</p>
+                <p
+                    className="text-sm mb-3"
+                    style={{ textAlign: styling.alignment }}
+                >
+                    {body}
+                </p>
                 {image && (
                     <img
                         src={image}

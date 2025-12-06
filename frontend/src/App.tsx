@@ -74,14 +74,62 @@ const SafeAnnouncementDisplay: React.FC = () => {
 
 // Announcement Display Component
 // Announcement Display Component
+// Announcement Display Component
 const AnnouncementDisplay: React.FC = () => {
-    const { data: announcements } = useAnnouncements();
-    console.log("ANNOUNCEMENTS", announcements);
+    const { data: announcements, isError, isLoading } = useAnnouncements();
     const [isDismissed, setIsDismissed] = useState(false);
 
-    // Get the first active announcement
-    const announcement =
-        announcements?.find((ann) => ann.isActive) || announcements?.[0];
+    // // Default test data for development/testing
+    // const defaultTestAnnouncement = {
+    //     id: "test-announcement-1",
+    //     isActive: true,
+    //     title: "bgbjkg",
+    //     body: "wegwrg",
+    //     image: "",
+    //     displayType: "modal" as const,
+    //     styling: {
+    //         alignment: "center" as const,
+    //         backgroundColor: "#ffffff",
+    //         borderColor: "#e2e8f0",
+    //         fontSize: "md" as const,
+    //         textColor: "#000000",
+    //     },
+    // };
+
+    // Determine which announcement to show
+    let announcement = null;
+
+    if (isError || isLoading) {
+        console.warn("Announcements API not available, using test data:", {
+            isError,
+            isLoading,
+        });
+        announcement = announcements;
+    } else if (
+        announcements &&
+        Array.isArray(announcements) &&
+        announcements.length > 0
+    ) {
+        // Use API data if available
+        announcement =
+            announcements.find((ann) => ann.isActive) || announcements[0];
+
+        // Validate API announcement data
+        if (
+            !announcement?.title ||
+            !announcement?.body ||
+            !announcement?.displayType
+        ) {
+            console.warn(
+                "Invalid API announcement data, using test data:",
+                announcement,
+            );
+            announcement = defaultTestAnnouncement;
+        }
+    } else {
+        console.log("No announcements from API, using test data");
+        announcement = defaultTestAnnouncement;
+    }
 
     // Load dismissed state from sessionStorage on component mount
     useEffect(() => {
@@ -100,11 +148,12 @@ const AnnouncementDisplay: React.FC = () => {
             }
         } catch (error) {
             console.warn("Error accessing sessionStorage:", error);
+            // Don't crash, just don't check dismissed state
         }
     }, [announcement]);
 
-    // Don't show if no announcement or dismissed
-    if (!announcement || isDismissed) {
+    // Don't show if dismissed
+    if (isDismissed) {
         return null;
     }
 
