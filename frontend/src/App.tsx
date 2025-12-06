@@ -91,9 +91,8 @@ const AnnouncementDisplay: React.FC = () => {
     const { data, isError, isLoading } = useAnnouncements();
     const [isDismissed, setIsDismissed] = useState(false);
 
-    // ---------------------------------------------------
-    // FIX: Your backend returns { data: announcementObj }
-    // ---------------------------------------------------
+    console.log(data);
+    
     const announcement =
         data && typeof data === "object" && data !== null && data?.id
             ? data
@@ -101,14 +100,12 @@ const AnnouncementDisplay: React.FC = () => {
 
     console.log("Announcement:", announcement);
 
-    // Generate ID early and safely
     const announcementId =
         announcement.id ||
         `${announcement.title}-${announcement.body}`
             .replace(/\s+/g, "-")
             .toLowerCase();
 
-    // Always called hook (safe)
     useEffect(() => {
         try {
             const dismissed = sessionStorage.getItem("dismissedAnnouncementId");
@@ -118,7 +115,6 @@ const AnnouncementDisplay: React.FC = () => {
         }
     }, [announcementId]);
 
-    // Early exits after hooks
     if (isLoading) return null;
     if (isError) return null;
     if (!announcement) return null;
