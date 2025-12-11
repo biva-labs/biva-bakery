@@ -59,7 +59,7 @@ function AnnouncementErrorFallback() {
 }
 
 // Safe Announcement Display Component
-const SafeAnnouncementDisplay: React.FC = () => {
+const SafeAnnouncementDisplay: React.FC<{ onBannerChange: (hasBanner: boolean) => void }> = ({ onBannerChange }) => {
     return (
         <ErrorBoundary
             FallbackComponent={AnnouncementErrorFallback}
@@ -67,14 +67,17 @@ const SafeAnnouncementDisplay: React.FC = () => {
                 console.warn("Announcement component error:", error);
             }}
         >
-            <AnnouncementDisplay />
+            <div className="fixed top-0 left-0 right-0 z-[9999]">
+                <AnnouncementDisplay onBannerChange={onBannerChange} />
+            </div>
         </ErrorBoundary>
     );
 };
 
 // Announcement Display Component
-const AnnouncementDisplay: React.FC = () => {
-    const { data: announcement } = useAnnouncements();
+const AnnouncementDisplay: React.FC<{ onBannerChange: (hasBanner: boolean) => void }> = ({ onBannerChange }) => {
+    const { data: announcements } = useAnnouncements();
+    const announcement = announcements?.[0]; // Get the first announcement
     console.log("ANNOUNCE", announcement);
     const [isDismissed, setIsDismissed] = useState(false);
 
@@ -91,6 +94,12 @@ const AnnouncementDisplay: React.FC = () => {
             console.warn("Error accessing sessionStorage:", error);
         }
     }, [announcement]);
+
+    // Notify parent about banner state
+    useEffect(() => {
+        const hasBanner = announcement?.displayType === "banner" && !isDismissed;
+        onBannerChange(hasBanner);
+    }, [announcement, isDismissed, onBannerChange]);
 
     // Don't show if no announcement or dismissed
     if (!announcement || isDismissed) {
@@ -142,6 +151,8 @@ const AnnouncementDisplay: React.FC = () => {
 };
 
 function App() {
+    const [hasBanner, setHasBanner] = useState(false);
+
     return (
         <PersistQueryClientProvider
             client={queryClient}
@@ -149,31 +160,33 @@ function App() {
         >
             <BrowserRouter>
                 <ScrollToHash />
-                <SafeAnnouncementDisplay />
-                <Routes>
-                    <Route path="/" element={<Main />}>
-                        <Route path="/" element={<Biva />}>
-                            <Route path="/" element={<Hotel />} />
-                            <Route path="/food" element={<FoodCourt />} />
-                            <Route path="/bakery" element={<Bakery />} />
+                <SafeAnnouncementDisplay onBannerChange={setHasBanner} />
+                <div style={{ paddingTop: hasBanner ? '80px' : '0' }}>
+                    <Routes>
+                        <Route path="/" element={<Main />}>
+                            <Route path="/" element={<Biva />}>
+                                <Route path="/" element={<Hotel />} />
+                                <Route path="/food" element={<FoodCourt />} />
+                                <Route path="/bakery" element={<Bakery />} />
+                            </Route>
+                            <Route
+                                path="/table/booking"
+                                element={<SeatBookingPage />}
+                            />
+                            <Route
+                                path="/booking-confirmation"
+                                element={<BookingConfirmation />}
+                            />
+                            <Route path="/events/booking" element={<Table />} />
+                            <Route path="/about" element={<About />} />
+                            <Route
+                                path="/booking/:type"
+                                element={<RoomBookingPage />}
+                            />
+                            <Route path="/ticket" element={<Ticket />} />
                         </Route>
-                        <Route
-                            path="/table/booking"
-                            element={<SeatBookingPage />}
-                        />
-                        <Route
-                            path="/booking-confirmation"
-                            element={<BookingConfirmation />}
-                        />
-                        <Route path="/events/booking" element={<Table />} />
-                        <Route path="/about" element={<About />} />
-                        <Route
-                            path="/booking/:type"
-                            element={<RoomBookingPage />}
-                        />
-                        <Route path="/ticket" element={<Ticket />} />
-                    </Route>
-                </Routes>
+                    </Routes>
+                </div>
                 <ChatBot />
                 <Toaster richColors position="top-center" />
             </BrowserRouter>
