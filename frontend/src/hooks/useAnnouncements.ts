@@ -14,9 +14,12 @@ export function useAnnouncements() {
         queryFn: async (): Promise<AnnouncementResponse[]> => {
             try {
                 const response = await axios.get(
-                    "https://oscitant-conner-gingelly.ngrok-free.dev/announcements",
+                    "https://biva-bakery-backend.onrender.com/announcements",
                 );
-                return response.data;
+
+                console.log("RESPONSE", response);
+
+                return response.data.data;
             } catch (error: any) {
                 console.error("Failed to fetch announcements:", error);
                 return [];
