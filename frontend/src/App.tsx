@@ -34,6 +34,23 @@ const queryClient = new QueryClient({
     },
 });
 
+// // mock data //
+
+// const MOCK_DATA = {
+//     body: "enjoy stuff",
+//     displayType: "modal",
+//     id: "mock-announcement-1",
+//     image: "",
+//     styling: {
+//         alignment: "center",
+//         backgroundColor: "#ffffff",
+//         borderColor: "#e2e8f0",
+//         fontSize: "md",
+//         textColor: "#000000",
+//     },
+//     title: "welcome to solchar!",
+// }
+
 const asyncStoragePersister = createAsyncStoragePersister({
     storage: window.localStorage,
 });
@@ -74,29 +91,18 @@ const SafeAnnouncementDisplay: React.FC<{ onBannerChange: (hasBanner: boolean) =
     );
 };
 
-const MOCK_ANNOUNCEMENT = {
-    id: "mock-announcement-1",
-    title: "Welcome to the Event!",
-    body: "Enjoy exclusive discounts today.",
-    image: "",
-    displayType: "notification",
-    styling: {
-        alignment: "center",
-        backgroundColor: "#ffffff",
-        borderColor: "#e2e8f0",
-        fontSize: "md",
-        textColor: "#000000",
-    },
-};
-
-const AnnouncementDisplay: React.FC = () => {
-    const { data, isError, isLoading } = useAnnouncements();
+// Announcement Display Component
+const AnnouncementDisplay: React.FC<{ onBannerChange: (hasBanner: boolean) => void }> = ({ onBannerChange }) => {
+    const { data: announcements } = useAnnouncements();
+    const announcement = announcements?.[0]; // Get the first announcement
+    // const announcement = MOCK_DATA;
+    console.log("ANNOUNCE", announcement);
     const [isDismissed, setIsDismissed] = useState(false);
 
     console.log(data);
 
-    const announcement =
-        data && typeof data === "object" ? data : MOCK_ANNOUNCEMENT;
+    // const announcement =
+    //     data && typeof data === "object" ? data : MOCK_ANNOUNCEMENT;
 
     console.log("Announcement:", announcement);
 
