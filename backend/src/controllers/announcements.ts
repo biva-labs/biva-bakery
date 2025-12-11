@@ -25,10 +25,8 @@ app.post("/", async (c: Context) => {
         );
       }
 
-      // Set image only if upload worked
       announce_data.image = uploadedImage.secure_url;
     } else {
-      // No file uploaded → empty or keep old value
       announce_data.image = "";
     }
 
