@@ -101,8 +101,8 @@ const AnnouncementDisplay: React.FC<{ onBannerChange: (hasBanner: boolean) => vo
 
     console.log(data);
 
-    const announcement =
-        data && typeof data === "object" ? data : MOCK_ANNOUNCEMENT;
+    // const announcement =
+    //     data && typeof data === "object" ? data : MOCK_ANNOUNCEMENT;
 
     console.log("Announcement:", announcement);
 
