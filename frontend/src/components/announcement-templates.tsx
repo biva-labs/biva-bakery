@@ -103,8 +103,8 @@ export const ModalTemplate: React.FC<TemplateProps> = ({
             styling.fontSize === "sm"
                 ? "14px"
                 : styling.fontSize === "lg"
-                  ? "18px"
-                  : "16px",
+                    ? "18px"
+                    : "16px",
     };
     return (
         <div
@@ -281,8 +281,8 @@ export const PopupTemplate: React.FC<TemplateProps> = ({
             styling.fontSize === "sm"
                 ? "14px"
                 : styling.fontSize === "lg"
-                  ? "18px"
-                  : "16px",
+                    ? "18px"
+                    : "16px",
     };
     return (
         <div

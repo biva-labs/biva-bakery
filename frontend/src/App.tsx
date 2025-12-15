@@ -100,12 +100,38 @@ const AnnouncementDisplay: React.FC<{ onBannerChange: (hasBanner: boolean) => vo
     console.log("ANNOUNCE", announcement);
     const [isDismissed, setIsDismissed] = useState(false);
 
-    console.log(data);
+    console.log("useAnnouncements data:", announcements);
+    console.log("isLoading:", isLoading);
+    console.log("isError:", isError);
 
-    // const announcement =
-    //     data && typeof data === "object" ? data : MOCK_ANNOUNCEMENT;
+    // Early returns for loading/error states
+    if (isLoading) return null;
+    if (isError) return null;
+    if (!announcements || announcements.length === 0) return null;
 
-    console.log("Announcement:", announcement);
+    const announcement = announcements[0]; // Get the first announcement
+    console.log("Selected announcement:", announcement);
+
+    let parsedStyling = {};
+
+    try {
+        if (typeof announcement.styling === 'string') {
+            parsedStyling = JSON.parse(announcement.styling);
+        }
+        else if (announcement.styling) {
+            parsedStyling = announcement.styling;
+        }
+    } catch (e) {
+        console.error("Failed to parse announcement styling JSON:", e);
+        parsedStyling = {};
+    }
+
+    const announcementWithParsedStyling = {
+        ...announcement,
+        styling: parsedStyling,
+    };
+
+    console.log("PROPSSSSS: ", announcementWithParsedStyling);
 
     const announcementId =
         announcement.id ||
@@ -122,9 +148,6 @@ const AnnouncementDisplay: React.FC<{ onBannerChange: (hasBanner: boolean) => vo
         }
     }, [announcementId]);
 
-    if (isLoading) return null;
-    if (isError) return null;
-    if (!announcement) return null;
     if (isDismissed) return null;
 
     // Dismiss
@@ -137,7 +160,8 @@ const AnnouncementDisplay: React.FC<{ onBannerChange: (hasBanner: boolean) => vo
         setIsDismissed(true);
     };
 
-    const props = { ...announcement, onClose: handleDismiss };
+    const props = { ...announcementWithParsedStyling, onClose: handleDismiss };
+    console.log("PROPSSSSS: ", props);
 
     // Render template
     switch (announcement.displayType) {
