@@ -76,7 +76,9 @@ function AnnouncementErrorFallback() {
 }
 
 // Safe Announcement Display Component
-const SafeAnnouncementDisplay: React.FC<{ onBannerChange: (hasBanner: boolean) => void }> = ({ onBannerChange }) => {
+const SafeAnnouncementDisplay: React.FC<{
+    onBannerChange: (hasBanner: boolean) => void;
+}> = ({ onBannerChange }) => {
     return (
         <ErrorBoundary
             FallbackComponent={AnnouncementErrorFallback}
@@ -92,33 +94,35 @@ const SafeAnnouncementDisplay: React.FC<{ onBannerChange: (hasBanner: boolean) =
 };
 
 // Announcement Display Component
-const AnnouncementDisplay: React.FC<{ onBannerChange: (hasBanner: boolean) => void }> = ({ onBannerChange }) => {
+const AnnouncementDisplay: React.FC<{
+    onBannerChange: (hasBanner: boolean) => void;
+}> = ({ onBannerChange }) => {
     const { data: announcements } = useAnnouncements();
-    console.log(announcements);
-    const announcement = announcements?.[0]; // Get the first announcement
-    // const announcement = MOCK_DATA;
-    console.log("ANNOUNCE", announcement);
     const [isDismissed, setIsDismissed] = useState(false);
 
-    console.log("useAnnouncements data:", announcements);
-    console.log("isLoading:", isLoading);
-    console.log("isError:", isError);
+    // 1. Get the current announcement (if any)
+    const announcement = announcements?.[0];
 
-    // Early returns for loading/error states
-    if (isLoading) return null;
-    if (isError) return null;
-    if (!announcements || announcements.length === 0) return null;
+    // 2. Determine if we should show a banner
+    // It must be a banner type, have data, and not be dismissed
+    const shouldShowBanner =
+        !!announcement && announcement.displayType === "banner" && !isDismissed;
 
-    const announcement = announcements[0]; // Get the first announcement
-    console.log("Selected announcement:", announcement);
+    // 3. Sync with parent (App.tsx)
+    // This tells App to add the top padding
+    useEffect(() => {
+        onBannerChange(shouldShowBanner);
+    }, [shouldShowBanner, onBannerChange]);
 
+    // Early return if no data
+    if (!announcement) return null;
+
+    // Parsing Logic
     let parsedStyling = {};
-
     try {
-        if (typeof announcement.styling === 'string') {
+        if (typeof announcement.styling === "string") {
             parsedStyling = JSON.parse(announcement.styling);
-        }
-        else if (announcement.styling) {
+        } else if (announcement.styling) {
             parsedStyling = announcement.styling;
         }
     } catch (e) {
@@ -131,26 +135,15 @@ const AnnouncementDisplay: React.FC<{ onBannerChange: (hasBanner: boolean) => vo
         styling: parsedStyling,
     };
 
-    console.log("PROPSSSSS: ", announcementWithParsedStyling);
-
     const announcementId =
         announcement.id ||
         `${announcement.title}-${announcement.body}`
             .replace(/\s+/g, "-")
             .toLowerCase();
 
-    useEffect(() => {
-        try {
-            const dismissed = sessionStorage.getItem("dismissedAnnouncementId");
-            setIsDismissed(dismissed === announcementId);
-        } catch (err) {
-            console.warn("SessionStorage error:", err);
-        }
-    }, [announcementId]);
-
+    // If dismissed, render nothing (The useEffect above already told parent to remove padding)
     if (isDismissed) return null;
 
-    // Dismiss
     const handleDismiss = () => {
         try {
             sessionStorage.setItem("dismissedAnnouncementId", announcementId);
@@ -161,30 +154,22 @@ const AnnouncementDisplay: React.FC<{ onBannerChange: (hasBanner: boolean) => vo
     };
 
     const props = { ...announcementWithParsedStyling, onClose: handleDismiss };
-    console.log("PROPSSSSS: ", props);
 
-    // Render template
     switch (announcement.displayType) {
         case "banner":
             return <BannerTemplate {...props} />;
-
         case "modal":
             return <ModalTemplate {...props} />;
-
         case "notification":
             return <NotificationTemplate {...props} />;
-
         case "popup":
             return <PopupTemplate {...props} />;
-
         default:
-            console.warn("Unknown displayType:", announcement.displayType);
             return null;
     }
 };
-
 function App() {
-    const [hasBanner, setHasBanner] = useState(false);
+    const [hasBanner, setHasBanner] = useState(true);
 
     return (
         <PersistQueryClientProvider
@@ -194,7 +179,7 @@ function App() {
             <BrowserRouter>
                 <ScrollToHash />
                 <SafeAnnouncementDisplay onBannerChange={setHasBanner} />
-                <div style={{ paddingTop: hasBanner ? '80px' : '0' }}>
+                <div style={{ top: hasBanner ? "80px" : "0" }}>
                     <Routes>
                         <Route path="/" element={<Main />}>
                             <Route path="/" element={<Biva />}>

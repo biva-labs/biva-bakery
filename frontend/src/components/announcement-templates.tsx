@@ -1,6 +1,8 @@
 import React from "react";
 import { X, Bell } from "lucide-react";
 
+// ... (Interfaces remain the same) ...
+
 export interface AnnouncementData {
     title: string;
     body: string;
@@ -18,6 +20,7 @@ interface TemplateProps extends AnnouncementData {
     onClose?: () => void;
 }
 
+// BannerTemplate was mostly fine, just included here for completeness
 export const BannerTemplate: React.FC<TemplateProps> = ({
     title,
     body,
@@ -33,12 +36,11 @@ export const BannerTemplate: React.FC<TemplateProps> = ({
             styling.fontSize === "sm"
                 ? "14px"
                 : styling.fontSize === "lg"
-                    ? "18px"
-                    : "16px",
+                  ? "18px"
+                  : "16px",
     };
 
     return (
-        // Fixed so it is always visible at the top; use very high z-index to avoid being hidden
         <div
             role="region"
             aria-label="Announcement banner"
@@ -95,6 +97,7 @@ export const ModalTemplate: React.FC<TemplateProps> = ({
     styling,
     onClose,
 }) => {
+    // FIX: Added size mapping so CSS is valid ("14px" instead of "sm")
     const style: React.CSSProperties = {
         backgroundColor: styling.backgroundColor,
         color: styling.textColor,
@@ -103,9 +106,10 @@ export const ModalTemplate: React.FC<TemplateProps> = ({
             styling.fontSize === "sm"
                 ? "14px"
                 : styling.fontSize === "lg"
-                    ? "18px"
-                    : "16px",
+                  ? "18px"
+                  : "16px",
     };
+
     return (
         <div
             role="dialog"
@@ -114,7 +118,6 @@ export const ModalTemplate: React.FC<TemplateProps> = ({
             className="fixed inset-0 bg-black/50 flex items-center justify-center z-[10000] p-4"
         >
             <div
-                // apply inline background color and text color; fallback to white if none
                 className="rounded-lg shadow-xl max-w-md w-full overflow-hidden"
                 style={{
                     backgroundColor: style.backgroundColor,
@@ -148,12 +151,22 @@ export const ModalTemplate: React.FC<TemplateProps> = ({
                             </button>
                         )}
                     </div>
-                    <p
-                        className="mb-4"
-                        style={{ textAlign: styling.alignment }}
-                    >
-                        {body}
-                    </p>
+
+                    {/* FIX: Changed fontSize: fontSize to fontSize: style.fontSize */}
+                    <div className="mb-4">
+                        <p
+                            className="leading-relaxed"
+                            style={{
+                                textAlign: styling.alignment,
+                                fontSize: style.fontSize,
+                                color: styling.textColor,
+                                opacity: 0.9,
+                            }}
+                        >
+                            {body}
+                        </p>
+                    </div>
+
                     {onClose && (
                         <div className="flex justify-end">
                             <button
@@ -166,49 +179,6 @@ export const ModalTemplate: React.FC<TemplateProps> = ({
                         </div>
                     )}
                 </div>
-
-                {/* Image */}
-                {image && (
-                    <div className="relative w-full aspect-video overflow-hidden">
-                        <img
-                            src={image}
-                            alt="Announcement"
-                            className="w-full h-full object-cover"
-                        />
-                    </div>
-                )}
-
-                {/* Content */}
-                <div className="px-6 py-5">
-                    <p
-                        className="leading-relaxed"
-                        style={{
-                            textAlign: styling.alignment,
-                            fontSize: fontSize,
-                            color: styling.textColor,
-                            opacity: 0.9,
-                        }}
-                    >
-                        {body}
-                    </p>
-                </div>
-
-                {/* Footer with action button */}
-                {onClose && (
-                    <div className="px-6 pb-6 flex justify-end gap-3">
-                        <button
-                            onClick={onClose}
-                            className="px-6 py-2.5 rounded-full font-semibold transition-all duration-200 hover:opacity-90"
-                            style={{
-                                backgroundColor: styling.textColor,
-                                color: styling.backgroundColor,
-                                fontSize: "14px",
-                            }}
-                        >
-                            Got it
-                        </button>
-                    </div>
-                )}
             </div>
         </div>
     );
@@ -220,8 +190,25 @@ export const NotificationTemplate: React.FC<TemplateProps> = ({
     styling,
     onClose,
 }) => {
-    const fontSize = styling.fontSize === "sm" ? "13px" : styling.fontSize === "lg" ? "16px" : "14px";
-    const titleSize = styling.fontSize === "sm" ? "14px" : styling.fontSize === "lg" ? "17px" : "15px";
+    // FIX: Added missing style object definition
+    const style = {
+        backgroundColor: styling.backgroundColor,
+        color: styling.textColor,
+    };
+
+    const fontSize =
+        styling.fontSize === "sm"
+            ? "13px"
+            : styling.fontSize === "lg"
+              ? "16px"
+              : "14px";
+
+    const titleSize =
+        styling.fontSize === "sm"
+            ? "14px"
+            : styling.fontSize === "lg"
+              ? "17px"
+              : "15px";
 
     return (
         <div
@@ -242,11 +229,14 @@ export const NotificationTemplate: React.FC<TemplateProps> = ({
                     <div className="flex-1">
                         <h4
                             className="font-medium text-sm mb-1"
-                            style={{ fontSize: style.fontSize }}
+                            style={{ fontSize: titleSize }}
                         >
                             {title}
                         </h4>
-                        <p className="text-sm" style={{ color: style.color }}>
+                        <p
+                            className="text-sm"
+                            style={{ color: style.color, fontSize: fontSize }}
+                        >
                             {body}
                         </p>
                     </div>
@@ -281,9 +271,10 @@ export const PopupTemplate: React.FC<TemplateProps> = ({
             styling.fontSize === "sm"
                 ? "14px"
                 : styling.fontSize === "lg"
-                    ? "18px"
-                    : "16px",
+                  ? "18px"
+                  : "16px",
     };
+
     return (
         <div
             className="fixed bottom-4 right-4 z-[9999] max-w-sm"
@@ -314,14 +305,9 @@ export const PopupTemplate: React.FC<TemplateProps> = ({
                         </button>
                     )}
                 </div>
-                <p
-                    className="text-sm mb-3"
-                    style={{ textAlign: styling.alignment }}
-                >
-                    {body}
-                </p>
+
                 {image && (
-                    <div className="px-5 pb-3">
+                    <div className="pb-3">
                         <img
                             src={image}
                             alt="Announcement"
@@ -330,13 +316,13 @@ export const PopupTemplate: React.FC<TemplateProps> = ({
                     </div>
                 )}
 
-                {/* Content */}
-                <div className="px-5 pb-4">
+                {/* FIX: Changed fontSize: fontSize to fontSize: style.fontSize */}
+                <div className="pb-4">
                     <p
                         className="leading-relaxed"
                         style={{
                             textAlign: styling.alignment,
-                            fontSize: fontSize,
+                            fontSize: style.fontSize,
                             color: styling.textColor,
                             opacity: 0.85,
                         }}
