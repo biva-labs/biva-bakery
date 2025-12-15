@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import SmoothScroll from "@/components/ui/smooth-scroll";
 import { QueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
@@ -118,16 +119,24 @@ const AnnouncementDisplay: React.FC<{
     if (!announcement) return null;
 
     // Parsing Logic
-    let parsedStyling = {};
+    const DEFAULT_STYLING = {
+        backgroundColor: "#ffffff",
+        textColor: "#000000",
+        fontSize: "md" as "sm" | "md" | "lg",
+        alignment: "center" as "center" | "left" | "right"
+    };
+
+    let parsedStyling = DEFAULT_STYLING;
     try {
         if (typeof announcement.styling === "string") {
-            parsedStyling = JSON.parse(announcement.styling);
+            const parsed = JSON.parse(announcement.styling);
+            parsedStyling = { ...DEFAULT_STYLING, ...parsed };
         } else if (announcement.styling) {
-            parsedStyling = announcement.styling;
+            parsedStyling = { ...DEFAULT_STYLING, ...announcement.styling };
         }
     } catch (e) {
         console.error("Failed to parse announcement styling JSON:", e);
-        parsedStyling = {};
+        parsedStyling = DEFAULT_STYLING;
     }
 
     const announcementWithParsedStyling = {
@@ -177,6 +186,7 @@ function App() {
             persistOptions={{ persister: asyncStoragePersister }}
         >
             <BrowserRouter>
+                <SmoothScroll />
                 <ScrollToHash />
                 <SafeAnnouncementDisplay onBannerChange={setHasBanner} />
                 <div style={{ top: hasBanner ? "80px" : "0" }}>

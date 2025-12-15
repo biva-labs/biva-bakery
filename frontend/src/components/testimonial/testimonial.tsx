@@ -34,11 +34,11 @@ export default function Testimonial() {
                     }
                     
                     .scroll-left-testimonial {
-                        animation: scroll-left-testimonial 80s linear infinite;
+                        animation: scroll-left-testimonial 10s linear infinite;
                     }
                     
                     .scroll-right-testimonial {
-                        animation: scroll-right-testimonial 80s linear infinite;
+                        animation: scroll-right-testimonial 10s linear infinite;
                     }
                 `
             }} />
@@ -47,7 +47,17 @@ export default function Testimonial() {
                 <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-gray-50 via-gray-50/70 to-transparent z-10"></div>
                 <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-gray-50 via-gray-50/70 to-transparent z-10"></div>
 
-                <div className="flex space-x-6 scroll-left-testimonial">
+                <div
+                    className="flex space-x-6 scroll-left-testimonial"
+                    onMouseEnter={(e) => {
+                        const target = e.currentTarget;
+                        target.getAnimations().forEach(anim => anim.updatePlaybackRate(0.1));
+                    }}
+                    onMouseLeave={(e) => {
+                        const target = e.currentTarget;
+                        target.getAnimations().forEach(anim => anim.updatePlaybackRate(1));
+                    }}
+                >
                     {duplicatedFirstRow.map((testimonial, index) => (
                         <TestimonialCard key={`${testimonial.id}-${index}`} {...testimonial} />
                     ))}
@@ -58,7 +68,17 @@ export default function Testimonial() {
                 <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-gray-50 via-gray-50/70 to-transparent z-10"></div>
                 <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-gray-50 via-gray-50/70 to-transparent z-10"></div>
 
-                <div className="flex space-x-6 scroll-right-testimonial">
+                <div
+                    className="flex space-x-6 scroll-right-testimonial"
+                    onMouseEnter={(e) => {
+                        const target = e.currentTarget;
+                        target.getAnimations().forEach(anim => anim.updatePlaybackRate(0.1));
+                    }}
+                    onMouseLeave={(e) => {
+                        const target = e.currentTarget;
+                        target.getAnimations().forEach(anim => anim.updatePlaybackRate(1));
+                    }}
+                >
                     {duplicatedSecondRow.map((testimonial, index) => (
                         <TestimonialCard key={`${testimonial.id}-${index}`} {...testimonial} />
                     ))}
