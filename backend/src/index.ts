@@ -31,7 +31,7 @@ const allowedOrigin = [
   "https://thebiva.com",
   "https://www.thebiva.com",
   "https://biva-bakery.onrender.com",
-  "https://biva-admin.onrender.com/",
+  "https://biva-admin.onrender.com",
 ];
 
 app.use(
