@@ -54,8 +54,9 @@ app.post("/", async (c: Context) => {
       );
     }
 
-  
-    const [newAnnouncement] = await db
+    await db.delete(announcements);
+
+    const [updatedAnnouncement] = await db
       .insert(announcements)
       .values({
         title,
@@ -68,10 +69,10 @@ app.post("/", async (c: Context) => {
 
     return c.json(
       {
-        message: "Announcement created successfully",
-        data: newAnnouncement,
+        message: "Announcement updated successfully",
+        data: updatedAnnouncement,
       },
-      201
+      200
     );
   } catch (error) {
     console.error("Error creating announcement:", error);
