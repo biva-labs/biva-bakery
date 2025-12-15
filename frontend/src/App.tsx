@@ -94,6 +94,7 @@ const SafeAnnouncementDisplay: React.FC<{ onBannerChange: (hasBanner: boolean) =
 // Announcement Display Component
 const AnnouncementDisplay: React.FC<{ onBannerChange: (hasBanner: boolean) => void }> = ({ onBannerChange }) => {
     const { data: announcements } = useAnnouncements();
+    console.log(announcements);
     const announcement = announcements?.[0]; // Get the first announcement
     // const announcement = MOCK_DATA;
     console.log("ANNOUNCE", announcement);
