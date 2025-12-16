@@ -37,11 +37,13 @@ export default function About() {
           }
         `
       }} />
-      <div className="text-center">
+      <div
+        className="text-center"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         <div
           className="relative inline-block"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
         >
           <h2 className={`text-3xl lg:text-4xl text-${color} outfit font-extrabold md:mt-6 relative z-10 bg-white/50 backdrop-blur-[1px] rounded-lg px-2`}>
             Who Are <span className="rainbow-text">We</span>?
