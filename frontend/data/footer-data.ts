@@ -2,6 +2,7 @@ import wa_link from "@/utils/wa-link";
 import { Home, Menu, Info, Phone, Briefcase, Star, MapPin, Mail, Truck, FileText, RotateCcw } from "lucide-react";
 import { PHONE } from "./phone-data";
 import { isExternal } from "util/types";
+import { href } from "react-router-dom";
 
 export const QUICK_LINKS = {
   "navigation": [
@@ -9,7 +10,7 @@ export const QUICK_LINKS = {
     { href: "/bakery", label: "Bakery", icon: Menu, isExternal: false },
     { href: "/food", label: "Food Court", icon: Info, isExternal: false },
     { href: "/#gallery", label: "Gallery", icon: Star, isExternal: false },
-    { href: wa_link("Hey!", PHONE["admin"]), label: "Contact", icon: Phone, isExternal: true },
+    { href: "/contact", label: "Contact", icon: Phone, isExternal: true },
     { href: "/food", label: "Book Table", icon: Briefcase, isExternal: false },
   ],
   "address": [
@@ -21,6 +22,7 @@ export const QUICK_LINKS = {
     { href: "https://merchant.razorpay.com/policy/RA3QHOsSbirhdr/shipping", label: "Shipping", icon: Truck },
     { href: "https://merchant.razorpay.com/policy/RA3QHOsSbirhdr/terms", label: "Terms", icon: FileText },
     { href: "https://merchant.razorpay.com/policy/RA3QHOsSbirhdr/refund", label: "Refunds", icon: RotateCcw },
+    { href: "https://www.freeprivacypolicy.com/live/e57a3616-868a-4236-922d-9403406c5684", label: "Privacy Policy", icon: FileText },
   ]
 }
 
