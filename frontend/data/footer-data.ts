@@ -22,7 +22,7 @@ export const QUICK_LINKS = {
     { href: "https://merchant.razorpay.com/policy/RA3QHOsSbirhdr/shipping", label: "Shipping", icon: Truck },
     { href: "https://merchant.razorpay.com/policy/RA3QHOsSbirhdr/terms", label: "Terms", icon: FileText },
     { href: "https://merchant.razorpay.com/policy/RA3QHOsSbirhdr/refund", label: "Refunds", icon: RotateCcw },
-    { href: "https://www.freeprivacypolicy.com/live/e57a3616-868a-4236-922d-9403406c5684", label: "Privacy Policy", icon: FileText },
+    { href: "/privacy-policy", label: "Privacy Policy", icon: FileText },
   ]
 }
 

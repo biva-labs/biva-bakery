@@ -77,18 +77,30 @@ export default function Footer() {
                     </h3>
                     <div className="space-y-3">
                         {QUICK_LINKS["terms"].map(
-                            ({ href, label, icon: Icon }) => (
-                                <a
-                                    key={href}
-                                    href={href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-2 hover:text-orange-400 transition-colors duration-200 text-sm text-gray-300"
-                                >
-                                    <Icon className="h-4 w-4" />
-                                    {label}
-                                </a>
-                            ),
+                            ({ href, label, icon: Icon }) => {
+                                const isInternal = href.startsWith("/");
+                                return isInternal ? (
+                                    <Link
+                                        key={href}
+                                        to={href}
+                                        className="flex items-center gap-2 hover:text-orange-400 transition-colors duration-200 text-sm text-gray-300"
+                                    >
+                                        <Icon className="h-4 w-4" />
+                                        {label}
+                                    </Link>
+                                ) : (
+                                    <a
+                                        key={href}
+                                        href={href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center gap-2 hover:text-orange-400 transition-colors duration-200 text-sm text-gray-300"
+                                    >
+                                        <Icon className="h-4 w-4" />
+                                        {label}
+                                    </a>
+                                );
+                            }
                         )}
                     </div>
                 </div>
