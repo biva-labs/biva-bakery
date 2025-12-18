@@ -16,6 +16,7 @@ import Bakery from "./pages/bakery";
 import SeatBookingPage from "./components/food-court/seat-booking-page";
 import ChatBot from "./components/chatbot/chatbot";
 import About from "./pages/about";
+import Contact from "./pages/contact";
 import BookingConfirmation from "./components/bookings";
 import { RoomBookingPage } from "./components/hotel/room-booking-page";
 import Ticket from "./ticket";
@@ -196,6 +197,7 @@ function App() {
                                 <Route path="/" element={<Hotel />} />
                                 <Route path="/food" element={<FoodCourt />} />
                                 <Route path="/bakery" element={<Bakery />} />
+                                <Route path="/contact" element={<Contact />} />
                             </Route>
                             <Route
                                 path="/table/booking"
