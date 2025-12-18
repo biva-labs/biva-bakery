@@ -17,6 +17,7 @@ import SeatBookingPage from "./components/food-court/seat-booking-page";
 import ChatBot from "./components/chatbot/chatbot";
 import About from "./pages/about";
 import Contact from "./pages/contact";
+import PrivacyPolicy from "./pages/privacy-policy";
 import BookingConfirmation from "./components/bookings";
 import { RoomBookingPage } from "./components/hotel/room-booking-page";
 import Ticket from "./ticket";
@@ -198,6 +199,7 @@ function App() {
                                 <Route path="/food" element={<FoodCourt />} />
                                 <Route path="/bakery" element={<Bakery />} />
                                 <Route path="/contact" element={<Contact />} />
+                                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                             </Route>
                             <Route
                                 path="/table/booking"
