@@ -88,7 +88,7 @@ app.post("/", async (c: Context) => {
 
 app.delete("/", async (c: Context) => {
   try {
-    const res = db.delete(announcements);
+    const res = await db.delete(announcements);
 
     return c.json({ message: "deleted successfully", res }, 200);
   }
