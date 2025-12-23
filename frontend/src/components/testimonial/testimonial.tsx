@@ -8,8 +8,9 @@ export default function Testimonial() {
     const isBakeryPage = location.pathname.includes("/bakery");
     const textColor = isBakeryPage ? "text-[#DE4243]" : "text-[#002a3a]";
 
-    const firstRow = testimonials.slice(0, 3);
-    const secondRow = testimonials.slice(3, 6);
+    const half = Math.ceil(testimonials.length / 2);
+    const firstRow = testimonials.slice(0, half);
+    const secondRow = testimonials.slice(half);
 
     const duplicatedFirstRow = [...firstRow, ...firstRow, ...firstRow, ...firstRow, ...firstRow];
     const duplicatedSecondRow = [...secondRow, ...secondRow, ...secondRow, ...secondRow, ...secondRow];

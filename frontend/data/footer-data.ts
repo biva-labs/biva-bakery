@@ -14,9 +14,9 @@ export const QUICK_LINKS = {
     { href: "/food", label: "Book Table", icon: Briefcase, isExternal: false },
   ],
   "address": [
-    { text: "Station Road, Silchar, Assam", icon: MapPin },
-    { text: "+91 8135938393", icon: Phone },
-    { text: "hotelbiva@gmail.com", icon: Mail },
+    { text: "Hailakandi Road, Silchar, Assam", icon: MapPin },
+    { text: "+91 8811888328", icon: Phone },
+    { text: "hello@thebiva.com", icon: Mail },
   ],
   "terms": [
     { href: "https://merchant.razorpay.com/policy/RA3QHOsSbirhdr/shipping", label: "Shipping", icon: Truck },

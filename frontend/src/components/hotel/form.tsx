@@ -32,8 +32,8 @@ const calculateTotalDays = (joinDate: string, leaveDate: string): number => {
     const timeDifference = end.getTime() - start.getTime();
     const dayDifference = timeDifference / (1000 * 60 * 60 * 24);
 
-    // Add 1 to make the end date inclusive.
-    return Math.floor(dayDifference) + 1;
+    // Checkout day is not included in billing
+    return Math.floor(dayDifference);
 };
 
 const formatDateISO = (date: Date) => {
@@ -258,9 +258,8 @@ function HotelBookingCalendar({
             onJoinDateSelect(dateStr);
             onLeaveDateSelect("");
         } else if (selectedJoinDate && !selectedLeaveDate) {
-            // if clicking same or earlier => start over
+            // if clicking same date => ignore (don't allow same-day check-in/check-out)
             if (dateStr === selectedJoinDate) {
-                onLeaveDateSelect(dateStr);
                 return;
             }
 

@@ -188,7 +188,7 @@ function App() {
             persistOptions={{ persister: asyncStoragePersister }}
         >
             <BrowserRouter>
-                <SmoothScroll />
+                {/* <SmoothScroll /> */}
                 <ScrollToHash />
                 <SafeAnnouncementDisplay onBannerChange={setHasBanner} />
                 <div style={{ top: hasBanner ? "80px" : "0" }}>
