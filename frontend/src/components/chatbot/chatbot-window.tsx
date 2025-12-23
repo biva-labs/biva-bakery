@@ -1,6 +1,6 @@
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
-import { MessageCircle, X, Send } from "lucide-react"
+import { X, Send } from "lucide-react"
 import ChatBotTypingIndicator from "./chatbot-typing-indicator"
 import ChatBotFormatMessages from "./chatbot-format-message"
 import { AI_QUICK_MESSAGES } from "../../../data/chatbot-quick-messages"
@@ -46,8 +46,8 @@ export default function ChatBotWindow({
 
             <div className="bg-yellow-500 text-black p-4 rounded-t-lg flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
-                        <MessageCircle size={16} className="text-yellow-500" />
+                    <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center text-lg">
+                        🤖
                     </div>
                     <div>
                         <h3 className="font-semibold">Biva Assistant</h3>

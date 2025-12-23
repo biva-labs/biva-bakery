@@ -11,11 +11,12 @@ import { PHONE } from "../../../../data/phone-data";
 const mainNavItems = [
   { title: "HOME", url: "/" },
   { title: "EVENTS", url: "/food#events" },
-  { title: "ABOUT US", url: "/about" }, 
+  { title: "ABOUT US", url: "/about" },
+  { title: "CONTACT US", url: "/contact" },
   {
     title: "BOOKINGS",
     url: "#",
-    type: "form", 
+    type: "form",
   },
   {
     title: "SERVICE",
@@ -42,7 +43,7 @@ export default function MainNav() {
     setOpenIndex(openIndex === index ? null : index);
   };
 
- 
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(event.target as Node)) {
@@ -100,12 +101,12 @@ export default function MainNav() {
                   </Link>
                 )}
 
-            
+
                 {item.children && isOpen && (
-                  <MainNavLinkDropdown items={item.children} /> 
+                  <MainNavLinkDropdown items={item.children} />
                 )}
 
-              
+
                 {item.type === "form" && isOpen && (
                   <MainNavForm />
                 )}

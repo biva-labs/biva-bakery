@@ -86,6 +86,17 @@ app.post("/", async (c: Context) => {
   }
 });
 
+app.delete("/", async (c: Context) => {
+  try {
+    const res = await db.delete(announcements).returning();
+
+    return c.json({ message: "deleted successfully", res }, 200);
+  }
+  catch (err) {
+    return c.json({ message: "error deleting!" }, 500);
+  }
+})
+
 app.get("/", async (c: Context) => {
   try {
     const allAnnouncements = await db.select().from(announcements);
