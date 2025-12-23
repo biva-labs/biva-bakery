@@ -131,10 +131,10 @@ function HotelBookingCalendar({
 
             if (!start || !end) return;
 
-            // We treat leave_date as checkout day; bookings are nights from start up to day before leave (standard)
-            // If your backend includes leave_date as inclusive, change `while (current < end)` to `while (current <= end)`
+            // We treat leave_date as checkout day; bookings occupy rooms from check-in up to (but not including) checkout
+            // This allows new guests to check in on the same day previous guests check out
             const current = new Date(start);
-            while (current <= end) {
+            while (current < end) {
                 const dateStr = formatDateISO(current);
                 map[dateStr] = (map[dateStr] || 0) + 1; // each booking occupies 1 room
                 current.setDate(current.getDate() + 1);

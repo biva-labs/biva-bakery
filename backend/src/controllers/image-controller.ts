@@ -66,7 +66,7 @@ export const getImage = async (c: Context) => {
         position: itm.context.position,
       }));
       const hotelEvents = await cloudService.listImages("events", true);
-      const hotelGallery = await cloudService.listImages("gallery", true);
+      const hotelGallery = await cloudService.listByMetadata("position", "gallery-hotel", "gallery");
       const hotelRooms = await cloudService.listByMetadata(
         "position",
         "rooms",
@@ -151,7 +151,7 @@ export const getImage = async (c: Context) => {
         param,
       );
       const foodCourtEvents = await cloudService.listImages("events", true);
-      const foodCourtGallery = await cloudService.listImages("gallery", true);
+      const foodCourtGallery = await cloudService.listByMetadata("position", "gallery-food-court", "gallery");
 
       console.log(FoodCourtPreference);
 
@@ -188,6 +188,7 @@ export const getImage = async (c: Context) => {
       });
     } else if (param.toLowerCase().includes("bakery")) {
       const bakeryImages = await cloudService.listImagesByTags(bakeryTypes);
+      const bakeryGallery = await cloudService.listByMetadata("position", "gallery-bakery", "gallery");
       const bakeryHero = await cloudService.listByMetadata(
         "position",
         "hero",
@@ -234,7 +235,11 @@ export const getImage = async (c: Context) => {
       });
 
       return c.json({
-        data: { hero: hero, groupedItems, category },
+        data: { hero: hero, groupedItems, category, gallery:  bakeryGallery.map((img) => ({
+            public_id: img.public_id,
+            url: img.optimized_url,
+            position: img.context?.position,
+          })), },
       });
     } else {
       const images = await cloudService.listImages(param);
