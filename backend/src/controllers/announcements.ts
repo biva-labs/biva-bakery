@@ -4,87 +4,49 @@ import { uploadImage } from "./image-controller.ts";
 import { Hono } from "hono";
 import { db } from "../db/index.ts";
 import { announcements } from "../../drizzle/schema.ts";
+import { title } from "process";
 
 const app = new Hono();
 
 app.post("/", async (c: Context) => {
-  try {
-    const formData = await c.req.parseBody();
-    let imageUrl = "";
+ try {
+  const formData = await c.req.parseBody();
+  const payloadRaw = formData["payload"] as string;
+  const announcementMetadata = JSON.parse(payloadRaw);
 
-    // Handle optional file upload
-    const file = formData["image"];
+  const filesRaw = formData["images"];
+  const files = Array.isArray(filesRaw) ? filesRaw : [filesRaw];
 
+  const announcementPromises = announcementMetadata.map(async (item: any, i: number) => {
+    let imageUrl = item.image || "";
+
+    const file = files[i];
     if (file instanceof File) {
-      const uploadedImage: UploadFileResult | undefined = await uploadImage(
-        file,
-        "announcements"
-      );
-
-      if (!uploadedImage?.secure_url) {
-        return c.json(
-          { error: "Image upload did not return a valid URL" },
-          500
-        );
-      }
-
-      imageUrl = uploadedImage.secure_url;
+      const uploadedImage = await uploadImage(file, "announcements");
+      imageUrl = uploadedImage.secure_url || "";
     }
 
-    const title = formData["title"] as string;
-    const bodyText = formData["body"] as string;
-    const displayType = formData["displayType"] as string;
-    const stylingString = formData["styling"] as string;
+    return {
+      title: item.title,
+      body: item.body,
+      image: imageUrl,
+      displayType: item.displayType || "banner",
+      styling: JSON.stringify(item.styling || {}),
+    };
+  });
 
-    if (!title || !bodyText || !displayType) {
-      return c.json(
-        { error: "Missing required fields: title, body, or displayType" },
-        400
-      );
-    }
+  const announcementData = await Promise.all(announcementPromises);
+  await db.delete(announcements);
 
+  if (announcementData.length > 0) {
+      const inserted = await db.insert(announcements).values(announcementData).returning();
 
-    let stylingData;
-    try {
-      stylingData = stylingString ? JSON.parse(stylingString) : {};
-    } catch (parseError) {
-      return c.json(
-        { error: "Invalid JSON format for styling field" },
-        400
-      );
-    }
-
-    await db.delete(announcements);
-
-    const [updatedAnnouncement] = await db
-      .insert(announcements)
-      .values({
-        title,
-        body: bodyText,
-        displayType,
-        image: imageUrl,
-        styling: JSON.stringify(stylingData),
-      })
-      .returning();
-
-    return c.json(
-      {
-        message: "Announcement updated successfully",
-        data: updatedAnnouncement,
-      },
-      200
-    );
-  } catch (error) {
-    console.error("Error creating announcement:", error);
-    return c.json(
-      {
-        error: "Server error",
-        details: error instanceof Error ? error.message : "Unknown error"
-      },
-      500
-    );
-  }
-});
+      return c.json({ message: "Announcements created successfully", data: inserted }, 201);}
+} catch (error) {{
+    console.error("Error creating announcements:", error);
+    return c.json({ message: "Error creating announcements", details: error instanceof Error ? error.message : "Unknown error" }, 500);
+};
+}});
 
 app.delete("/", async (c: Context) => {
   try {
