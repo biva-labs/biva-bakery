@@ -14,39 +14,26 @@ app.post("/", async (c: Context) => {
   const payloadRaw = formData["payload"] as string;
   const announcementMetadata = JSON.parse(payloadRaw);
 
-  console.log("announcement data!!: ", formData)
+  console.log("announcement data!!: ", formData);
 
-  // Extract images from formData - they come as images[0], images[1], etc.
-  const imageFiles: (File | null)[] = [];
-  for (let i = 0; i < 4; i++) {
-    const file = formData[`images[${i}]`] as File | undefined;
-    imageFiles[i] = file && file.size > 0 ? file : null;
-  }
+  // Extract images from formData - they come as images[0], images[1], images[2], images[3]
+  const files: (File | undefined)[] = [
+    formData["images[0]"] as File | undefined,
+    formData["images[1]"] as File | undefined,
+    formData["images[2]"] as File | undefined,
+    formData["images[3]"] as File | undefined,
+  ];
 
-  console.log("Extracted image files:", imageFiles.map((f, i) => ({
-    position: i,
-    hasFile: !!f,
-    size: f?.size || 0,
-    name: f?.name || 'N/A',
-  })));
-
-  // Map displayType to array index: banner=0, modal=1, notification=2, popup=3
-  const displayTypeIndexMap: Record<string, number> = {
-    banner: 0,
-    modal: 1,
-    notification: 2,
-    popup: 3,
-  };
-
-  // First, upload all valid images at their correct positions
+  // Upload images and store URLs at their respective positions
+  // 0=banner, 1=modal, 2=notification, 3=popup
   const uploadedUrls: string[] = ["", "", "", ""];
   
-  for (let i = 0; i < imageFiles.length; i++) {
-    const file = imageFiles[i];
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
     
-    // Skip if file is null or empty
-    if (!file) {
-      console.log(`Skipping position ${i} - no valid file`);
+    // Skip if file is empty, undefined, or not a valid File object with content
+    if (!file || !(file instanceof File) || file.size === 0) {
+      console.log(`Skipping position ${i} - no valid file (size: ${file?.size || 0})`);
       continue;
     }
 
@@ -66,15 +53,13 @@ app.post("/", async (c: Context) => {
     }
   }
 
-  // Now process announcements and assign the correct image URL based on displayType
-  const announcementPromises = announcementMetadata.map(async (item: any) => {
-    const displayType = item.displayType || "banner";
-    const position = displayTypeIndexMap[displayType] ?? 0;
-    const imageUrl = uploadedUrls[position] || item.image || "";
+  // Process announcements - they're already in order: banner, modal, notification, popup
+  const announcementData = announcementMetadata.map((item: any, index: number) => {
+    const imageUrl = uploadedUrls[index] || item.image || "";
 
-    console.log(`Processing announcement (${displayType}):`, {
-      position,
+    console.log(`Processing announcement ${index} (${item.displayType}):`, {
       imageUrl,
+      hasUploadedImage: !!uploadedUrls[index],
       hasExistingImage: !!item.image,
     });
 
@@ -82,12 +67,10 @@ app.post("/", async (c: Context) => {
       title: item.title,
       body: item.body,
       image: imageUrl,
-      displayType: displayType,
+      displayType: item.displayType || "banner",
       styling: JSON.stringify(item.styling || {}),
     };
   });
-
-  const announcementData = await Promise.all(announcementPromises);
   await db.delete(announcements);
 
   if (announcementData.length > 0) {
