@@ -33,14 +33,15 @@ const allowedOrigin = [
     "https://biva-bakery.onrender.com",
     "https://biva-admin.onrender.com",
     "http://localhost:5173",
+    "http://localhost:5174",
 ];
-
-app.use(
+app.use( "*",
     cors({
         origin: (origin) => {
-            if (!origin) return "*"; // allow non-browser requests
-
-            return allowedOrigin.includes(origin) ? origin : "";
+            if (allowedOrigin.includes(origin)) {
+                return origin;
+            }
+            return null;
         },
         credentials: true,
         allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -48,8 +49,7 @@ app.use(
     }),
 );
 
-// CONST VAR
-//
+
 export interface announce_data_type {
     title: string;
     body: string;
