@@ -32,8 +32,6 @@ const allowedOrigin = [
     "https://www.thebiva.com",
     "https://biva-bakery.onrender.com",
     "https://biva-admin.onrender.com",
-    "http://localhost:5173",
-    "http://localhost:5174",
 ];
 app.use( "*",
     cors({
