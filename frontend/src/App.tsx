@@ -37,23 +37,6 @@ const queryClient = new QueryClient({
     },
 });
 
-// // mock data //
-
-// const MOCK_DATA = {
-//     body: "enjoy stuff",
-//     displayType: "modal",
-//     id: "mock-announcement-1",
-//     image: "",
-//     styling: {
-//         alignment: "center",
-//         backgroundColor: "#ffffff",
-//         borderColor: "#e2e8f0",
-//         fontSize: "md",
-//         textColor: "#000000",
-//     },
-//     title: "welcome to solchar!",
-// }
-
 const asyncStoragePersister = createAsyncStoragePersister({
     storage: window.localStorage,
 });
@@ -89,9 +72,7 @@ const SafeAnnouncementDisplay: React.FC<{
                 console.warn("Announcement component error:", error);
             }}
         >
-            <div className="fixed top-0 left-0 right-0 z-[9999]">
-                <AnnouncementDisplay onBannerChange={onBannerChange} />
-            </div>
+            <AnnouncementDisplay onBannerChange={onBannerChange} />
         </ErrorBoundary>
     );
 };
@@ -100,10 +81,14 @@ const SafeAnnouncementDisplay: React.FC<{
 const AnnouncementDisplay: React.FC<{
     onBannerChange: (hasBanner: boolean) => void;
 }> = ({ onBannerChange }) => {
-    const { data: announcements } = useAnnouncements();
-    console.log("Announcements fetched:", announcements);
+    const {
+        data: announcements,
+        isLoading,
+        isError,
+        error,
+    } = useAnnouncements();
+
     const [dismissedIds, setDismissedIds] = useState<Set<string>>(() => {
-        // Initialize from sessionStorage
         try {
             const stored = sessionStorage.getItem("dismissedAnnouncementIds");
             return stored ? new Set(JSON.parse(stored)) : new Set();
@@ -112,8 +97,31 @@ const AnnouncementDisplay: React.FC<{
         }
     });
 
-    // Early return if no data
+    // Debug logging
+    useEffect(() => {
+        console.log("Announcements Query State:", {
+            isLoading,
+            isError,
+            error,
+            data: announcements,
+            dataLength: announcements?.length,
+        });
+    }, [announcements, isLoading, isError, error]);
+
+    // Early return cases
+    if (isLoading) {
+        console.log("Announcements loading...");
+        return null;
+    }
+
+    if (isError) {
+        console.error("Error loading announcements:", error);
+        onBannerChange(false);
+        return null;
+    }
+
     if (!announcements || announcements.length === 0) {
+        console.log("No announcements data");
         onBannerChange(false);
         return null;
     }
@@ -122,52 +130,70 @@ const AnnouncementDisplay: React.FC<{
         backgroundColor: "#ffffff",
         textColor: "#000000",
         fontSize: "md" as "sm" | "md" | "lg",
-        alignment: "center" as "center" | "left" | "right"
+        alignment: "center" as "center" | "left" | "right",
+        borderColor: "#e2e8f0",
     };
 
     // Filter and parse all active announcements
     const activeAnnouncements = announcements
         .filter((announcement) => {
-            // Filter out dismissed announcements
+            // Generate a consistent ID
             const announcementId =
                 announcement.id ||
-                `${announcement.title}-${announcement.body}`
+                `${announcement.displayType}-${announcement.title}-${announcement.body}`
                     .replace(/\s+/g, "-")
                     .toLowerCase();
-            
+
+            // Check if dismissed
             if (dismissedIds.has(String(announcementId))) {
+                console.log(`Announcement ${announcementId} is dismissed`);
                 return false;
             }
 
             // Filter out announcements with empty title AND empty body
             if (!announcement.title?.trim() && !announcement.body?.trim()) {
+                console.log("Announcement has no title or body, skipping");
                 return false;
             }
 
             return true;
         })
         .map((announcement) => {
-            let parsedStyling = DEFAULT_STYLING;
+            let parsedStyling = { ...DEFAULT_STYLING };
+
             try {
                 if (typeof announcement.styling === "string") {
                     const parsed = JSON.parse(announcement.styling);
                     parsedStyling = { ...DEFAULT_STYLING, ...parsed };
-                } else if (announcement.styling) {
-                    parsedStyling = { ...DEFAULT_STYLING, ...announcement.styling };
+                } else if (
+                    announcement.styling &&
+                    typeof announcement.styling === "object"
+                ) {
+                    parsedStyling = {
+                        ...DEFAULT_STYLING,
+                        ...announcement.styling,
+                    };
                 }
             } catch (e) {
-                console.error("Failed to parse announcement styling JSON:", e);
+                console.error("Failed to parse announcement styling:", e);
             }
 
             return {
                 ...announcement,
+                id:
+                    announcement.id ||
+                    `${announcement.displayType}-${announcement.title}-${announcement.body}`
+                        .replace(/\s+/g, "-")
+                        .toLowerCase(),
                 styling: parsedStyling,
             };
         });
 
+    console.log("Active announcements after filtering:", activeAnnouncements);
+
     // Check if any active banner exists
     const hasBannerAnnouncement = activeAnnouncements.some(
-        (a) => a.displayType === "banner"
+        (a) => a.displayType === "banner",
     );
 
     // Sync with parent
@@ -176,9 +202,13 @@ const AnnouncementDisplay: React.FC<{
     }, [hasBannerAnnouncement, onBannerChange]);
 
     // If no active announcements, render nothing
-    if (activeAnnouncements.length === 0) return null;
+    if (activeAnnouncements.length === 0) {
+        console.log("No active announcements to display");
+        return null;
+    }
 
     const handleDismiss = (announcementId: string) => {
+        console.log("Dismissing announcement:", announcementId);
         const newDismissedIds = new Set(dismissedIds);
         newDismissedIds.add(announcementId);
         setDismissedIds(newDismissedIds);
@@ -186,7 +216,7 @@ const AnnouncementDisplay: React.FC<{
         try {
             sessionStorage.setItem(
                 "dismissedAnnouncementIds",
-                JSON.stringify([...newDismissedIds])
+                JSON.stringify([...newDismissedIds]),
             );
         } catch (err) {
             console.warn("SessionStorage write error:", err);
@@ -194,50 +224,78 @@ const AnnouncementDisplay: React.FC<{
     };
 
     const renderAnnouncement = (announcement: any) => {
-        const announcementId = String(
-            announcement.id ||
-            `${announcement.title}-${announcement.body}`
-                .replace(/\s+/g, "-")
-                .toLowerCase()
-        );
+        const announcementId = String(announcement.id);
 
-        // Extract all required props for the template
         const componentProps = {
             title: announcement.title || "",
             body: announcement.body || "",
             image: announcement.image || "",
-            styling: announcement.styling, // Already parsed in activeAnnouncements
+            styling: announcement.styling,
             displayType: announcement.displayType,
             onClose: () => handleDismiss(announcementId),
         };
 
-        console.log(`Rendering ${announcement.displayType}:`, {
+        console.log(`Rendering ${announcement.displayType} announcement:`, {
+            id: announcementId,
             title: componentProps.title,
             body: componentProps.body,
             hasImage: !!componentProps.image,
-            imageUrl: componentProps.image,
             styling: componentProps.styling,
         });
 
-        switch (announcement.displayType) {
-            case "banner":
-                return <BannerTemplate key={announcementId} {...componentProps} />;
-            case "modal":
-                return <ModalTemplate key={announcementId} {...componentProps} />;
-            case "notification":
-                return <NotificationTemplate key={announcementId} {...componentProps} />;
-            case "popup":
-                return <PopupTemplate key={announcementId} {...componentProps} />;
-            default:
-                console.warn(`Unknown displayType: ${announcement.displayType}`);
-                return null;
+        try {
+            switch (announcement.displayType) {
+                case "banner":
+                    return (
+                        <BannerTemplate
+                            key={announcementId}
+                            {...componentProps}
+                        />
+                    );
+                case "modal":
+                    return (
+                        <ModalTemplate
+                            key={announcementId}
+                            {...componentProps}
+                        />
+                    );
+                case "notification":
+                    return (
+                        <NotificationTemplate
+                            key={announcementId}
+                            {...componentProps}
+                        />
+                    );
+                case "popup":
+                    return (
+                        <PopupTemplate
+                            key={announcementId}
+                            {...componentProps}
+                        />
+                    );
+                default:
+                    console.warn(
+                        `Unknown displayType: ${announcement.displayType}`,
+                    );
+                    return null;
+            }
+        } catch (err) {
+            console.error(`Error rendering ${announcement.displayType}:`, err);
+            return null;
         }
     };
 
-    return <>{activeAnnouncements.map(renderAnnouncement)}</>;
+    return (
+        <div className="fixed inset-0 pointer-events-none z-[9999]">
+            <div className="pointer-events-auto">
+                {activeAnnouncements.map(renderAnnouncement)}
+            </div>
+        </div>
+    );
 };
+
 function App() {
-    const [hasBanner, setHasBanner] = useState(true);
+    const [hasBanner, setHasBanner] = useState(false);
 
     return (
         <PersistQueryClientProvider
@@ -245,10 +303,14 @@ function App() {
             persistOptions={{ persister: asyncStoragePersister }}
         >
             <BrowserRouter>
-                {/* <SmoothScroll /> */}
                 <ScrollToHash />
                 <SafeAnnouncementDisplay onBannerChange={setHasBanner} />
-                <div style={{ top: hasBanner ? "80px" : "0" }}>
+                <div
+                    style={{
+                        marginTop: hasBanner ? "80px" : "0",
+                        transition: "margin-top 0.3s ease",
+                    }}
+                >
                     <Routes>
                         <Route path="/" element={<Main />}>
                             <Route path="/" element={<Biva />}>
@@ -256,7 +318,10 @@ function App() {
                                 <Route path="/food" element={<FoodCourt />} />
                                 <Route path="/bakery" element={<Bakery />} />
                                 <Route path="/contact" element={<Contact />} />
-                                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                                <Route
+                                    path="/privacy-policy"
+                                    element={<PrivacyPolicy />}
+                                />
                             </Route>
                             <Route
                                 path="/table/booking"
