@@ -14,31 +14,75 @@ app.post("/", async (c: Context) => {
   const payloadRaw = formData["payload"] as string;
   const announcementMetadata = JSON.parse(payloadRaw);
 
-  const filesRaw = formData["images"];
-  const files = Array.isArray(filesRaw) ? filesRaw : [filesRaw];
+  console.log("announcement data!!: ", formData)
 
-  const announcementPromises = announcementMetadata.map(async (item: any, i: number) => {
-    let imageUrl = item.image || "";
+  // Extract images from formData - they come as images[0], images[1], etc.
+  const imageFiles: (File | null)[] = [];
+  for (let i = 0; i < 4; i++) {
+    const file = formData[`images[${i}]`] as File | undefined;
+    imageFiles[i] = file && file.size > 0 ? file : null;
+  }
 
-    const file = files[i];
-    console.log(`Processing announcement ${i}:`, {
-      hasFile: !!file,
-      isFileInstance: file instanceof File,
-      fileName: file instanceof File ? file.name : 'N/A',
-      fileSize: file instanceof File ? file.size : 'N/A',
-      fileType: file instanceof File ? file.type : typeof file,
-    });
+  console.log("Extracted image files:", imageFiles.map((f, i) => ({
+    position: i,
+    hasFile: !!f,
+    size: f?.size || 0,
+    name: f?.name || 'N/A',
+  })));
 
-    if (file instanceof File && file.size > 0) {
-      const uploadedImage = await uploadImage(file, "announcements");
-      imageUrl = uploadedImage.secure_url || "";
+  // Map displayType to array index: banner=0, modal=1, notification=2, popup=3
+  const displayTypeIndexMap: Record<string, number> = {
+    banner: 0,
+    modal: 1,
+    notification: 2,
+    popup: 3,
+  };
+
+  // First, upload all valid images at their correct positions
+  const uploadedUrls: string[] = ["", "", "", ""];
+  
+  for (let i = 0; i < imageFiles.length; i++) {
+    const file = imageFiles[i];
+    
+    // Skip if file is null or empty
+    if (!file) {
+      console.log(`Skipping position ${i} - no valid file`);
+      continue;
     }
+
+    try {
+      console.log(`Uploading file at position ${i}:`, {
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type,
+      });
+      
+      const uploadedImage = await uploadImage(file, "announcements");
+      uploadedUrls[i] = uploadedImage.secure_url || uploadedImage.url || "";
+      console.log(`Successfully uploaded to position ${i}:`, uploadedUrls[i]);
+    } catch (error) {
+      console.error(`Error uploading file at position ${i}:`, error);
+      uploadedUrls[i] = "";
+    }
+  }
+
+  // Now process announcements and assign the correct image URL based on displayType
+  const announcementPromises = announcementMetadata.map(async (item: any) => {
+    const displayType = item.displayType || "banner";
+    const position = displayTypeIndexMap[displayType] ?? 0;
+    const imageUrl = uploadedUrls[position] || item.image || "";
+
+    console.log(`Processing announcement (${displayType}):`, {
+      position,
+      imageUrl,
+      hasExistingImage: !!item.image,
+    });
 
     return {
       title: item.title,
       body: item.body,
       image: imageUrl,
-      displayType: item.displayType || "banner",
+      displayType: displayType,
       styling: JSON.stringify(item.styling || {}),
     };
   });
