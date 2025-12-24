@@ -101,26 +101,23 @@ const AnnouncementDisplay: React.FC<{
     onBannerChange: (hasBanner: boolean) => void;
 }> = ({ onBannerChange }) => {
     const { data: announcements } = useAnnouncements();
-    const [isDismissed, setIsDismissed] = useState(false);
-
-    // 1. Get the current announcement (if any)
-    const announcement = announcements?.[0];
-
-    // 2. Determine if we should show a banner
-    // It must be a banner type, have data, and not be dismissed
-    const shouldShowBanner =
-        !!announcement && announcement.displayType === "banner" && !isDismissed;
-
-    // 3. Sync with parent (App.tsx)
-    // This tells App to add the top padding
-    useEffect(() => {
-        onBannerChange(shouldShowBanner);
-    }, [shouldShowBanner, onBannerChange]);
+    console.log("Announcements fetched:", announcements);
+    const [dismissedIds, setDismissedIds] = useState<Set<string>>(() => {
+        // Initialize from sessionStorage
+        try {
+            const stored = sessionStorage.getItem("dismissedAnnouncementIds");
+            return stored ? new Set(JSON.parse(stored)) : new Set();
+        } catch {
+            return new Set();
+        }
+    });
 
     // Early return if no data
-    if (!announcement) return null;
+    if (!announcements || announcements.length === 0) {
+        onBannerChange(false);
+        return null;
+    }
 
-    // Parsing Logic
     const DEFAULT_STYLING = {
         backgroundColor: "#ffffff",
         textColor: "#000000",
@@ -128,56 +125,116 @@ const AnnouncementDisplay: React.FC<{
         alignment: "center" as "center" | "left" | "right"
     };
 
-    let parsedStyling = DEFAULT_STYLING;
-    try {
-        if (typeof announcement.styling === "string") {
-            const parsed = JSON.parse(announcement.styling);
-            parsedStyling = { ...DEFAULT_STYLING, ...parsed };
-        } else if (announcement.styling) {
-            parsedStyling = { ...DEFAULT_STYLING, ...announcement.styling };
-        }
-    } catch (e) {
-        console.error("Failed to parse announcement styling JSON:", e);
-        parsedStyling = DEFAULT_STYLING;
-    }
+    // Filter and parse all active announcements
+    const activeAnnouncements = announcements
+        .filter((announcement) => {
+            // Filter out dismissed announcements
+            const announcementId =
+                announcement.id ||
+                `${announcement.title}-${announcement.body}`
+                    .replace(/\s+/g, "-")
+                    .toLowerCase();
+            
+            if (dismissedIds.has(String(announcementId))) {
+                return false;
+            }
 
-    const announcementWithParsedStyling = {
-        ...announcement,
-        styling: parsedStyling,
-    };
+            // Filter out announcements with empty title AND empty body
+            if (!announcement.title?.trim() && !announcement.body?.trim()) {
+                return false;
+            }
 
-    const announcementId =
-        announcement.id ||
-        `${announcement.title}-${announcement.body}`
-            .replace(/\s+/g, "-")
-            .toLowerCase();
+            return true;
+        })
+        .map((announcement) => {
+            let parsedStyling = DEFAULT_STYLING;
+            try {
+                if (typeof announcement.styling === "string") {
+                    const parsed = JSON.parse(announcement.styling);
+                    parsedStyling = { ...DEFAULT_STYLING, ...parsed };
+                } else if (announcement.styling) {
+                    parsedStyling = { ...DEFAULT_STYLING, ...announcement.styling };
+                }
+            } catch (e) {
+                console.error("Failed to parse announcement styling JSON:", e);
+            }
 
-    // If dismissed, render nothing (The useEffect above already told parent to remove padding)
-    if (isDismissed) return null;
+            return {
+                ...announcement,
+                styling: parsedStyling,
+            };
+        });
 
-    const handleDismiss = () => {
+    // Check if any active banner exists
+    const hasBannerAnnouncement = activeAnnouncements.some(
+        (a) => a.displayType === "banner"
+    );
+
+    // Sync with parent
+    useEffect(() => {
+        onBannerChange(hasBannerAnnouncement);
+    }, [hasBannerAnnouncement, onBannerChange]);
+
+    // If no active announcements, render nothing
+    if (activeAnnouncements.length === 0) return null;
+
+    const handleDismiss = (announcementId: string) => {
+        const newDismissedIds = new Set(dismissedIds);
+        newDismissedIds.add(announcementId);
+        setDismissedIds(newDismissedIds);
+
         try {
-            sessionStorage.setItem("dismissedAnnouncementId", announcementId);
+            sessionStorage.setItem(
+                "dismissedAnnouncementIds",
+                JSON.stringify([...newDismissedIds])
+            );
         } catch (err) {
             console.warn("SessionStorage write error:", err);
         }
-        setIsDismissed(true);
     };
 
-    const props = { ...announcementWithParsedStyling, onClose: handleDismiss };
+    const renderAnnouncement = (announcement: any) => {
+        const announcementId = String(
+            announcement.id ||
+            `${announcement.title}-${announcement.body}`
+                .replace(/\s+/g, "-")
+                .toLowerCase()
+        );
 
-    switch (announcement.displayType) {
-        case "banner":
-            return <BannerTemplate {...props} />;
-        case "modal":
-            return <ModalTemplate {...props} />;
-        case "notification":
-            return <NotificationTemplate {...props} />;
-        case "popup":
-            return <PopupTemplate {...props} />;
-        default:
-            return null;
-    }
+        // Extract all required props for the template
+        const componentProps = {
+            title: announcement.title || "",
+            body: announcement.body || "",
+            image: announcement.image || "",
+            styling: announcement.styling, // Already parsed in activeAnnouncements
+            displayType: announcement.displayType,
+            onClose: () => handleDismiss(announcementId),
+        };
+
+        console.log(`Rendering ${announcement.displayType}:`, {
+            title: componentProps.title,
+            body: componentProps.body,
+            hasImage: !!componentProps.image,
+            imageUrl: componentProps.image,
+            styling: componentProps.styling,
+        });
+
+        switch (announcement.displayType) {
+            case "banner":
+                return <BannerTemplate key={announcementId} {...componentProps} />;
+            case "modal":
+                return <ModalTemplate key={announcementId} {...componentProps} />;
+            case "notification":
+                return <NotificationTemplate key={announcementId} {...componentProps} />;
+            case "popup":
+                return <PopupTemplate key={announcementId} {...componentProps} />;
+            default:
+                console.warn(`Unknown displayType: ${announcement.displayType}`);
+                return null;
+        }
+    };
+
+    return <>{activeAnnouncements.map(renderAnnouncement)}</>;
 };
 function App() {
     const [hasBanner, setHasBanner] = useState(true);

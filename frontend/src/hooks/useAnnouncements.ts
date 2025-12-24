@@ -14,7 +14,8 @@ export function useAnnouncements() {
         queryFn: async (): Promise<AnnouncementResponse[]> => {
             try {
                 const response = await axios.get(
-                    "https://biva-bakery-backend.onrender.com/announcements",
+                    "http://localhost:4000/announcements",
+                    // https://biva-bakery-backend.onrender.com/announcements
                 );
 
                 console.log("RESPONSE", response);
