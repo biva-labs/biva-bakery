@@ -3,6 +3,7 @@ import {
   CloudinaryService,
   type UploadFileResult,
 } from "../utils/cloudinary-service.ts";
+import type { Blob } from "buffer";
 
 const MAX_BYTES = 5 * 1024 * 1024;
 
@@ -259,10 +260,18 @@ export const getImage = async (c: Context) => {
 };
 
 export const uploadImage = async (
-  imgFile: File,
+  imgFile: File | string,
   folder: string,
 ): Promise<UploadFileResult> => {
   try {
+    // Validate file before upload
+    if (imgFile instanceof File) {
+      if (!imgFile.size || imgFile.size === 0) {
+        throw new Error(`File is empty: ${imgFile.name || 'unknown'}`);
+      }
+      console.log(`Uploading file: ${imgFile.name}, size: ${imgFile.size} bytes`);
+    }
+
     const res = await cloudService.uploadMedia(imgFile, {
       maxSizeBytes: 3 * 1028 * 1024,
       folder: folder,
@@ -270,7 +279,7 @@ export const uploadImage = async (
 
     return res;
   } catch (err: any) {
-    console.error(err);
-    throw new Error("Image upload failed");
+    console.error("Error uploading image:", err);
+    throw new Error(`Image upload failed: ${err.message}`);
   }
 };

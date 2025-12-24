@@ -21,7 +21,15 @@ app.post("/", async (c: Context) => {
     let imageUrl = item.image || "";
 
     const file = files[i];
-    if (file instanceof File) {
+    console.log(`Processing announcement ${i}:`, {
+      hasFile: !!file,
+      isFileInstance: file instanceof File,
+      fileName: file instanceof File ? file.name : 'N/A',
+      fileSize: file instanceof File ? file.size : 'N/A',
+      fileType: file instanceof File ? file.type : typeof file,
+    });
+
+    if (file instanceof File && file.size > 0) {
       const uploadedImage = await uploadImage(file, "announcements");
       imageUrl = uploadedImage.secure_url || "";
     }

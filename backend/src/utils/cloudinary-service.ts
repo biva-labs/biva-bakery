@@ -197,6 +197,12 @@ export class CloudinaryService {
 
     const { buffer, detectedMime, originalName } = await toBuffer(source);
 
+    if (!buffer || buffer.length === 0) {
+      throw new Error(
+        `Empty file: Cannot upload an empty file. Source type: ${typeof source}`,
+      );
+    }
+
     if (
       typeof maxSizeBytes === "number" &&
       buffer &&
