@@ -36,6 +36,9 @@ const allowedOrigin = [
 app.use( "*",
     cors({
         origin: (origin) => {
+            if (!origin) {
+                return "*";
+            }
             if (allowedOrigin.includes(origin)) {
                 return origin;
             }
