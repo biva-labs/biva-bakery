@@ -71,6 +71,17 @@ export default function Bakery() {
                     <BakerySections title={category} products={items} />
                 ))}
 
+                                <div className="mt-16 mb-10 flex flex-col items-left  px-4">
+                    <h2 className="text-3xl lg:text-4xl font-black text-green-950 tracking-tight">
+                        Sweets
+                    </h2>
+                    <div className="mt-10 relative">
+                        <span className="relative z-10 px-6 py-1.5 rounded-full bg-amber-100 text-amber-700 text-sm lg:text-base font-bold uppercase tracking-widest border border-amber-200 shadow-sm">
+                            All sweets available
+                        </span>
+                    </div>
+                </div>
+
                 <div className="mt-16" id="gallery">
                     <h2 className="text-3xl lg:text-4xl text-start lg:ml-6 ml-4 outfit font-extrabold text-green-950 mb-2">
                         Gallery
