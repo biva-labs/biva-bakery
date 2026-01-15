@@ -1,6 +1,6 @@
 
 export const PHONE = {
-    "bakery": "8135938393",
-    "admin": "8811888328",
-    "technical": "8811888328",
+    "bakery": "+91 8135938393",
+    "admin": "+91 8811888328",
+    "technical": "+91 8811888328",
 }
