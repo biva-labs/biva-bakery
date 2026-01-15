@@ -81,7 +81,7 @@ export default function Hotel() {
                     images={hotelHero}
                 />
 
-                <div className="mb-8 text-center lg:text-left mt-10">
+                <div id="book-rooms" className="mb-8 text-center lg:text-left mt-10">
                     <h2 className="text-4xl lg:text-4xl outfit font-extrabold ml-4 text-start lg:ml-6 text-green-950 mb-2">
                         Our Premium Rooms
                     </h2>

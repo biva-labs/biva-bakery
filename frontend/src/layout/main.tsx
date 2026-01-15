@@ -26,7 +26,7 @@ const data = {
   navMain: [
     {
       title: "HOME",
-      url: "/#top",
+      url: "/",
       icon: null,
     },
     {
@@ -41,7 +41,7 @@ const data = {
     },
     {
       title: "BOOK TABLE",
-      url: "/table-reservation",
+      url: "/table/booking",
       icon: null,
     },
     {
@@ -90,7 +90,15 @@ export function NavMain({
                     </SidebarMenuButton>
                   </a>
                 ) : (
-                  <Link to={item.url} className="w-full">
+                  <Link 
+                    to={item.url} 
+                    className="w-full"
+                    onClick={() => {
+                      if (item.url === "/") {
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }
+                    }}
+                  >
                     <SidebarMenuButton
                       tooltip={item.title}
                       className="justify-start h-12 text-lg font-medium tracking-wide transition-all hover:bg-neutral-100 hover:text-neutral-900 rounded-md px-4"
