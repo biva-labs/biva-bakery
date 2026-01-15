@@ -124,7 +124,7 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
         >
           <img
             src={selectedImage}
-            className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
+            className="w-full h-96 object-cover transition-transform duration-300 group-hover:scale-105"
             alt="Selected room"
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
@@ -232,8 +232,8 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
         </Button>
 
         {/* Caution Box */}
-        <div className="border-2 border-red-500 rounded-lg p-4 bg-red-50 mt-6">
-          <div className="flex items-start gap-3">
+        <div className="border-2 border-red-500 rounded-lg p-5 bg-red-50 mt-6">
+          <div className="flex items-start gap-3 mb-3">
             <div className="flex-shrink-0 mt-0.5">
               <svg
                 className="w-5 h-5 text-red-600"
@@ -248,12 +248,27 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
               </svg>
             </div>
             <div className="flex-1">
-              <h4 className="text-red-800 font-semibold text-base mb-1">
-                Important Notice
+              <h4 className="text-red-800 font-semibold text-base mb-3">
+                Important Booking Rules & Policies
               </h4>
-              <p className="text-red-700 text-sm leading-relaxed">
-                We do not accept local IDs. In case of bookings from local IDs, fees shall not be refunded.
-              </p>
+              <ul className="space-y-2 text-red-700 text-sm leading-relaxed">
+                <li className="flex items-start gap-2">
+                  <span className="text-red-600 font-bold mt-0.5">•</span>
+                  <span>We do not accept local IDs. In case of bookings from local IDs, fees shall not be refunded.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-red-600 font-bold mt-0.5">•</span>
+                  <span>Unmarried couples are not allowed.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-red-600 font-bold mt-0.5">•</span>
+                  <span>Only proper and government authorized Aadhar Card / Voter ID / Driving License are allowed. Failure to do so will result in only 80% of fees to be refundable.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-red-600 font-bold mt-0.5">•</span>
+                  <span>For extra beds, please contact at the Reception.</span>
+                </li>
+              </ul>
             </div>
           </div>
         </div>

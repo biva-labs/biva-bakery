@@ -77,7 +77,7 @@ export default function Hotel() {
                     }
                     buttonText={<>Contact Us</>}
                     redirect="#footer"
-                    buttonDescription={<>Available at just ₹4999/-</>}
+                    buttonDescription={<>Starting from ₹2200/-</>}
                     images={hotelHero}
                 />
 

@@ -14,6 +14,7 @@ export default function GalleryMasonry({ allImages }: GalleryMasonryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [loopImages, setLoopImages] = useState<Image[]>([]);
   const [columnCount, setColumnCount] = useState(4);
+  const [hoveredColumn, setHoveredColumn] = useState<number | null>(null);
 
   useEffect(() => {
     if (allImages.length === 0) return;
@@ -50,9 +51,10 @@ export default function GalleryMasonry({ allImages }: GalleryMasonryProps) {
     columns[idx % columnCount].push(img);
   });
 
+  // Faster speeds - reduced time means faster animation
   const speeds = columnCount === 2
-    ? Array(2).fill("15s") // Same speed for both columns on small screens
-    : Array.from({ length: columnCount }, (_, idx) => `${(idx + 1) * 5 + 15}s`);
+    ? Array(2).fill("12s") // Faster speed for both columns on small screens
+    : Array.from({ length: columnCount }, (_, idx) => `${(idx + 1) * 4 + 10}s`);
 
   return (
     <div
@@ -68,8 +70,11 @@ export default function GalleryMasonry({ allImages }: GalleryMasonryProps) {
             <div
               key={colIdx}
               className="inline-block w-full animate-scroll"
+              onMouseEnter={() => setHoveredColumn(colIdx)}
+              onMouseLeave={() => setHoveredColumn(null)}
               style={{
                 animation: `scrollY ${speeds[colIdx]} linear infinite`,
+                animationPlayState: hoveredColumn === colIdx ? "paused" : "running",
               }}
             >
               {colImages.map((img, idx) => (
