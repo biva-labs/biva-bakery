@@ -93,7 +93,7 @@ export default function Hotel() {
 
                 <div className="mt-10" id="banquet">
                     <h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-green-950 ">
-                        Banquet
+                        BANQUET
                     </h2>
                     <Banquet media={hotelBanquet[0]?.url} />
                 </div>

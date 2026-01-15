@@ -26,7 +26,7 @@ const data = {
   navMain: [
     {
       title: "HOME",
-      url: "/",
+      url: "/#top",
       icon: null,
     },
     {
@@ -36,7 +36,7 @@ const data = {
     },
     {
       title: "BOOK ROOMS",
-      url: "/rooms",
+      url: "/hotel#book-rooms",
       icon: null,
     },
     {
