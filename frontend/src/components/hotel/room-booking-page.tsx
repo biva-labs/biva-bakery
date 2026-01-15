@@ -216,7 +216,7 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
       </div>
 
       {/* RIGHT SIDE — FORM */}
-      <div className="lg:w-1/2 space-y-10 mt-10">
+      <div className="lg:w-1/2 space-y-6 mt-10 mb-10">
         <h2 className="text-2xl font-semibold">Book {roomType} Room</h2>
 
         <Form type={room_type} />
@@ -232,7 +232,7 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
         </Button>
 
         {/* Caution Box */}
-        <div className="border-2 border-red-500 rounded-lg p-4 bg-red-50">
+        <div className="border-2 border-red-500 rounded-lg p-4 bg-red-50 mt-6">
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0 mt-0.5">
               <svg
@@ -247,7 +247,7 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
                 />
               </svg>
             </div>
-            <div>
+            <div className="flex-1">
               <h4 className="text-red-800 font-semibold text-base mb-1">
                 Important Notice
               </h4>
