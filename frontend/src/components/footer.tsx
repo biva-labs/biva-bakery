@@ -62,6 +62,7 @@ export default function Footer() {
                                         key={href}
                                         to={href}
                                         className="flex items-center gap-2 hover:text-orange-400 transition-colors duration-200 text-sm text-gray-300"
+                                        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                                     >
                                         <Icon className="h-4 w-4" />
                                         {label}
@@ -84,6 +85,7 @@ export default function Footer() {
                                         key={href}
                                         to={href}
                                         className="flex items-center gap-2 hover:text-orange-400 transition-colors duration-200 text-sm text-gray-300"
+                                        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                                     >
                                         <Icon className="h-4 w-4" />
                                         {label}
