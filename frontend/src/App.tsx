@@ -19,6 +19,7 @@ import ChatBot from "./components/chatbot/chatbot";
 import About from "./pages/about";
 import Contact from "./pages/contact";
 import PrivacyPolicy from "./pages/privacy-policy";
+import ReservationPolicy from "./pages/reservation-policy";
 import BookingConfirmation from "./components/bookings";
 import { RoomBookingPage } from "./components/hotel/room-booking-page";
 import Ticket from "./ticket";
@@ -358,6 +359,10 @@ function App() {
                                 <Route
                                     path="/privacy-policy"
                                     element={<PrivacyPolicy />}
+                                />
+                                <Route
+                                    path="/reservation-policy"
+                                    element={<ReservationPolicy />}
                                 />
                             </Route>
                             <Route

@@ -23,9 +23,7 @@ export async function sendEventMail(body: any, c: Context) {
         from: "noreply@thebiva.com",
         to: [
           data.email,
-          "db1833@srmist.edu.in",
           "hello@thebiva.com",
-          "quickpromoteagency@gmail.com",
         ],
         subject: "invoice",
         html: eventEmailTemplate(

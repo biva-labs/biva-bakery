@@ -21,7 +21,7 @@ export default function Footer() {
                     </p>
 
                     {/* Newsletter Subscription */}
-                    <div className="w-full max-w-sm">
+                    {/*<div className="w-full max-w-sm">
                         <h3 className="text-lg font-semibold mb-3">
                             Subscribe to our Newsletter
                         </h3>
@@ -38,7 +38,7 @@ export default function Footer() {
                                 Subscribe
                             </Button>
                         </div>
-                    </div>
+                    </div>*/}
                 </div>
 
                 <div className="flex flex-col items-start text-left">
