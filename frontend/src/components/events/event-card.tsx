@@ -35,7 +35,7 @@ function parseTimeTo24h(timeStr: string) {
 }
 
 function parseDateParts(cleanDate: string) {
-    const slashMatch = cleanDate.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+    const slashMatch = cleanDate.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/);
     if (slashMatch) {
         const day = parseInt(slashMatch[1], 10);
         const month = parseInt(slashMatch[2], 10);
