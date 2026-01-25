@@ -15,42 +15,39 @@ type EventCardProps = {
     url: string;
 };
 
+function parseEventDate(dateStr: string, timeStr: string) {
+    if (!dateStr) return null;
+
+    // Remove ordinal suffixes like 1st, 2nd, 3rd, 4th, etc.
+    const cleanDate = dateStr.replace(/(\d+)(st|nd|rd|th)/gi, "$1").trim();
+
+    const combined = timeStr ? `${cleanDate} ${timeStr}` : cleanDate;
+    const parsed = new Date(combined);
+
+    if (!Number.isNaN(parsed.getTime())) {
+        return parsed;
+    }
+
+    // Fallback: try date-only parsing
+    const dateOnly = new Date(cleanDate);
+    if (!Number.isNaN(dateOnly.getTime())) {
+        return dateOnly;
+    }
+
+    return null;
+}
+
 export default function EventCard(props: EventCardProps) {
     const navigate = useNavigate();
 
     const isExpired = useMemo(() => {
-        try {
-            if (!props.date) return false;
-            
-            // Remove ordinal suffixes (st, nd, rd, th) from the date string
-            // e.g., "12th Jan 2025" -> "12 Jan 2025"
-            const cleanDate = props.date.replace(/(\d+)(st|nd|rd|th)/g, "$1");
-            
-            // Combine date and time if available
-            const dateTimeStr = props.time 
-                ? `${cleanDate} ${props.time}` 
-                : cleanDate;
-            
-            const eventDate = new Date(dateTimeStr);
-            
-            // Check if date is valid
-            if (isNaN(eventDate.getTime())) {
-                console.warn("Invalid date format for event:", props.event_name, dateTimeStr);
-                return false;
-            }
-            
-            return eventDate < new Date();
-        } catch (e) {
-            console.error("Error parsing event date:", e);
-            return false;
-        }
-    }, [props.date, props.time, props.event_name]);
-
-    console.log("PROPS", props);
+        const eventDate = parseEventDate(props.date, props.time);
+        if (!eventDate) return false;
+        return eventDate < new Date();
+    }, [props.date, props.time]);
 
     const handleBookNow = () => {
         if (isExpired) return;
-        
         const searchParams = new URLSearchParams({
             eventId: props.event_id,
             eventName: props.event_name,
@@ -87,9 +84,10 @@ export default function EventCard(props: EventCardProps) {
                         }`}
                     />
                     {isExpired && (
-                        <div className="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
-                             {/* Optional: Add "Expired" text if desired, but user just asked for layover */}
-                             {/* <span className="text-white font-bold text-xl uppercase tracking-widest border-2 border-white px-4 py-2 rounded">Expired</span> */}
+                        <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/50">
+                            <span className="rounded-full border-2 border-white px-6 py-2 text-lg font-bold uppercase tracking-widest text-white">
+                                EXPIRED
+                            </span>
                         </div>
                     )}
                 </div>
