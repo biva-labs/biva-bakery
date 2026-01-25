@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 
 type EventCardProps = {
     date: string;
@@ -17,9 +18,39 @@ type EventCardProps = {
 export default function EventCard(props: EventCardProps) {
     const navigate = useNavigate();
 
+    const isExpired = useMemo(() => {
+        try {
+            if (!props.date) return false;
+            
+            // Remove ordinal suffixes (st, nd, rd, th) from the date string
+            // e.g., "12th Jan 2025" -> "12 Jan 2025"
+            const cleanDate = props.date.replace(/(\d+)(st|nd|rd|th)/g, "$1");
+            
+            // Combine date and time if available
+            const dateTimeStr = props.time 
+                ? `${cleanDate} ${props.time}` 
+                : cleanDate;
+            
+            const eventDate = new Date(dateTimeStr);
+            
+            // Check if date is valid
+            if (isNaN(eventDate.getTime())) {
+                console.warn("Invalid date format for event:", props.event_name, dateTimeStr);
+                return false;
+            }
+            
+            return eventDate < new Date();
+        } catch (e) {
+            console.error("Error parsing event date:", e);
+            return false;
+        }
+    }, [props.date, props.time, props.event_name]);
+
     console.log("PROPS", props);
 
     const handleBookNow = () => {
+        if (isExpired) return;
+        
         const searchParams = new URLSearchParams({
             eventId: props.event_id,
             eventName: props.event_name,
@@ -51,48 +82,60 @@ export default function EventCard(props: EventCardProps) {
                         loading="lazy"
                         src={props.url}
                         alt={props.event_name || "event"}
-                        className="absolute inset-0 h-full w-full object-cover transition-opacity"
+                        className={`absolute inset-0 h-full w-full object-cover transition-opacity ${
+                            isExpired ? "grayscale" : ""
+                        }`}
                     />
+                    {isExpired && (
+                        <div className="absolute inset-0 bg-black/40 z-10 flex items-center justify-center">
+                             {/* Optional: Add "Expired" text if desired, but user just asked for layover */}
+                             {/* <span className="text-white font-bold text-xl uppercase tracking-widest border-2 border-white px-4 py-2 rounded">Expired</span> */}
+                        </div>
+                    )}
                 </div>
 
-                <div className="absolute bottom-4 right-4 z-20 md:hidden">
-                    <Button
-                        onClick={handleBookNow}
-                        className="outfit rounded-full px-8 py-4 text-lg font-semibold text-white shadow-lg bg-[#002a3a]"
-                    >
-                        Book Now
-                    </Button>
-                </div>
-
-                <div className="absolute inset-0 hidden items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 md:flex md:group-hover:opacity-100">
-                    <div className="group relative inline-block rounded-full p-[6px]">
-                        <span
-                            aria-hidden="true"
-                            className="pointer-events-none absolute inset-0 rounded-full blur-sm opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                            style={{
-                                background:
-                                    "conic-gradient(from 0deg, #ff004d, #ff8a00, #ffd500, #3cff6e, #00d4ff, #7a5cff, #ff004d)",
-                                zIndex: 0,
-                            }}
-                        />
+                {!isExpired && (
+                    <div className="absolute bottom-4 right-4 z-20 md:hidden">
                         <Button
                             onClick={handleBookNow}
-                            className="outfit relative z-10 rounded-full px-8 py-4 text-lg font-semibold text-white shadow-lg bg-[#002a3a]"
+                            className="outfit rounded-full px-8 py-4 text-lg font-semibold text-white shadow-lg bg-[#002a3a]"
                         >
-                            <span className="relative z-10 transition-opacity group-hover:opacity-0">
-                                Book Now
-                            </span>
-                            <span
-                                aria-hidden="true"
-                                className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100"
-                            >
-                                <span className="outfit font-semibold">
-                                    Book Now
-                                </span>
-                            </span>
+                            Book Now
                         </Button>
                     </div>
-                </div>
+                )}
+
+                {!isExpired && (
+                    <div className="absolute inset-0 hidden items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 md:flex md:group-hover:opacity-100">
+                        <div className="group relative inline-block rounded-full p-[6px]">
+                            <span
+                                aria-hidden="true"
+                                className="pointer-events-none absolute inset-0 rounded-full blur-sm opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                                style={{
+                                    background:
+                                        "conic-gradient(from 0deg, #ff004d, #ff8a00, #ffd500, #3cff6e, #00d4ff, #7a5cff, #ff004d)",
+                                    zIndex: 0,
+                                }}
+                            />
+                            <Button
+                                onClick={handleBookNow}
+                                className="outfit relative z-10 rounded-full px-8 py-4 text-lg font-semibold text-white shadow-lg bg-[#002a3a]"
+                            >
+                                <span className="relative z-10 transition-opacity group-hover:opacity-0">
+                                    Book Now
+                                </span>
+                                <span
+                                    aria-hidden="true"
+                                    className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100"
+                                >
+                                    <span className="outfit font-semibold">
+                                        Book Now
+                                    </span>
+                                </span>
+                            </Button>
+                        </div>
+                    </div>
+                )}
             </Card>
 
             <style>{`
