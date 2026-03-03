@@ -6,6 +6,7 @@ import EventCardCarousel, {
     type EventData,
 } from "@/components/events/event-card-carousal";
 import FoodCourtPreference from "@/components/food-court/food-court-prefrence";
+import Preloader from "@/components/ui/preloader";
 
 import { type HeroImagesType } from "@/types/hero-images-types";
 import { type GalleryImagesType } from "@/types/gallery-images-types";
@@ -48,6 +49,7 @@ export default function FoodCourt() {
 
     return (
         <div>
+            <Preloader isLoading={isLoading} />
             <div className="mx-auto px-4 lg:mr-0 ">
                 <Hero
                     title={

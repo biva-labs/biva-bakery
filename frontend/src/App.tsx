@@ -69,14 +69,16 @@ interface Announcement {
 }
 
 // Helper to parse styling
-const parseStyling = (styling: string | AnnouncementStyling): AnnouncementStyling => {
+const parseStyling = (
+    styling: string | AnnouncementStyling,
+): AnnouncementStyling => {
     const defaults: AnnouncementStyling = {
         backgroundColor: "#ffffff",
         textColor: "#000000",
         fontSize: "md",
         alignment: "center",
     };
-    
+
     if (typeof styling === "string") {
         try {
             return { ...defaults, ...JSON.parse(styling) };
@@ -90,9 +92,12 @@ const parseStyling = (styling: string | AnnouncementStyling): AnnouncementStylin
 // Helper to get font size in pixels
 const getFontSize = (size: "sm" | "md" | "lg"): string => {
     switch (size) {
-        case "sm": return "14px";
-        case "lg": return "18px";
-        default: return "16px";
+        case "sm":
+            return "14px";
+        case "lg":
+            return "18px";
+        default:
+            return "16px";
     }
 };
 
@@ -115,21 +120,53 @@ const AnnouncementBanner: React.FC<{
             borderBottom: "1px solid #e5e7eb",
         }}
     >
-        <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "12px 16px", display: "flex", alignItems: "center", gap: "12px" }}>
+        <div
+            style={{
+                maxWidth: "1280px",
+                margin: "0 auto",
+                padding: "12px 16px",
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+            }}
+        >
             {announcement.image && (
                 <img
                     src={announcement.image}
                     alt=""
-                    style={{ width: "48px", height: "48px", borderRadius: "8px", objectFit: "cover" }}
+                    style={{
+                        width: "48px",
+                        height: "48px",
+                        borderRadius: "8px",
+                        objectFit: "cover",
+                    }}
                 />
             )}
             <div style={{ flex: 1, textAlign: styling.alignment }}>
-                <h4 style={{ fontWeight: 600, marginBottom: "4px", fontSize: getFontSize(styling.fontSize) }}>
+                <h4
+                    style={{
+                        fontWeight: 600,
+                        marginBottom: "4px",
+                        fontSize: getFontSize(styling.fontSize),
+                    }}
+                >
                     {announcement.title}
                 </h4>
-                <p style={{ fontSize: "14px", opacity: 0.9 }}>{announcement.body}</p>
+                <p style={{ fontSize: "14px", opacity: 0.9 }}>
+                    {announcement.body}
+                </p>
             </div>
-            <button onClick={onClose} style={{ padding: "4px", opacity: 0.7, background: "none", border: "none", cursor: "pointer", color: styling.textColor }}>
+            <button
+                onClick={onClose}
+                style={{
+                    padding: "4px",
+                    opacity: 0.7,
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    color: styling.textColor,
+                }}
+            >
                 <X size={20} />
             </button>
         </div>
@@ -165,20 +202,68 @@ const AnnouncementModal: React.FC<{
             }}
         >
             {announcement.image && (
-                <img src={announcement.image} alt="" style={{ width: "100%", height: "192px", objectFit: "cover" }} />
+                <img
+                    src={announcement.image}
+                    alt=""
+                    style={{
+                        width: "100%",
+                        height: "192px",
+                        objectFit: "cover",
+                    }}
+                />
             )}
             <div style={{ padding: "24px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "16px" }}>
-                    <h4 style={{ fontWeight: 600, fontSize: getFontSize(styling.fontSize) }}>{announcement.title}</h4>
-                    <button onClick={onClose} style={{ padding: "4px", opacity: 0.7, background: "none", border: "none", cursor: "pointer", color: styling.textColor }}>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "start",
+                        marginBottom: "16px",
+                    }}
+                >
+                    <h4
+                        style={{
+                            fontWeight: 600,
+                            fontSize: getFontSize(styling.fontSize),
+                        }}
+                    >
+                        {announcement.title}
+                    </h4>
+                    <button
+                        onClick={onClose}
+                        style={{
+                            padding: "4px",
+                            opacity: 0.7,
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            color: styling.textColor,
+                        }}
+                    >
                         <X size={20} />
                     </button>
                 </div>
-                <p style={{ textAlign: styling.alignment, fontSize: getFontSize(styling.fontSize), opacity: 0.9, marginBottom: "16px" }}>
+                <p
+                    style={{
+                        textAlign: styling.alignment,
+                        fontSize: getFontSize(styling.fontSize),
+                        opacity: 0.9,
+                        marginBottom: "16px",
+                    }}
+                >
                     {announcement.body}
                 </p>
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <button onClick={onClose} style={{ padding: "8px 16px", backgroundColor: "#f3f4f6", borderRadius: "4px", border: "none", cursor: "pointer" }}>
+                    <button
+                        onClick={onClose}
+                        style={{
+                            padding: "8px 16px",
+                            backgroundColor: "#f3f4f6",
+                            borderRadius: "4px",
+                            border: "none",
+                            cursor: "pointer",
+                        }}
+                    >
                         Close
                     </button>
                 </div>
@@ -214,10 +299,28 @@ const AnnouncementNotification: React.FC<{
             <div style={{ display: "flex", alignItems: "start", gap: "12px" }}>
                 <Bell size={20} style={{ marginTop: "2px", flexShrink: 0 }} />
                 <div style={{ flex: 1 }}>
-                    <h4 style={{ fontWeight: 500, fontSize: getFontSize(styling.fontSize), marginBottom: "4px" }}>{announcement.title}</h4>
+                    <h4
+                        style={{
+                            fontWeight: 500,
+                            fontSize: getFontSize(styling.fontSize),
+                            marginBottom: "4px",
+                        }}
+                    >
+                        {announcement.title}
+                    </h4>
                     <p style={{ fontSize: "14px" }}>{announcement.body}</p>
                 </div>
-                <button onClick={onClose} style={{ padding: "4px", opacity: 0.5, background: "none", border: "none", cursor: "pointer", color: styling.textColor }}>
+                <button
+                    onClick={onClose}
+                    style={{
+                        padding: "4px",
+                        opacity: 0.5,
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        color: styling.textColor,
+                    }}
+                >
                     <X size={16} />
                 </button>
             </div>
@@ -249,22 +352,66 @@ const AnnouncementPopup: React.FC<{
                 border: "1px solid #e5e7eb",
             }}
         >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "12px" }}>
-                <h4 style={{ fontWeight: 500, fontSize: getFontSize(styling.fontSize) }}>{announcement.title}</h4>
-                <button onClick={onClose} style={{ padding: "4px", opacity: 0.5, background: "none", border: "none", cursor: "pointer", color: styling.textColor }}>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "start",
+                    marginBottom: "12px",
+                }}
+            >
+                <h4
+                    style={{
+                        fontWeight: 500,
+                        fontSize: getFontSize(styling.fontSize),
+                    }}
+                >
+                    {announcement.title}
+                </h4>
+                <button
+                    onClick={onClose}
+                    style={{
+                        padding: "4px",
+                        opacity: 0.5,
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        color: styling.textColor,
+                    }}
+                >
                     <X size={16} />
                 </button>
             </div>
             {announcement.image && (
-                <img src={announcement.image} alt="" style={{ width: "100%", height: "128px", objectFit: "cover", borderRadius: "8px", marginBottom: "12px" }} />
+                <img
+                    src={announcement.image}
+                    alt=""
+                    style={{
+                        width: "100%",
+                        height: "128px",
+                        objectFit: "cover",
+                        borderRadius: "8px",
+                        marginBottom: "12px",
+                    }}
+                />
             )}
-            <p style={{ textAlign: styling.alignment, fontSize: getFontSize(styling.fontSize), opacity: 0.85 }}>{announcement.body}</p>
+            <p
+                style={{
+                    textAlign: styling.alignment,
+                    fontSize: getFontSize(styling.fontSize),
+                    opacity: 0.85,
+                }}
+            >
+                {announcement.body}
+            </p>
         </div>
     </div>
 );
 
 // Main Announcements Component - fetches directly with axios
-const Announcements: React.FC<{ onBannerChange: (has: boolean) => void }> = ({ onBannerChange }) => {
+const Announcements: React.FC<{ onBannerChange: (has: boolean) => void }> = ({
+    onBannerChange,
+}) => {
     const [announcements, setAnnouncements] = useState<Announcement[]>([]);
     const [dismissed, setDismissed] = useState<Set<number>>(new Set());
     const [loading, setLoading] = useState(true);
@@ -272,9 +419,11 @@ const Announcements: React.FC<{ onBannerChange: (has: boolean) => void }> = ({ o
     useEffect(() => {
         const fetchAnnouncements = async () => {
             try {
-                const res = await axios.get("https://biva-bakery-backend.onrender.com/announcements");
+                const res = await axios.get(
+                    "https://biva-bakery-backend.onrender.com/announcements",
+                );
                 console.log("Fetched announcements:", res.data);
-                
+
                 if (res.data?.data && Array.isArray(res.data.data)) {
                     setAnnouncements(res.data.data);
                 }
@@ -290,12 +439,14 @@ const Announcements: React.FC<{ onBannerChange: (has: boolean) => void }> = ({ o
 
     // Filter valid announcements (has title or body)
     const validAnnouncements = announcements.filter(
-        (a) => !dismissed.has(a.id) && (a.title?.trim() || a.body?.trim())
+        (a) => !dismissed.has(a.id) && (a.title?.trim() || a.body?.trim()),
     );
 
     // Check for banner
     useEffect(() => {
-        const hasBanner = validAnnouncements.some((a) => a.displayType === "banner");
+        const hasBanner = validAnnouncements.some(
+            (a) => a.displayType === "banner",
+        );
         onBannerChange(hasBanner);
     }, [validAnnouncements, onBannerChange]);
 
@@ -313,17 +464,48 @@ const Announcements: React.FC<{ onBannerChange: (has: boolean) => void }> = ({ o
                 const styling = parseStyling(announcement.styling);
                 const onClose = () => handleDismiss(announcement.id);
 
-                console.log(`Rendering ${announcement.displayType}:`, { announcement, styling });
+                console.log(`Rendering ${announcement.displayType}:`, {
+                    announcement,
+                    styling,
+                });
 
                 switch (announcement.displayType) {
                     case "banner":
-                        return <AnnouncementBanner key={announcement.id} announcement={announcement} styling={styling} onClose={onClose} />;
+                        return (
+                            <AnnouncementBanner
+                                key={announcement.id}
+                                announcement={announcement}
+                                styling={styling}
+                                onClose={onClose}
+                            />
+                        );
                     case "modal":
-                        return <AnnouncementModal key={announcement.id} announcement={announcement} styling={styling} onClose={onClose} />;
+                        return (
+                            <AnnouncementModal
+                                key={announcement.id}
+                                announcement={announcement}
+                                styling={styling}
+                                onClose={onClose}
+                            />
+                        );
                     case "notification":
-                        return <AnnouncementNotification key={announcement.id} announcement={announcement} styling={styling} onClose={onClose} />;
+                        return (
+                            <AnnouncementNotification
+                                key={announcement.id}
+                                announcement={announcement}
+                                styling={styling}
+                                onClose={onClose}
+                            />
+                        );
                     case "popup":
-                        return <AnnouncementPopup key={announcement.id} announcement={announcement} styling={styling} onClose={onClose} />;
+                        return (
+                            <AnnouncementPopup
+                                key={announcement.id}
+                                announcement={announcement}
+                                styling={styling}
+                                onClose={onClose}
+                            />
+                        );
                     default:
                         return null;
                 }
@@ -334,6 +516,15 @@ const Announcements: React.FC<{ onBannerChange: (has: boolean) => void }> = ({ o
 
 function App() {
     const [hasBanner, setHasBanner] = useState(false);
+
+    // Dismiss the HTML-level preloader (index.html) once React has mounted
+    useEffect(() => {
+        const el = document.getElementById("app-preloader");
+        if (!el) return;
+        el.classList.add("fade-out");
+        const timer = setTimeout(() => el.remove(), 400);
+        return () => clearTimeout(timer);
+    }, []);
 
     return (
         <PersistQueryClientProvider

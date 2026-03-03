@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import BakerySections from "@/components/bakery/bakery-sections/bakery-sections";
 import GalleryMasonry from "@/components/gallery/masonary";
+import Preloader from "@/components/ui/preloader";
 
 import { type CardImagesType } from "@/types/card-images-types";
 // import { type CardImagesType } from "@/types/card-images-types";
@@ -46,6 +47,7 @@ export default function Bakery() {
 
     return (
         <div className="outfit">
+            <Preloader isLoading={isLoading} />
             <div className="mx-auto px-4 lg:mr-0">
                 <Hero
                     title={

@@ -8,6 +8,7 @@ import Banquet from "@/components/hotel/banquet";
 import EventCardCarousel, {
     type EventData,
 } from "@/components/events/event-card-carousal";
+import Preloader from "@/components/ui/preloader";
 
 import { type CardImagesType } from "@/types/card-images-types";
 import { type HeroImagesType } from "@/types/hero-images-types";
@@ -62,6 +63,7 @@ export default function Hotel() {
 
     return (
         <div>
+            <Preloader isLoading={isLoading} />
             <div className="mx-auto px-4 lg:mr-0 ">
                 <Hero
                     title={

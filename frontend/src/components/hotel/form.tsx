@@ -653,22 +653,49 @@ export default function Form({ type }: { type: string }) {
 
                         <div className="space-y-2">
                             <Label
-                                htmlFor="name"
+                                htmlFor="image"
                                 className="text-sm font-medium text-gray-700"
                             >
-                                Adhaar/PAN Image
+                                Aadhar / Voter ID / Driving License{" "}
+                                <span className="text-red-500">*</span>
                             </Label>
                             <Input
                                 id="image"
                                 type="file"
                                 accept="image/*,.pdf"
                                 onChange={(e) => {
-                                    const file = e.target.files?.[0];
-                                    if (file) {
-                                        hotelStore.setFile(file);
-                                    }
+                                    const file = e.target.files?.[0] ?? null;
+                                    hotelStore.setFile(file);
                                 }}
                             />
+                            <p className="text-xs text-gray-500">
+                                Primary government-issued ID (required)
+                            </p>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label
+                                htmlFor="secondary-image"
+                                className="text-sm font-medium text-gray-700"
+                            >
+                                Additional ID / Supporting Document{" "}
+                                <span className="text-gray-400 font-normal">
+                                    (optional)
+                                </span>
+                            </Label>
+                            <Input
+                                id="secondary-image"
+                                type="file"
+                                accept="image/*,.pdf"
+                                onChange={(e) => {
+                                    const file = e.target.files?.[0] ?? null;
+                                    hotelStore.setSecondaryFile(file);
+                                }}
+                            />
+                            <p className="text-xs text-gray-500">
+                                Upload a second document for additional
+                                verification (e.g. Passport, PAN card)
+                            </p>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">

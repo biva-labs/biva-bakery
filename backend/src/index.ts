@@ -32,8 +32,10 @@ const allowedOrigin = [
     "https://www.thebiva.com",
     "https://biva-bakery.onrender.com",
     "https://biva-admin.onrender.com",
+    // "http://localhost:5173",
 ];
-app.use( "*",
+app.use(
+    "*",
     cors({
         origin: (origin) => {
             if (!origin) {
@@ -49,7 +51,6 @@ app.use( "*",
         allowHeaders: ["Content-Type", "Authorization"],
     }),
 );
-
 
 export interface announce_data_type {
     title: string;
