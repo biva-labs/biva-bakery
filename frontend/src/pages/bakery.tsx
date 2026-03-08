@@ -2,6 +2,7 @@ import Hero from "@/components/hero";
 import { useImages } from "@/hooks/useImages";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useMemo } from "react";
 import BakerySections from "@/components/bakery/bakery-sections/bakery-sections";
 import GalleryMasonry from "@/components/gallery/masonary";
 import Preloader from "@/components/ui/preloader";
@@ -45,9 +46,31 @@ export default function Bakery() {
         // do soemthing
     }
 
+    const imageSources = useMemo(
+        () => [
+            ...bakeryHero.map((image) => image.url),
+            ...Object.values(bakeryItems).flatMap((items) =>
+                items.map((item) =>
+                    Array.isArray(item.url) ? item.url[0] : item.url,
+                ),
+            ),
+            ...bakeryGallery.map((image) => image.url),
+            "/patties.webp",
+            "/pastries.webp",
+            "/birthday-cakes.webp",
+            "/eggless-cakes.webp",
+            "/bento-cakes.webp",
+            "/muffins.webp",
+            "/sweets.webp",
+            "/cakes.webp",
+            "/cookies.webp",
+        ],
+        [bakeryHero, bakeryItems, bakeryGallery],
+    );
+
     return (
         <div className="outfit">
-            <Preloader isLoading={isLoading} />
+            <Preloader isLoading={isLoading} imageSources={imageSources} />
             <div className="mx-auto px-4 lg:mr-0">
                 <Hero
                     title={

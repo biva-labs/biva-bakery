@@ -1,5 +1,6 @@
 import Hero from "@/components/hero";
 import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import { useImages } from "@/hooks/useImages";
 import GalleryMasonry from "@/components/gallery/masonary";
 import EventCardCarousel, {
@@ -47,9 +48,27 @@ export default function FoodCourt() {
         // handle loading
     }
 
+    const imageSources = useMemo(
+        () => [
+            ...foodCourtHero.map((image) => image.url),
+            ...events.map((event) => event.url),
+            ...foodCourtGallery.map((image) => image.url),
+        ],
+        [foodCourtHero, events, foodCourtGallery],
+    );
+
+    const videoSources = useMemo(
+        () => foodCourtPreference.map((item) => item.url),
+        [foodCourtPreference],
+    );
+
     return (
         <div>
-            <Preloader isLoading={isLoading} />
+            <Preloader
+                isLoading={isLoading}
+                imageSources={imageSources}
+                videoSources={videoSources}
+            />
             <div className="mx-auto px-4 lg:mr-0 ">
                 <Hero
                     title={

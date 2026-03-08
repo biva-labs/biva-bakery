@@ -3,6 +3,7 @@ import RoomCardCarousel from "../components/hotel/room-card/room-card-carousal";
 import Hero from "@/components/hero";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useMemo } from "react";
 import GalleryMasonry from "@/components/gallery/masonary";
 import Banquet from "@/components/hotel/banquet";
 import EventCardCarousel, {
@@ -61,9 +62,30 @@ export default function Hotel() {
         // handle loading
     }
 
+    const imageSources = useMemo(
+        () => [
+            ...hotelHero.map((image) => image.url),
+            ...hotelRooms.flatMap((room) =>
+                Array.isArray(room.url) ? room.url : [room.url],
+            ),
+            ...events.map((event) => event.url),
+            ...hotelGallery.map((image) => image.url),
+        ],
+        [hotelHero, hotelRooms, events, hotelGallery],
+    );
+
+    const videoSources = useMemo(
+        () => [hotelBanquet[0]?.url, "/bar.mp4"].filter(Boolean),
+        [hotelBanquet],
+    );
+
     return (
         <div>
-            <Preloader isLoading={isLoading} />
+            <Preloader
+                isLoading={isLoading}
+                imageSources={imageSources}
+                videoSources={videoSources}
+            />
             <div className="mx-auto px-4 lg:mr-0 ">
                 <Hero
                     title={

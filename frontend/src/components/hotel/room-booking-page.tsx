@@ -307,6 +307,45 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
                                         Reception.
                                     </span>
                                 </li>
+
+                                <li className="pt-4 border-t border-red-200">
+                                    <h5 className="font-bold underline italic text-red-800 mb-2">
+                                        Cancellation Policy :
+                                    </h5>
+                                    <ol className="list-decimal list-inside space-y-2 ml-1 text-red-700">
+                                        <li>
+                                            Cancellations made 15 or more days
+                                            before check-in date will be free.
+                                        </li>
+                                        <li>
+                                            Cancellations made more than 7 days
+                                            in advance but less than 15 days
+                                            will incur a cancellation charge of
+                                            1 night tariff as retention charges.
+                                        </li>
+                                        <li>
+                                            No shows and cancellations made 0 to
+                                            7 days in advance will incur 100%
+                                            charge of the booking.
+                                        </li>
+                                    </ol>
+                                </li>
+
+                                <li className="pt-2">
+                                    <h5 className="font-bold underline italic text-red-800 mb-2">
+                                        Amendment Policy :
+                                    </h5>
+                                    <ol className="list-decimal list-inside space-y-2 ml-1 text-red-700">
+                                        <li>
+                                            Amendments will be treated as
+                                            cancellation.
+                                        </li>
+                                        <li>
+                                            Any refund will take at least 15
+                                            days to process.
+                                        </li>
+                                    </ol>
+                                </li>
                             </ul>
                         </div>
                     </div>

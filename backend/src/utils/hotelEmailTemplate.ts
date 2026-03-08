@@ -136,15 +136,60 @@ export function hotelEmailTemplate(
                         </div>
                       </div>
 
-                      <!-- Check-in Info -->
-                      <div style="background-color:#fef3c7;padding:20px;border-radius:12px;border:2px solid #fbbf24;margin:0 0 30px 0;">
-                        <p style="margin:0 0 8px 0;color:#002a3a;font-size:15px;font-weight:600;font-family:'Segoe UI',Arial,sans-serif;">
-                          ℹ️ Check-in Information
-                        </p>
-                        <p style="margin:0;color:#4b5563;font-size:14px;line-height:1.6;font-family:'Segoe UI',Arial,sans-serif;">
-                          Check-in time: 2:00 PM | Check-out time: 11:00 AM<br/>
-                          Please carry a valid government-issued photo ID for verification.
-                        </p>
+                      <!-- Policies & Important Information -->
+                      <div style="background-color:#fef3c7;padding:24px;border-radius:12px;border:2px solid #fbbf24;margin:0 0 30px 0;font-family:'Segoe UI',Arial,sans-serif;">
+                        <h3 style="margin:0 0 16px 0;color:#002a3a;font-size:18px;font-weight:700;border-bottom:2px solid #fbbf24;padding-bottom:8px;">
+                          📋 Important Rules & Policies
+                        </h3>
+                        
+                        <!-- Reservation Policy -->
+                        <div style="margin-bottom:20px;">
+                          <p style="margin:0 0 8px 0;color:#002a3a;font-size:15px;font-weight:700;text-decoration:underline;font-style:italic;">Reservation Policy:</p>
+                          <ul style="margin:0;padding-left:20px;color:#4b5563;font-size:14px;line-height:1.6;">
+                            <li style="margin-bottom:4px;">Early check-in or late check-out is strictly subjected to availability at the time of check-in and may incur additional charges.</li>
+                            <li style="margin-bottom:4px;">Advance deposit in Cash or online Payment is mandatory to obtain the confirmed reservation.</li>
+                            <li style="margin-bottom:4px;">A Valid Govt Photo ID with address is required (PASSPORT/AADHAAR CARD/DRIVING LICENCE/VOTER ID CARD). PAN card is not accepted as a photo ID.</li>
+                          </ul>
+                        </div>
+
+                        <!-- Cancellation Policy -->
+                        <div style="margin-bottom:20px;">
+                          <p style="margin:0 0 8px 0;color:#002a3a;font-size:15px;font-weight:700;text-decoration:underline;font-style:italic;">Cancellation Policy:</p>
+                          <ul style="margin:0;padding-left:20px;color:#4b5563;font-size:14px;line-height:1.6;">
+                            <li style="margin-bottom:4px;">Cancellations made 15 or more days before check-in date will be free.</li>
+                            <li style="margin-bottom:4px;">Cancellations made more than 7 days in advance but less than 15 days will incur a cancellation charge of 1 night tariff as retention charges.</li>
+                            <li style="margin-bottom:4px;">No shows and cancellations made 0 to 7 days in advance will incur 100% charge of the booking.</li>
+                          </ul>
+                        </div>
+
+                        <!-- Amendment Policy -->
+                        <div style="margin-bottom:20px;">
+                          <p style="margin:0 0 8px 0;color:#002a3a;font-size:15px;font-weight:700;text-decoration:underline;font-style:italic;">Amendment Policy:</p>
+                          <ul style="margin:0;padding-left:20px;color:#4b5563;font-size:14px;line-height:1.6;">
+                            <li style="margin-bottom:4px;">Amendments will be treated as cancellation.</li>
+                            <li style="margin-bottom:4px;">Any refund will take at least 15 days to process.</li>
+                          </ul>
+                        </div>
+
+                        <!-- Other Information -->
+                        <div>
+                          <p style="margin:0 0 8px 0;color:#002a3a;font-size:15px;font-weight:700;text-decoration:underline;font-style:italic;">Other Information:</p>
+                          <ul style="margin:0;padding-left:20px;color:#4b5563;font-size:14px;line-height:1.6;">
+                            <li style="margin-bottom:4px;">Outside food & drinks are not allowed in the hotel premises.</li>
+                            <li style="margin-bottom:4px;">Unmarried couples & local ID is not allowed.</li>
+                            <li style="margin-bottom:4px;">Pets are not allowed.</li>
+                            <li style="margin-bottom:4px;">Rights of admission reserved.</li>
+                            <li style="margin-bottom:4px;">Visitors are not allowed in the room without prior consultation with the Front Office.</li>
+                            <li style="margin-bottom:4px;">Housekeeping room cleaning service is available upon request.</li>
+                          </ul>
+                        </div>
+                      </div>
+
+                      <!-- Closing Note -->
+                      <div style="margin-bottom:30px;color:#4b5563;font-size:14px;line-height:1.6;font-family:'Segoe UI',Arial,sans-serif;">
+                        <p style="margin:0 0 8px 0;">We look forward to welcome you at Hotel Biva and Biva Food Court.</p>
+                        <p style="margin:0 0 8px 0;">Kindly use your Room Booking Number <strong style="color:#002a3a;">#${id}</strong> as subject to future correspondence for this Reservation.</p>
+                        <p style="margin:0;">Should you require any assistance, please call us at <strong style="color:#002a3a;">+91 88118 88328</strong></p>
                       </div>
 
                       <!-- Contact Section -->
