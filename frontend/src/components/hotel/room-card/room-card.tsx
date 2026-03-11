@@ -18,18 +18,22 @@ export default function RoomCard({
     price,
 }: CardImagesType) {
     const [index, setIndex] = useState(0);
-    const [hovering, setHovering] = useState(false);
     const [showFullDesc, setShowFullDesc] = useState(false);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!hovering || url.length <= 1) return;
+        if (!Array.isArray(url) || url.length <= 1) {
+            setIndex(0);
+            return;
+        }
+
         const interval = setInterval(() => {
             setIndex((prev) => (prev + 1) % url.length);
         }, 1200);
+
         return () => clearInterval(interval);
-    }, [hovering, url.length]);
+    }, [url.length]);
 
     console.log("from room-card.tsx: " + url, title, desc);
 
@@ -38,11 +42,6 @@ export default function RoomCard({
     return (
         <Card
             className="relative w-full max-w-sm mx-auto flex flex-col overflow-hidden p-0 transition-transform hover:scale-105 shadow-md hover:shadow-lg"
-            onMouseEnter={() => setHovering(true)}
-            onMouseLeave={() => {
-                setHovering(false);
-                setIndex(0);
-            }}
         >
             <div className="relative w-full aspect-[4/3] overflow-hidden">
                 {Array.isArray(url) &&
