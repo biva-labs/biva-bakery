@@ -36,14 +36,6 @@ export default function Bakery() {
 		}
 	}, [data]);
 
-	if (error) {
-		return <div className="text-center py-10">Error loading bakery data</div>;
-	}
-
-	if (isLoading) {
-		// do soemthing
-	}
-
 	const imageSources = useMemo(
 		() => [
 			...bakeryHero.map((image) => image.url),
@@ -66,9 +58,21 @@ export default function Bakery() {
 		[bakeryHero, bakeryItems, bakeryGallery],
 	);
 
+	if (error) {
+		return <div className="text-center py-10">Error loading bakery data</div>;
+	}
+
+	if (isLoading) {
+		// do soemthing
+	}
+
 	return (
 		<div className="outfit">
-			<Preloader isLoading={isLoading} imageSources={imageSources} />
+			<Preloader
+				isLoading={isLoading}
+				imageSources={imageSources}
+				pageKey="bakery"
+			/>
 			<div className="mx-auto px-4 lg:mr-0">
 				<Hero
 					heightClasses="h-[45vh] lg:h-[90vh]"

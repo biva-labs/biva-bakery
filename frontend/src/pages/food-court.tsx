@@ -68,6 +68,7 @@ export default function FoodCourt() {
 				isLoading={isLoading}
 				imageSources={imageSources}
 				videoSources={videoSources}
+				pageKey="food-court"
 			/>
 			<div className="mx-auto px-4 lg:mr-0 ">
 				<Hero

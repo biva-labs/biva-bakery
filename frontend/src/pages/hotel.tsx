@@ -85,6 +85,7 @@ export default function Hotel() {
 				isLoading={isLoading}
 				imageSources={imageSources}
 				videoSources={videoSources}
+				pageKey="hotel"
 			/>
 			<div className="mx-auto px-4 lg:mr-0 ">
 				<Hero

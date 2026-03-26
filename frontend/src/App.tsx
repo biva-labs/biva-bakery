@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import SmoothScroll from "@/components/ui/smooth-scroll";
 import { QueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
@@ -23,6 +22,21 @@ import ReservationPolicy from "./pages/reservation-policy";
 import BookingConfirmation from "./components/bookings";
 import { RoomBookingPage } from "./components/hotel/room-booking-page";
 import Ticket from "./ticket";
+
+function dismissBootPreloader() {
+	const htmlPreloader = document.getElementById("app-preloader");
+
+	if (!htmlPreloader || htmlPreloader.dataset.dismissed === "true") {
+		return;
+	}
+
+	htmlPreloader.dataset.dismissed = "true";
+	htmlPreloader.classList.add("fade-out");
+
+	window.setTimeout(() => {
+		htmlPreloader.remove();
+	}, 400);
+}
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -516,6 +530,10 @@ const Announcements: React.FC<{ onBannerChange: (has: boolean) => void }> = ({
 
 function App() {
 	const [hasBanner, setHasBanner] = useState(false);
+
+	useEffect(() => {
+		dismissBootPreloader();
+	}, []);
 
 	return (
 		<PersistQueryClientProvider

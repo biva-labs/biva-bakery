@@ -4,12 +4,29 @@ interface PreloaderProps {
     isLoading: boolean;
     imageSources?: string[];
     videoSources?: string[];
+    pageKey?: string;
 }
 
 const EMPTY_SOURCES: string[] = [];
 const FADE_DURATION_MS = 400;
 const MIN_VISIBLE_MS = 500;
 const RESOURCE_TIMEOUT_MS = 12000;
+const PRELOADED_PAGES_STORAGE_KEY = "biva-preloaded-pages-v1";
+const DEFAULT_PAGE_KEY = "route:/";
+
+function resolvePageKey(pageKey?: string) {
+    const trimmed = pageKey?.trim();
+
+    if (trimmed) {
+        return trimmed;
+    }
+
+    if (typeof window !== "undefined") {
+        return `route:${window.location.pathname}`;
+    }
+
+    return DEFAULT_PAGE_KEY;
+}
 
 function sleep(duration: number) {
     return new Promise<void>((resolve) => {
@@ -30,6 +47,66 @@ function dismissHtmlPreloader() {
     window.setTimeout(() => {
         htmlPreloader.remove();
     }, FADE_DURATION_MS);
+}
+
+function readPreloadedPages() {
+    if (typeof window === "undefined") {
+        return new Set<string>();
+    }
+
+    try {
+        const value = window.localStorage.getItem(PRELOADED_PAGES_STORAGE_KEY);
+
+        if (!value) {
+            return new Set<string>();
+        }
+
+        const parsed = JSON.parse(value);
+
+        if (!Array.isArray(parsed)) {
+            return new Set<string>();
+        }
+
+        return new Set(
+            parsed.filter(
+                (item): item is string =>
+                    typeof item === "string" && item.trim().length > 0,
+            ),
+        );
+    } catch {
+        return new Set<string>();
+    }
+}
+
+function writePreloadedPages(pages: Set<string>) {
+    if (typeof window === "undefined") {
+        return;
+    }
+
+    try {
+        window.localStorage.setItem(
+            PRELOADED_PAGES_STORAGE_KEY,
+            JSON.stringify([...pages]),
+        );
+    } catch {
+        // ignore storage failures
+    }
+}
+
+function isPagePreloaded(pageKey: string) {
+    const pages = readPreloadedPages();
+    return pages.has(pageKey);
+}
+
+function markPageAsPreloaded(pageKey: string) {
+    const pages = readPreloadedPages();
+
+    if (pages.has(pageKey)) {
+        return;
+    }
+
+    pages.add(pageKey);
+    writePreloadedPages(pages);
 }
 
 function preloadImage(src: string) {
@@ -106,8 +183,14 @@ export default function Preloader({
     isLoading,
     imageSources = EMPTY_SOURCES,
     videoSources = EMPTY_SOURCES,
+    pageKey,
 }: PreloaderProps) {
-    const [visible, setVisible] = useState(true);
+    const resolvedPageKey = resolvePageKey(pageKey);
+
+    const [hasLoadedPage, setHasLoadedPage] = useState(() =>
+        isPagePreloaded(resolvedPageKey),
+    );
+    const [visible, setVisible] = useState(() => !isPagePreloaded(resolvedPageKey));
     const [fading, setFading] = useState(false);
 
     const resources = useMemo(() => {
@@ -121,6 +204,17 @@ export default function Preloader({
     }, [imageSources, videoSources]);
 
     useEffect(() => {
+        const preloaded = isPagePreloaded(resolvedPageKey);
+        setHasLoadedPage(preloaded);
+        setVisible(!preloaded);
+        setFading(false);
+
+        if (preloaded) {
+            dismissHtmlPreloader();
+        }
+    }, [resolvedPageKey]);
+
+    useEffect(() => {
         let cancelled = false;
         let hideTimer: number | undefined;
 
@@ -131,6 +225,8 @@ export default function Preloader({
                 return;
             }
 
+            markPageAsPreloaded(resolvedPageKey);
+            setHasLoadedPage(true);
             dismissHtmlPreloader();
             setFading(true);
             hideTimer = window.setTimeout(() => {
@@ -141,6 +237,12 @@ export default function Preloader({
         };
 
         const loadResources = async () => {
+            if (hasLoadedPage) {
+                setVisible(false);
+                dismissHtmlPreloader();
+                return;
+            }
+
             setVisible(true);
             setFading(false);
 
@@ -171,13 +273,13 @@ export default function Preloader({
                 window.clearTimeout(hideTimer);
             }
         };
-    }, [isLoading, resources]);
+    }, [hasLoadedPage, isLoading, resolvedPageKey, resources]);
 
     useEffect(() => {
-        if (!visible && !isLoading) {
+        if (!visible) {
             dismissHtmlPreloader();
         }
-    }, [isLoading, visible]);
+    }, [visible]);
 
     if (!visible) return null;
 
