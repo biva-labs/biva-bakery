@@ -101,10 +101,7 @@ app.post("/wh", async (c) => {
 	const signature = c.req.raw.headers.get("x-razorpay-signature");
 	const secret = "biva";
 	if (!signature || !secret) {
-		return c.json(
-			{ error: "Missing signature or secret" },
-			{ status: 400 },
-		);
+		return c.json({ error: "Missing signature or secret" }, { status: 400 });
 	}
 
 	const isValid = validateWebhookSignature(
