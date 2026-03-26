@@ -63,14 +63,15 @@ export default function RoomImageViewer({
             <Dialog.Portal>
                 <Dialog.Overlay className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm" />
 
-                <Dialog.Content className="fixed left-1/2 top-1/2 z-50 h-[95vh] w-[96vw] max-w-[1600px] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-white/15 bg-background shadow-2xl outline-none">
+                <Dialog.Content className="fixed inset-0 z-50 h-[100dvh] w-screen max-w-none bg-background outline-none sm:left-1/2 sm:top-1/2 sm:h-[95vh] sm:w-[96vw] sm:max-w-[1600px] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-xl sm:border sm:border-white/15 sm:shadow-2xl">
                     <div className="flex h-full flex-col">
-                        <div className="flex items-center justify-between gap-3 border-b border-border/60 px-3 py-3 md:px-5">
-                            <Dialog.Title className="text-sm font-semibold capitalize md:text-base">
+                        <div className="flex flex-col gap-2 border-b border-border/60 px-3 py-3 sm:flex-row sm:items-center sm:justify-between md:px-5">
+                            <Dialog.Title className="max-w-full truncate text-sm font-semibold capitalize md:text-base">
                                 {roomType} room images
                             </Dialog.Title>
 
-                            <div className="flex items-center gap-1.5 md:gap-2">
+                            <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
+                                <div className="flex items-center gap-1.5 md:gap-2">
                                 <Button
                                     type="button"
                                     variant="outline"
@@ -94,7 +95,7 @@ export default function RoomImageViewer({
                                     <Minus className="size-4" />
                                 </Button>
 
-                                <div className="w-14 text-center text-xs font-medium tabular-nums md:text-sm">
+                                <div className="w-12 text-center text-xs font-medium tabular-nums md:w-14 md:text-sm">
                                     {zoomText}
                                 </div>
 
@@ -120,6 +121,7 @@ export default function RoomImageViewer({
                                     <RotateCcw className="size-4" />
                                     <span className="hidden sm:inline">Reset</span>
                                 </Button>
+                                </div>
 
                                 <Dialog.Close asChild>
                                     <Button
@@ -137,7 +139,7 @@ export default function RoomImageViewer({
                         <div className="grid min-h-0 flex-1 grid-rows-[1fr_auto]">
                             <div className="min-h-0 overflow-auto bg-muted/30">
                                 {selectedImage ? (
-                                    <div className="min-h-full min-w-full p-2 md:p-4">
+                                    <div className="min-h-full min-w-full p-2 sm:p-3 md:p-4">
                                         <img
                                             src={selectedImage}
                                             alt={`Room image ${selectedImageIndex + 1}`}
@@ -157,7 +159,7 @@ export default function RoomImageViewer({
                                 )}
                             </div>
 
-                            <div className="border-t border-border/60 bg-background px-3 py-3 md:px-5">
+                            <div className="border-t border-border/60 bg-background px-2 py-2 sm:px-3 sm:py-3 md:px-5">
                                 <div className="flex gap-2 overflow-x-auto pb-1">
                                     {images.map((img, index) => (
                                         <button
@@ -165,7 +167,7 @@ export default function RoomImageViewer({
                                             key={`${img}-${index}`}
                                             onClick={() => onSelectImage(index)}
                                             className={cn(
-                                                "h-16 w-24 shrink-0 overflow-hidden rounded-md border transition-all md:h-20 md:w-32",
+                                                "h-14 w-20 shrink-0 overflow-hidden rounded-md border transition-all sm:h-16 sm:w-24 md:h-20 md:w-32",
                                                 selectedImageIndex === index
                                                     ? "border-primary ring-2 ring-primary/30"
                                                     : "border-border/70 hover:border-foreground/30",
