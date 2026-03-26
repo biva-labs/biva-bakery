@@ -63,65 +63,13 @@ export default function RoomImageViewer({
             <Dialog.Portal>
                 <Dialog.Overlay className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm" />
 
-                <Dialog.Content className="fixed inset-0 z-50 h-[100dvh] w-screen max-w-none bg-background outline-none sm:left-1/2 sm:top-1/2 sm:h-[95vh] sm:w-[96vw] sm:max-w-[1600px] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-xl sm:border sm:border-white/15 sm:shadow-2xl">
+                <Dialog.Content className="fixed inset-x-2 top-2 bottom-2 z-50 overflow-hidden rounded-xl border border-white/15 bg-background shadow-2xl outline-none sm:inset-auto sm:left-1/2 sm:top-1/2 sm:h-[95vh] sm:w-[96vw] sm:max-w-[1600px] sm:-translate-x-1/2 sm:-translate-y-1/2">
                     <div className="flex h-full flex-col">
-                        <div className="flex flex-col gap-2 border-b border-border/60 px-3 py-3 sm:flex-row sm:items-center sm:justify-between md:px-5">
-                            <Dialog.Title className="max-w-full truncate text-sm font-semibold capitalize md:text-base">
-                                {roomType} room images
-                            </Dialog.Title>
-
-                            <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
-                                <div className="flex items-center gap-1.5 md:gap-2">
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={handleOpenInNewTab}
-                                    disabled={!selectedImage}
-                                    className="h-8 px-2 md:px-3"
-                                >
-                                    <ExternalLink className="size-4" />
-                                    <span className="hidden sm:inline">New tab</span>
-                                </Button>
-
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="icon"
-                                    className="size-8"
-                                    onClick={handleZoomOut}
-                                    disabled={zoom <= MIN_ZOOM}
-                                >
-                                    <Minus className="size-4" />
-                                </Button>
-
-                                <div className="w-12 text-center text-xs font-medium tabular-nums md:w-14 md:text-sm">
-                                    {zoomText}
-                                </div>
-
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="icon"
-                                    className="size-8"
-                                    onClick={handleZoomIn}
-                                    disabled={zoom >= MAX_ZOOM}
-                                >
-                                    <Plus className="size-4" />
-                                </Button>
-
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    className="h-8 px-2 md:px-3"
-                                    onClick={handleResetZoom}
-                                    disabled={zoom === MIN_ZOOM}
-                                >
-                                    <RotateCcw className="size-4" />
-                                    <span className="hidden sm:inline">Reset</span>
-                                </Button>
-                                </div>
+                        <div className="border-b border-border/60 px-3 py-2 md:px-5 md:py-3">
+                            <div className="flex items-center justify-between gap-2">
+                                <Dialog.Title className="max-w-full truncate text-sm font-semibold capitalize md:text-base">
+                                    {roomType} room images
+                                </Dialog.Title>
 
                                 <Dialog.Close asChild>
                                     <Button
@@ -134,15 +82,85 @@ export default function RoomImageViewer({
                                     </Button>
                                 </Dialog.Close>
                             </div>
+
+                            <div
+                                className="mt-2 overflow-x-auto overflow-y-hidden pb-1"
+                                style={{
+                                    touchAction: "pan-x",
+                                    WebkitOverflowScrolling: "touch",
+                                }}
+                            >
+                                <div className="flex min-w-max items-center gap-1.5 md:gap-2">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={handleOpenInNewTab}
+                                        disabled={!selectedImage}
+                                        className="h-8 px-2 md:px-3"
+                                    >
+                                        <ExternalLink className="size-4" />
+                                        <span className="hidden sm:inline">New tab</span>
+                                    </Button>
+
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="icon"
+                                        className="size-8"
+                                        onClick={handleZoomOut}
+                                        disabled={zoom <= MIN_ZOOM}
+                                    >
+                                        <Minus className="size-4" />
+                                    </Button>
+
+                                    <div className="w-12 text-center text-xs font-medium tabular-nums md:w-14 md:text-sm">
+                                        {zoomText}
+                                    </div>
+
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="icon"
+                                        className="size-8"
+                                        onClick={handleZoomIn}
+                                        disabled={zoom >= MAX_ZOOM}
+                                    >
+                                        <Plus className="size-4" />
+                                    </Button>
+
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        className="h-8 px-2 md:px-3"
+                                        onClick={handleResetZoom}
+                                        disabled={zoom === MIN_ZOOM}
+                                    >
+                                        <RotateCcw className="size-4" />
+                                        <span className="hidden sm:inline">Reset</span>
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
 
                         <div className="grid min-h-0 flex-1 grid-rows-[1fr_auto]">
-                            <div className="min-h-0 overflow-x-auto overflow-y-auto bg-muted/30 touch-pan-x touch-pan-y [-webkit-overflow-scrolling:touch]">
+                            <div
+                                className="min-h-0 overflow-x-scroll overflow-y-auto bg-muted/30"
+                                style={{
+                                    touchAction: "pan-x pan-y",
+                                    WebkitOverflowScrolling: "touch",
+                                    overscrollBehavior: "contain",
+                                }}
+                            >
                                 {selectedImage ? (
                                     <div className="min-h-full p-2 sm:p-3 md:p-4">
                                         <div
                                             style={{
-                                                width: `${zoom * 100}%`,
+                                                width:
+                                                    zoom > 1
+                                                        ? `${zoom * 100}%`
+                                                        : "100%",
                                                 minWidth: "100%",
                                             }}
                                         >
@@ -165,8 +183,15 @@ export default function RoomImageViewer({
                             </div>
 
                             <div className="border-t border-border/60 bg-background px-2 py-2 pb-[calc(env(safe-area-inset-bottom)+8px)] sm:px-3 sm:py-3 md:px-5">
-                                <div className="overflow-x-auto overflow-y-hidden pb-1 touch-pan-x [-webkit-overflow-scrolling:touch]">
-                                    <div className="flex w-max gap-2 pr-1">
+                                <div
+                                    className="overflow-x-scroll overflow-y-hidden pb-1"
+                                    style={{
+                                        touchAction: "pan-x",
+                                        WebkitOverflowScrolling: "touch",
+                                        overscrollBehaviorX: "contain",
+                                    }}
+                                >
+                                    <div className="flex min-w-max gap-2 pr-1">
                                         {images.map((img, index) => (
                                             <button
                                                 type="button"
