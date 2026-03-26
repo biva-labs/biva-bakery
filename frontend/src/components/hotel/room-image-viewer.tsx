@@ -63,7 +63,7 @@ export default function RoomImageViewer({
             <Dialog.Portal>
                 <Dialog.Overlay className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm" />
 
-                <Dialog.Content className="fixed inset-x-2 top-2 bottom-2 z-50 overflow-hidden rounded-xl border border-white/15 bg-background shadow-2xl outline-none sm:inset-auto sm:left-1/2 sm:top-1/2 sm:h-[95vh] sm:w-[96vw] sm:max-w-[1600px] sm:-translate-x-1/2 sm:-translate-y-1/2">
+                <Dialog.Content className="fixed left-1/2 top-1/2 z-50 h-[84dvh] w-[90vw] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-xl border border-white/15 bg-background shadow-2xl outline-none sm:h-[90vh] sm:w-[94vw] md:h-[95vh] md:w-[96vw] md:max-w-[1600px]">
                     <div className="flex h-full flex-col">
                         <div className="border-b border-border/60 px-3 py-2 md:px-5 md:py-3">
                             <div className="flex items-center justify-between gap-2">
