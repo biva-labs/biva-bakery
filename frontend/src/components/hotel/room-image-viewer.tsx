@@ -137,20 +137,25 @@ export default function RoomImageViewer({
                         </div>
 
                         <div className="grid min-h-0 flex-1 grid-rows-[1fr_auto]">
-                            <div className="min-h-0 overflow-auto bg-muted/30">
+                            <div className="min-h-0 overflow-x-auto overflow-y-auto bg-muted/30 touch-pan-x touch-pan-y [-webkit-overflow-scrolling:touch]">
                                 {selectedImage ? (
-                                    <div className="min-h-full min-w-full p-2 sm:p-3 md:p-4">
-                                        <img
-                                            src={selectedImage}
-                                            alt={`Room image ${selectedImageIndex + 1}`}
-                                            className="block rounded-lg"
+                                    <div className="min-h-full p-2 sm:p-3 md:p-4">
+                                        <div
                                             style={{
                                                 width: `${zoom * 100}%`,
                                                 minWidth: "100%",
-                                                maxWidth: "none",
-                                                height: "auto",
                                             }}
-                                        />
+                                        >
+                                            <img
+                                                src={selectedImage}
+                                                alt={`Room image ${selectedImageIndex + 1}`}
+                                                className="block w-full max-w-none rounded-lg"
+                                                style={{
+                                                    height: "auto",
+                                                }}
+                                                draggable={false}
+                                            />
+                                        </div>
                                     </div>
                                 ) : (
                                     <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
@@ -159,27 +164,29 @@ export default function RoomImageViewer({
                                 )}
                             </div>
 
-                            <div className="border-t border-border/60 bg-background px-2 py-2 sm:px-3 sm:py-3 md:px-5">
-                                <div className="flex gap-2 overflow-x-auto pb-1">
-                                    {images.map((img, index) => (
-                                        <button
-                                            type="button"
-                                            key={`${img}-${index}`}
-                                            onClick={() => onSelectImage(index)}
-                                            className={cn(
-                                                "h-14 w-20 shrink-0 overflow-hidden rounded-md border transition-all sm:h-16 sm:w-24 md:h-20 md:w-32",
-                                                selectedImageIndex === index
-                                                    ? "border-primary ring-2 ring-primary/30"
-                                                    : "border-border/70 hover:border-foreground/30",
-                                            )}
-                                        >
-                                            <img
-                                                src={img}
-                                                alt={`Thumbnail ${index + 1}`}
-                                                className="h-full w-full object-cover"
-                                            />
-                                        </button>
-                                    ))}
+                            <div className="border-t border-border/60 bg-background px-2 py-2 pb-[calc(env(safe-area-inset-bottom)+8px)] sm:px-3 sm:py-3 md:px-5">
+                                <div className="overflow-x-auto overflow-y-hidden pb-1 touch-pan-x [-webkit-overflow-scrolling:touch]">
+                                    <div className="flex w-max gap-2 pr-1">
+                                        {images.map((img, index) => (
+                                            <button
+                                                type="button"
+                                                key={`${img}-${index}`}
+                                                onClick={() => onSelectImage(index)}
+                                                className={cn(
+                                                    "h-14 w-20 shrink-0 overflow-hidden rounded-md border transition-all sm:h-16 sm:w-24 md:h-20 md:w-32",
+                                                    selectedImageIndex === index
+                                                        ? "border-primary ring-2 ring-primary/30"
+                                                        : "border-border/70 hover:border-foreground/30",
+                                                )}
+                                            >
+                                                <img
+                                                    src={img}
+                                                    alt={`Thumbnail ${index + 1}`}
+                                                    className="h-full w-full object-cover"
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
