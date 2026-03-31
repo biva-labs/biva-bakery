@@ -107,7 +107,7 @@ export default function Hotel() {
 				</div>
 				<RoomCardCarousel rooms={hotelRooms} />
 
-				<div className="mt-24" id="banquet">
+				<div className="mt-12" id="banquet">
 					<h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-green-950 ">
 						BANQUET
 					</h2>

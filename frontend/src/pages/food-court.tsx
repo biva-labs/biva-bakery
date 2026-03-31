@@ -79,7 +79,7 @@ export default function FoodCourt() {
 					redirect="/table/booking"
 					images={foodCourtHero}
 				/>
-				<div className="mt-28 items-center justify-center text-center">
+				<div className="mt-20 items-center justify-center text-center">
 					<h2 className="text-3xl lg:text-4xl text-start justify-center lg:ml-6 ml-4 outfit font-extrabold text-green-950 mb-6">
 						Our Delicious Offerings
 					</h2>

@@ -2,7 +2,7 @@ export default function Banquet({ media }: { media: any }) {
 	return (
 		<>
 			{/* Banquet Hall Section */}
-			<div className="w-full px-0 lg:px-0 mt-8 mb-10">
+			<div className="w-full px-0 lg:px-0 mt-4 mb-10">
 				<div className="relative w-full aspect-[4/3] md:aspect-video lg:aspect-auto lg:h-[80vh] xl:h-[75vh] rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(255,223,0,0.6)]">
 					<video
 						src={media}
