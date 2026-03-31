@@ -6,7 +6,7 @@ function NonVegetarianFood({ media }: { media: any }) {
 
 	return (
 		<div className="w-full mt-16 mb-10 mx-auto">
-			<div className="relative w-full aspect-[4/3] md:aspect-video lg:aspect-auto lg:h-[62vh] xl:h-[85vh] rounded-2xl overflow-hidden ">
+			<div className="relative w-full h-[50vh] md:aspect-video lg:aspect-auto lg:h-[62vh] xl:h-[85vh] rounded-2xl overflow-hidden ">
 				<video
 					className="w-full h-full object-cover"
 					src={media}
@@ -45,7 +45,7 @@ function VegetarianFood({ media }: { media: any }) {
 
 	return (
 		<div className="w-full -mt-5 mx-auto">
-			<div className="relative w-full aspect-[4/3] md:aspect-video lg:aspect-auto lg:h-[62vh] xl:h-[78vh] rounded-2xl overflow-hidden ">
+			<div className="relative w-full h-[50vh] md:aspect-video lg:aspect-auto lg:h-[62vh] xl:h-[78vh] rounded-2xl overflow-hidden ">
 				<video
 					className="w-full h-full object-cover"
 					src={media}

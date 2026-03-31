@@ -80,7 +80,7 @@ export default function FoodCourt() {
 					images={foodCourtHero}
 				/>
 				<div className="mt-20 items-center justify-center text-center">
-					<h2 className="text-3xl lg:text-4xl text-start justify-center lg:ml-6 ml-4 outfit font-extrabold text-green-950 mb-6">
+					<h2 className="text-2xl lg:text-4xl text-start justify-center lg:ml-6 ml-4 outfit font-extrabold text-green-950 mb-6">
 						Our Delicious Offerings
 					</h2>
 					<div className="mt-10">
