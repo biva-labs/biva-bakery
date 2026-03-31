@@ -107,14 +107,14 @@ export default function Hotel() {
 				</div>
 				<RoomCardCarousel rooms={hotelRooms} />
 
-				<div className="mt-10" id="banquet">
+				<div className="mt-24" id="banquet">
 					<h2 className="text-4xl ml-4 lg:text-4xl text-start lg:ml-6 outfit font-extrabold text-green-950 ">
 						BANQUET
 					</h2>
 					<Banquet media={hotelBanquet[0]?.url} />
 				</div>
 
-				<div id="events" className="mb-8 text-center lg:text-left mt-10">
+				<div id="events" className="mb-8 text-center lg:text-left mt-18">
 					<h2 className="text-2xl lg:text-4xl text-start outfit font-extrabold lg:ml-6 ml-4 text-green-950 mb-2">
 						Upcoming Events
 					</h2>
