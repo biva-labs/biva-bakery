@@ -50,7 +50,7 @@ export async function sendEventMail(body: any, c: Context) {
 				);
 			}
 
-			console.log(`Email successfully sent to ${data.email}`, res);
+			// console.log(`Email successfully sent to ${data.email}`, res);
 			// Return the result for Promise.all, but not a Hono response
 			return res;
 		});
@@ -59,7 +59,7 @@ export async function sendEventMail(body: any, c: Context) {
 		await Promise.all(emailPromises);
 
 		// 4. AFTER all emails are sent, return the final success response
-		console.log("All emails processed successfully.");
+		// console.log("All emails processed successfully.");
 		return c.json({ success: "All messages delivered!" }, 200);
 	} catch (error: any) {
 		// 5. If any email failed, the catch block will execute

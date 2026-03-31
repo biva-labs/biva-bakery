@@ -93,7 +93,7 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
 			},
 			{
 				onSuccess: async (response) => {
-					console.log("room booking page", response);
+					// console.log("room booking page", response);
 					const amount = response.data?.total_amount;
 					const id = response.data?.id;
 

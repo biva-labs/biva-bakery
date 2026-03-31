@@ -4,117 +4,118 @@ import { useState } from "react";
 import { instance } from "@/utils/axios";
 
 interface PayButtonProps {
-  amount: number;
-  onSuccess?: (response: unknown) => void;
-  onError?: (message: string) => void;
+	amount: number;
+	onSuccess?: (response: unknown) => void;
+	onError?: (message: string) => void;
 }
 
 interface RazorpaySuccessResponse {
-  razorpay_payment_id: string;
-  razorpay_order_id: string;
-  razorpay_signature: string;
+	razorpay_payment_id: string;
+	razorpay_order_id: string;
+	razorpay_signature: string;
 }
 
 const PayButton = ({ amount, onSuccess, onError }: PayButtonProps) => {
+	const [isLoading, setIsLoading] = useState(false);
 
+	const handlePayment = async () => {
+		setIsLoading(true);
 
-  const [isLoading, setIsLoading] = useState(false);
+		try {
+			const isScriptLoaded = await loadRazorpayScript(
+				"https://checkout.razorpay.com/v1/checkout.js",
+			);
+			if (!isScriptLoaded) {
+				throw new Error(
+					"Razorpay SDK failed to load. Please check your connection.",
+				);
+			}
 
-  const handlePayment = async () => {
-    setIsLoading(true);
+			const order = await createOrder(amount);
+			// console.log(order)
 
-    try {
-      const isScriptLoaded = await loadRazorpayScript(
-        "https://checkout.razorpay.com/v1/checkout.js"
-      );
-      if (!isScriptLoaded) {
-        throw new Error(
-          "Razorpay SDK failed to load. Please check your connection."
-        );
-      }
+			const razorpaykey = import.meta.env.VITE_RAZORPAY_ID;
+			if (!razorpaykey) {
+				throw new Error(
+					"Razorpay key is missing in environment variables.",
+				);
+			}
 
-      const order = await createOrder(amount);
-      console.log(order)
+			// 1. First, define the options object
+			const options = {
+				key: razorpaykey,
+				amount: order.amount,
+				currency: order.currency,
+				name: "Biva",
+				description: "Purchase Description",
+				order_id: order.id,
+				handler: async function (response: RazorpaySuccessResponse) {
+					// console.log("Payment Authorization Received!", response);
 
-      const razorpaykey = import.meta.env.VITE_RAZORPAY_ID;
-      if (!razorpaykey) {
-        throw new Error("Razorpay key is missing in environment variables.");
-      }
+					try {
+						const verificationResponse = await instance.post(
+							"/api/verify-payment",
+							{
+								body: JSON.stringify(response),
+							},
+						);
 
-      // 1. First, define the options object
-      const options = {
-        key: razorpaykey,
-        amount: order.amount,
-        currency: order.currency,
-        name: "Biva",
-        description: "Purchase Description",
-        order_id: order.id,
-        handler: async function (response: RazorpaySuccessResponse) {
-          console.log("Payment Authorization Received!", response);
+						if (!verificationResponse) {
+							throw new Error(
+								"Payment verification failed on the server.",
+							);
+						}
 
-          try {
-            const verificationResponse = await instance.post('/api/verify-payment', {
-              body: JSON.stringify(response),
-            });
+						const verificationData = await verificationResponse.data();
 
-            if (!verificationResponse) {
-              throw new Error('Payment verification failed on the server.');
-            }
+						if (verificationData.status === "success" && onSuccess) {
+							onSuccess(response);
+						} else {
+							throw new Error(
+								verificationData.error ||
+									"Payment verification failed.",
+							);
+						}
+					} catch (error) {
+						console.error("Verification error:", error);
+						if (onError) {
+							onError(
+								"Payment completed but verification failed. Please contact support.",
+							);
+						}
+					}
+				},
+				theme: {
+					color: "#2563eb",
+				},
+			};
+			const paymentObject = new window.Razorpay(options);
 
-            const verificationData = await verificationResponse.data();
+			paymentObject.on("close", function () {
+				// console.log('Payment modal was closed without completing the payment.');
+				setIsLoading(false);
+			});
 
-            if (verificationData.status === 'success' && onSuccess) {
-              onSuccess(response);
-            } else {
-              throw new Error(verificationData.error || 'Payment verification failed.');
-            }
-          } catch (error) {
-            console.error('Verification error:', error);
-            if (onError) {
-              onError('Payment completed but verification failed. Please contact support.');
-            }
-          }
-        },
-        theme: {
-          color: "#2563eb",
-        },
-      };
-      const paymentObject = new window.Razorpay(options);
+			paymentObject.open();
+		} catch (error: unknown) {
+			let message = "Payment failed. Please try again.";
+			console.error("Payment error:", error);
 
-      paymentObject.on('close', function () {
-        console.log('Payment modal was closed without completing the payment.');
-        setIsLoading(false);
-      });
+			if (error instanceof Error) {
+				message = error.message;
+			}
+			if (onError) {
+				onError(message);
+			}
+			setIsLoading(false);
+		}
+	};
 
-      paymentObject.open();
-
-    } catch (error: unknown) {
-      let message = "Payment failed. Please try again.";
-      console.error("Payment error:", error);
-
-      if (error instanceof Error) {
-        message = error.message;
-      }
-      if (onError) {
-        onError(message);
-      }
-      setIsLoading(false);
-    }
-
-  };
-
-  return (
-    <Button
-      onClick={handlePayment}
-      disabled={isLoading}
-      className="w-full"
-    >
-      {isLoading ? "Processing..." : `Pay ₹${amount}`}
-    </Button>
-  );
+	return (
+		<Button onClick={handlePayment} disabled={isLoading} className="w-full">
+			{isLoading ? "Processing..." : `Pay ₹${amount}`}
+		</Button>
+	);
 };
-
-
-
 
 export default PayButton;

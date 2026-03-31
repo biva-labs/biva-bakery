@@ -32,7 +32,7 @@ export default function FoodCourt() {
 
 	useEffect(() => {
 		if (data) {
-			console.log(data);
+			// console.log(data);
 			setfoodCourtHero(data.data.hero ?? []);
 			setEvents(data.data.events ?? []);
 			setFoodCourtGallery(data.data.gallery ?? []);
@@ -48,31 +48,21 @@ export default function FoodCourt() {
 		// handle loading
 	}
 
-	const imageSources = useMemo(
-		() => [
-			...foodCourtHero.map((image) => image.url),
-			...events.map((event) => event.url),
-			...foodCourtGallery.map((image) => image.url),
-		],
-		[foodCourtHero, events, foodCourtGallery],
-	);
-
-	const videoSources = useMemo(
-		() => foodCourtPreference.map((item) => item.url),
-		[foodCourtPreference],
+	const criticalImageSources = useMemo(
+		() => [...foodCourtHero.map((image) => image.url)],
+		[foodCourtHero],
 	);
 
 	return (
 		<div>
 			<Preloader
 				isLoading={isLoading}
-				imageSources={imageSources}
-				videoSources={videoSources}
+				imageSources={criticalImageSources}
 				pageKey="food-court"
 			/>
 			<div className="mx-auto px-4 lg:mr-0 ">
 				<Hero
-					heightClasses="h-[45vh] lg:h-[90vh]"
+					heightClasses="h-[45vh] lg:h-[95vh]"
 					title={
 						<div className="mb-5">
 							The Biva <br />

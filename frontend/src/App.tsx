@@ -436,7 +436,7 @@ const Announcements: React.FC<{ onBannerChange: (has: boolean) => void }> = ({
 				const res = await axios.get(
 					"https://biva-bakery-backend.onrender.com/announcements",
 				);
-				console.log("Fetched announcements:", res.data);
+				// console.log("Fetched announcements:", res.data);
 
 				if (res.data?.data && Array.isArray(res.data.data)) {
 					setAnnouncements(res.data.data);
@@ -478,10 +478,10 @@ const Announcements: React.FC<{ onBannerChange: (has: boolean) => void }> = ({
 				const styling = parseStyling(announcement.styling);
 				const onClose = () => handleDismiss(announcement.id);
 
-				console.log(`Rendering ${announcement.displayType}:`, {
-					announcement,
-					styling,
-				});
+				// console.log(`Rendering ${announcement.displayType}:`, {
+				// 	announcement,
+				// 	styling,
+				// });
 
 				switch (announcement.displayType) {
 					case "banner":

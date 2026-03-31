@@ -24,10 +24,10 @@ export async function sendFoodCourtMail(body: any, c: Context<any>) {
 	});
 
 	if (error) {
-		console.log(error);
+		// console.log(error);
 		return c.json({ error: error }, 400);
 	} else {
-		console.log("resend got it", data);
+		// console.log("resend got it", data);
 		return c.json({ success: "message delivered!" }, 200);
 	}
 }

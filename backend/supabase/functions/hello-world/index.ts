@@ -21,17 +21,17 @@ const TYPE_TO_TABLE = {
 
 async function markPaymentPaid(userId: string[], type: string) {
 	const tableToUpdate = TYPE_TO_TABLE[type];
-	console.log(tableToUpdate);
+	// console.log(tableToUpdate);
 	try {
 		const numericUserIds = userId.map((id) => parseInt(id));
-		console.log(numericUserIds);
+		// console.log(numericUserIds);
 		const updated = await db
 			.update(tableToUpdate)
 			.set({ paid: true })
 			.where(inArray(tableToUpdate.id, numericUserIds))
 			.returning();
 
-		console.log("Payment updated for userId:", updated);
+		// console.log("Payment updated for userId:", updated);
 		return updated;
 	} catch (err) {
 		console.error("Failed to update payment:", err);
@@ -74,9 +74,9 @@ Deno.serve(async (req: Request) => {
 	const signature = req.headers.get("x-razorpay-signature") ?? "";
 	const secret = Deno.env.get("RAZORPAY_WEBHOOK_SECRET") ?? "";
 
-	console.log("Signature:", signature);
-	console.log("Secret:", secret);
-	console.log("Body:", rawBody);
+	// console.log("Signature:", signature);
+	// console.log("Secret:", secret);
+	// console.log("Body:", rawBody);
 
 	const isValid = await validateWebhookSignature(rawBody, signature, secret);
 
@@ -87,21 +87,21 @@ Deno.serve(async (req: Request) => {
 	const payload = JSON.parse(rawBody);
 	const userId = payload.payload.payment.entity.notes.users;
 	const tableType = payload.payload.payment.entity.notes.type;
-	console.log("✅ Verified Razorpay webhook:", payload.event);
-	console.log("userId: ", userId);
+	// console.log("✅ Verified Razorpay webhook:", payload.event);
+	// console.log("userId: ", userId);
 
 	switch (payload.event) {
 		// testing qstash messaging
 		case "payment.captured":
 			const userIdArray = JSON.parse(userId);
-			console.log("INDEX>TS!!", userIdArray);
-			console.log("INDEX>TS!!", tableType);
+			// console.log("INDEX>TS!!", userIdArray);
+			// console.log("INDEX>TS!!", tableType);
 			const paymentConfirmedData = await markPaymentPaid(
 				userIdArray,
 				tableType,
 			);
 
-			console.log(paymentConfirmedData);
+			// console.log(paymentConfirmedData);
 			const res = await upstashClient.publishJSON({
 				// url: "https://biva-bakery-backend.onrender.com/qstash-message",
 				url: "https://biva-bakery-backend.onrender.com/qstash-message",
@@ -112,11 +112,11 @@ Deno.serve(async (req: Request) => {
 				},
 				headers: { "my-header": "my-value" },
 			});
-			console.log("updated successfully for user:", userId);
-			console.log(res);
+			// console.log("updated successfully for user:", userId);
+			// console.log(res);
 			break;
 		default:
-			console.log("Unhandled event:", payload.event);
+			// console.log("Unhandled event:", payload.event);
 	}
 
 	return new Response("Pass", { status: 200 });

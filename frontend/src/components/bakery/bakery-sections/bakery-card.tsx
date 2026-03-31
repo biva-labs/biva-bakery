@@ -19,6 +19,8 @@ export default function BakeryCard(props: CardImagesType) {
                 <img
                     src={Array.isArray(props.url) ? props.url[0] : props.url}
                     alt={props.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-48 object-cover"
                 />
                 <div className="p-5 flex flex-col justify-between flex-grow min-h-[160px]">

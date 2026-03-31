@@ -35,7 +35,7 @@ export default function Hotel() {
 			console.warn("no valid data received", data);
 			return;
 		}
-		console.log("HOTEL", data);
+		// console.log("HOTEL", data);
 
 		const { hero, rooms, gallery, banquet, events } = data.data;
 		setHotelHero(hero ?? []);
@@ -62,29 +62,16 @@ export default function Hotel() {
 		// handle loading
 	}
 
-	const imageSources = useMemo(
-		() => [
-			...hotelHero.map((image) => image.url),
-			...hotelRooms.flatMap((room) =>
-				Array.isArray(room.url) ? room.url : [room.url],
-			),
-			...events.map((event) => event.url),
-			...hotelGallery.map((image) => image.url),
-		],
-		[hotelHero, hotelRooms, events, hotelGallery],
-	);
-
-	const videoSources = useMemo(
-		() => [hotelBanquet[0]?.url, "/bar.mp4"].filter(Boolean),
-		[hotelBanquet],
+	const criticalImageSources = useMemo(
+		() => hotelHero.slice(0, 2).map((image) => image.url),
+		[hotelHero],
 	);
 
 	return (
 		<div>
 			<Preloader
 				isLoading={isLoading}
-				imageSources={imageSources}
-				videoSources={videoSources}
+				imageSources={criticalImageSources}
 				pageKey="hotel"
 			/>
 			<div className="mx-auto px-4 lg:mr-0 ">
@@ -104,7 +91,7 @@ export default function Hotel() {
 					redirect="#footer"
 					buttonDescription={<>Starting from ₹2200/-</>}
 					images={hotelHero}
-					heightClasses="h-[45vh] lg:h-[90vh]"
+					heightClasses="h-[45vh] lg:h-[95vh]"
 				/>
 
 				<div

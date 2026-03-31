@@ -2,7 +2,7 @@ import { instance } from "@/utils/axios";
 import { useQuery } from "@tanstack/react-query";
 
 async function fetchRoomDetails(room_type: string) {
-    console.log(room_type);
+    // console.log(room_type);
     const res = await instance.get(`/room-details/${room_type}`);
     return res.data;
 }

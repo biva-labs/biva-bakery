@@ -24,6 +24,7 @@ export default function Hero({
 	heightClasses,
 }: HeroType) {
 	const [current, setCurrent] = useState(0);
+	const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
 	const navigate = useNavigate();
 	const location = useLocation();
 	const isBakeryPage = location.pathname.includes("/bakery");
@@ -37,6 +38,19 @@ export default function Hero({
 			setCurrent((prev) => (prev + 1) % images.length);
 		}, 2000);
 		return () => clearInterval(interval);
+	}, [images]);
+
+	useEffect(() => {
+		if (!images) return;
+
+		const remainingImages = images.slice(1);
+		remainingImages.forEach((img) => {
+			const image = new Image();
+			image.src = img.url;
+			image.onload = () => {
+				setLoadedImages((prev) => new Set([...prev, img.url]));
+			};
+		});
 	}, [images]);
 
 	const titleWrapperBaseClasses = "absolute bottom-0 p-6 md:p-10 z-20";
@@ -58,17 +72,25 @@ export default function Hero({
 		>
 			<div className="absolute inset-0">
 				<>
-					{images?.map((src, idx) => (
-						<img
-							fetchPriority="high"
-							key={src.public_id}
-							src={src.url}
-							alt={`Slide ${idx + 1}`}
-							className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-								idx === current ? "opacity-100" : "opacity-0"
-							}`}
-						/>
-					))}
+					{images?.map((src, idx) => {
+						const isFirst = idx === 0;
+						const isLoaded = loadedImages.has(src.url) || isFirst;
+
+					 return (
+							<img
+								key={src.public_id}
+								src={src.url}
+								alt={`Slide ${idx + 1}`}
+								fetchPriority={isFirst ? "high" : "low"}
+								loading={isFirst ? "eager" : "lazy"}
+								decoding={isFirst ? "sync" : "async"}
+								className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+									idx === current ? "opacity-100" : "opacity-0"
+								}`}
+								style={{ display: isLoaded ? "block" : "none" }}
+							/>
+						);
+					})}
 				</>
 			</div>
 

@@ -24,7 +24,7 @@ async function getBookingCountByEmail(email: string): Promise<number> {
 
 export const reserveHotelRoom = async (c: Context) => {
     const body = await c.req.parseBody();
-    console.log("HOTEL RESERVE BODY: ", body);
+    // console.log("HOTEL RESERVE BODY: ", body);
 
     const email = body["email"] as string;
 
@@ -230,7 +230,7 @@ export const storeUnpaidData = async (c: Context) => {
 export const getHotelRoomDetails = async (c: Context) => {
     try {
         const room_type = c.req.param("room_type");
-        console.log(room_type);
+        // console.log(room_type);
 
         if (room_type === undefined || room_type.trim() === "") {
             return c.json(

@@ -3,7 +3,7 @@ import { hotelEmailTemplate } from "./hotelEmailTemplate.ts";
 import { resend } from "./resend.ts";
 
 export async function sendHotelMail(body: any, c: Context) {
-	console.log("HOTEL-MAIL.TS 6", body);
+	// console.log("HOTEL-MAIL.TS 6", body);
 	const { data, error } = await resend.emails.send({
 		from: "noreply@thebiva.com",
 		to: [
@@ -27,10 +27,10 @@ export async function sendHotelMail(body: any, c: Context) {
 	});
 
 	if (error) {
-		console.log(error);
+		// console.log(error);
 		return c.json({ error: error }, 400);
 	} else {
-		console.log("resend got it", data);
+		// console.log("resend got it", data);
 		return c.json({ success: "message delivered!" }, 200);
 	}
 }

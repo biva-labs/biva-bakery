@@ -16,7 +16,7 @@ export const qstash_message = async (c: Context) => {
 		const signature = c.req.raw.headers.get("Upstash-Signature");
 		const rawBody = await c.req.text();
 		const body = JSON.parse(rawBody);
-		console.log(body);
+		// console.log(body);
 
 		const isValid = await receiver.verify({
 			body: rawBody,
@@ -49,7 +49,7 @@ export const qstash_message = async (c: Context) => {
 			//   "invoice",
 			// );
 
-			console.log("qstash got it ", email);
+			// console.log("qstash got it ", email);
 			return c.json(
 				{ message: "recieved in server and mail sent!", data: body },
 				200,

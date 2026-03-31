@@ -48,7 +48,7 @@ export default function Table() {
     // const guest = useGuestStore().guest;
     // Get event data from URL params
     useEffect(() => {
-        console.log("URL Search Params:", Object.fromEntries(searchParams));
+        // console.log("URL Search Params:", Object.fromEntries(searchParams));
 
         const params = Object.fromEntries(searchParams);
 
@@ -64,7 +64,7 @@ export default function Table() {
                 imageUrl: decodeURIComponent(params.imageUrl || ""),
             };
 
-            console.log("Parsed Event Data:", parsedEventData);
+            // console.log("Parsed Event Data:", parsedEventData);
             setEventData(parsedEventData);
 
             // Set event_id in store
@@ -92,17 +92,17 @@ export default function Table() {
 
     const handleBookAndPay = async () => {
         // Debug: Log store state before submission
-        console.log("Store state before submission:", {
-            guest: data.guest,
-            name: data.name,
-            email: data.email,
-            phone_number: data.phone_number,
-            event_id: data.event_id,
-            number_of_guest: data.number_of_guest,
-            adhaar_or_pan_card: data.adhaar_or_pan_card
-                ? "File present"
-                : "No file",
-        });
+        // console.log("Store state before submission:", {
+            // guest: data.guest,
+            // name: data.name,
+        //     email: data.email,
+        //     phone_number: data.phone_number,
+        //     event_id: data.event_id,
+        //     number_of_guest: data.number_of_guest,
+        //     adhaar_or_pan_card: data.adhaar_or_pan_card
+        //         ? "File present"
+        //         : "No file",
+        // });
 
         if (
             !data.name ||
@@ -136,7 +136,7 @@ export default function Table() {
                         (v) => v.id,
                     );
                     // const eventType = response.data?.data?.insertedData[0].eventId;
-                    console.log("AFTER PAYMENT DATA:", user);
+                    // console.log("AFTER PAYMENT DATA:", user);
                     await initiatePayment(totalAmount, user, "events");
                 },
                 onError: (error) => {

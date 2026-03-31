@@ -63,7 +63,7 @@ export function useTicket() {
         },
         onSuccess: (data) => {
             toast.success("Ticket submitted successfully!");
-            console.log("Ticket submitted successfully:", data.ticketNumber);
+            // console.log("Ticket submitted successfully:", data.ticketNumber);
         },
         onError: (error) => {
             toast.error(error.message);

@@ -2,14 +2,14 @@
 export default function About() {
 
     const aboutUsImages = [
-        "/about-us-first.jpeg",
-        "/about-us-second.jpeg",
-        "/about-us-third.jpeg",
-        "/about-us-fourth.jpeg",
-        "/about-us-fifth.jpeg",
-        "/about-us-sixth.jpeg",
-        "/about-us-seventh.jpeg",
-        "/about-us-eigth.jpeg",
+        "/about-us-first.webp",
+        "/about-us-second.webp",
+        "/about-us-third.webp",
+        "/about-us-fourth.webp",
+        "/about-us-fifth.webp",
+        "/about-us-sixth.webp",
+        "/about-us-seventh.webp",
+        "/about-us-eigth.webp",
     ];
 
     return (
@@ -79,6 +79,8 @@ export default function About() {
                                 <img
                                     src={src}
                                     alt={`Biva Bakery ${i + 1}`}
+                                    loading="lazy"
+                                    decoding="async"
                                     className="w-full h-full object-cover"
                                 />
                             </div>

@@ -24,7 +24,7 @@ export default function RoomCardCarousel({ rooms }: RoomCardCarouselProps) {
     // Use useEffect to prevent calling setAllRooms on every render
     useEffect(() => {
         const roomTypes = groupByTag(rooms);
-        console.log(roomTypes);
+        // console.log(roomTypes);
         setAllRooms(roomTypes);
     }, [rooms, setAllRooms]);
 

@@ -6,8 +6,10 @@ export default function SeatDetail() {
 
       <div className="w-full h-48 overflow-hidden rounded-lg">
         <img
-          src="/room.jpg" 
+          src="/room.webp" 
           alt="Seat"
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover"
         />
       </div>

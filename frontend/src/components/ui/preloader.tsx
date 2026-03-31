@@ -5,6 +5,8 @@ interface PreloaderProps {
     imageSources?: string[];
     videoSources?: string[];
     pageKey?: string;
+    maxImagesToPreload?: number;
+    fallbackTimeoutMs?: number;
 }
 
 const EMPTY_SOURCES: string[] = [];
@@ -13,6 +15,8 @@ const MIN_VISIBLE_MS = 500;
 const RESOURCE_TIMEOUT_MS = 12000;
 const PRELOADED_PAGES_STORAGE_KEY = "biva-preloaded-pages-v1";
 const DEFAULT_PAGE_KEY = "route:/";
+const DEFAULT_MAX_IMAGES = 2;
+const DEFAULT_FALLBACK_TIMEOUT_MS = 3000;
 
 function resolvePageKey(pageKey?: string) {
     const trimmed = pageKey?.trim();
@@ -31,6 +35,12 @@ function resolvePageKey(pageKey?: string) {
 function sleep(duration: number) {
     return new Promise<void>((resolve) => {
         window.setTimeout(resolve, duration);
+    });
+}
+
+function fallbackTimeout(ms: number) {
+    return new Promise<void>((resolve) => {
+        window.setTimeout(resolve, ms);
     });
 }
 
@@ -184,6 +194,8 @@ export default function Preloader({
     imageSources = EMPTY_SOURCES,
     videoSources = EMPTY_SOURCES,
     pageKey,
+    maxImagesToPreload = DEFAULT_MAX_IMAGES,
+    fallbackTimeoutMs = DEFAULT_FALLBACK_TIMEOUT_MS,
 }: PreloaderProps) {
     const resolvedPageKey = resolvePageKey(pageKey);
 
@@ -197,11 +209,13 @@ export default function Preloader({
         const uniqueImages = [...new Set(imageSources.filter(Boolean))];
         const uniqueVideos = [...new Set(videoSources.filter(Boolean))];
 
+        const limitedImages = uniqueImages.slice(0, maxImagesToPreload);
+
         return [
-            ...uniqueImages.map((src) => ({ type: "image" as const, src })),
+            ...limitedImages.map((src) => ({ type: "image" as const, src })),
             ...uniqueVideos.map((src) => ({ type: "video" as const, src })),
         ];
-    }, [imageSources, videoSources]);
+    }, [imageSources, videoSources, maxImagesToPreload]);
 
     useEffect(() => {
         const preloaded = isPagePreloaded(resolvedPageKey);
@@ -250,15 +264,17 @@ export default function Preloader({
                 return;
             }
 
-            await Promise.allSettled(
-                resources.map((resource) => {
-                    if (resource.type === "video") {
-                        return preloadVideo(resource.src);
-                    }
+            const preloadPromises = resources.map((resource) => {
+                if (resource.type === "video") {
+                    return preloadVideo(resource.src);
+                }
 
-                    return preloadImage(resource.src);
-                }),
-            );
+                return preloadImage(resource.src);
+            });
+
+            const preloadAll = Promise.allSettled(preloadPromises);
+
+            await Promise.race([preloadAll, fallbackTimeout(fallbackTimeoutMs)]);
 
             if (!cancelled) {
                 await finishLoading();
@@ -273,7 +289,7 @@ export default function Preloader({
                 window.clearTimeout(hideTimer);
             }
         };
-    }, [hasLoadedPage, isLoading, resolvedPageKey, resources]);
+    }, [hasLoadedPage, isLoading, resolvedPageKey, resources, fallbackTimeoutMs]);
 
     useEffect(() => {
         if (!visible) {

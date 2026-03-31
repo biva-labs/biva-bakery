@@ -82,7 +82,7 @@ export default function BookingConfirmation() {
             const response = await allBookingsMutation.mutateAsync({
                 email: emailToFetch.trim(),
             });
-            console.log(response);
+            // console.log(response);
             setBookingsData(response.data.data);
         } catch (error) {
             console.error("Error fetching bookings:", error);

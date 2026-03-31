@@ -18,7 +18,7 @@ export function useAnnouncements() {
 					// https://biva-bakery-backend.onrender.com/announcements
 				);
 
-				console.log("RESPONSE", response);
+				// console.log("RESPONSE", response);
 
 				return response.data.data;
 			} catch (error: any) {

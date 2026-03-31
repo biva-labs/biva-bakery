@@ -124,10 +124,10 @@ app.post("/wh", async (c) => {
 	if (event.event === "payment.captured") {
 		const { payload } = event;
 		const payment = payload.payment.entity;
-		console.log("Payment captured:", payment);
+		// console.log("Payment captured:", payment);
 		// Handle payment captured logic here
 	} else {
-		console.log("Unhandled event:", event.event);
+		// console.log("Unhandled event:", event.event);
 	}
 
 	return c.json({ message: "Event processed" });

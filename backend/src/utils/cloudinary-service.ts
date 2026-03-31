@@ -6,256 +6,260 @@ import streamifier from "streamifier";
 dotenv.config();
 
 export type UploadFileResult = {
-  secure_url?: string; // https URL for delivery (if available)
-  url?: string; // fallback url
-  public_id: string;
-  resource_type: string; // 'image' | 'video' | 'raw' | etc.
-  bytes?: number;
-  mime_type?: string | null;
-  original_filename?: string | null;
-  raw?: UploadApiResponse;
-  optimized_url?: string;
+	secure_url?: string; // https URL for delivery (if available)
+	url?: string; // fallback url
+	public_id: string;
+	resource_type: string; // 'image' | 'video' | 'raw' | etc.
+	bytes?: number;
+	mime_type?: string | null;
+	original_filename?: string | null;
+	raw?: UploadApiResponse;
+	optimized_url?: string;
 };
 
 export type UploadOptions = {
-  folder?: string;
-  public_id?: string;
-  tags?: string | string[];
-  context?: Record<string, string>;
-  maxSizeBytes?: number;
-  // If you want a strict whitelist, provide MIME types here (optional)
-  allowedMimeTypes?: string[];
-  // Force resource type (rarely needed). If not provided we use 'auto'.
-  forceResourceType?: "auto" | "image" | "video" | "raw";
+	folder?: string;
+	public_id?: string;
+	tags?: string | string[];
+	context?: Record<string, string>;
+	maxSizeBytes?: number;
+	// If you want a strict whitelist, provide MIME types here (optional)
+	allowedMimeTypes?: string[];
+	// Force resource type (rarely needed). If not provided we use 'auto'.
+	forceResourceType?: "auto" | "image" | "video" | "raw";
 };
 
 export class CloudinaryService {
-  constructor() {
-    cloudinary.config({
-      cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
-      api_key: process.env.CLOUDINARY_API_KEY!,
-      api_secret: process.env.CLOUDINARY_API_SECRET!,
-      secure: true,
-    });
-  }
+	constructor() {
+		cloudinary.config({
+			cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+			api_key: process.env.CLOUDINARY_API_KEY!,
+			api_secret: process.env.CLOUDINARY_API_SECRET!,
+			secure: true,
+		});
+	}
 
-  private getOptimizedUrl(resource: any): string {
-    return cloudinary.url(resource.public_id, {
-      resource_type: resource.resource_type,
-      secure: true,
-      transformation: [{ fetch_format: resource.resource_type === "video" ? "webm" : "webp", quality: "auto:best" }],
-    });
-  }
+	private getOptimizedUrl(resource: any): string {
+		return cloudinary.url(resource.public_id, {
+			resource_type: resource.resource_type,
+			secure: true,
+			transformation: [
+				{
+					fetch_format:
+						resource.resource_type === "video" ? "webm" : "webp",
+					quality: "auto:best",
+				},
+			],
+		});
+	}
 
-  async listImages(folderPrefix = "", dynamicMode = false): Promise<any[]> {
-    let resources: any[] = [];
-    let nextCursor: string | undefined = undefined;
+	async listImages(folderPrefix = "", dynamicMode = false): Promise<any[]> {
+		let resources: any[] = [];
+		let nextCursor: string | undefined = undefined;
 
-    if (dynamicMode) {
-      do {
-        const response: any = await cloudinary.api.resources_by_asset_folder(
-          folderPrefix,
-          {
-            max_results: 500,
-            next_cursor: nextCursor,
-          },
-        );
-        resources.push(...(response.resources || []));
-        nextCursor = response.next_cursor;
-      } while (nextCursor);
-    }
+		if (dynamicMode) {
+			do {
+				const response: any =
+					await cloudinary.api.resources_by_asset_folder(folderPrefix, {
+						max_results: 500,
+						next_cursor: nextCursor,
+					});
+				resources.push(...(response.resources || []));
+				nextCursor = response.next_cursor;
+			} while (nextCursor);
+		}
 
-    return resources.map((res) => ({
-      ...res,
-      optimized_url: this.getOptimizedUrl(res),
-    }));
-  }
+		return resources.map((res) => ({
+			...res,
+			optimized_url: this.getOptimizedUrl(res),
+		}));
+	}
 
-  async listImagesByTags(tags: string[]): Promise<any[]> {
-    try {
-      const tagsExpression = tags.map((tag) => `${tag}`).join(" OR ");
-      const expression = `tags=(${tagsExpression})`;
+	async listImagesByTags(tags: string[]): Promise<any[]> {
+		try {
+			const tagsExpression = tags.map((tag) => `${tag}`).join(" OR ");
+			const expression = `tags=(${tagsExpression})`;
 
-      const result = await cloudinary.search
-        .expression(expression)
-        .with_field("tags")
-        .with_field("context")
-        .max_results(100)
-        .execute();
+			const result = await cloudinary.search
+				.expression(expression)
+				.with_field("tags")
+				.with_field("context")
+				.max_results(100)
+				.execute();
 
-      return result.resources.map((res) => ({
-        ...res,
-        optimized_url: this.getOptimizedUrl(res),
-      }));
-    } catch (error) {
-      console.error("Error fetching images by tags:", error);
-      return [];
-    }
-  }
+			return result.resources.map((res) => ({
+				...res,
+				optimized_url: this.getOptimizedUrl(res),
+			}));
+		} catch (error) {
+			console.error("Error fetching images by tags:", error);
+			return [];
+		}
+	}
 
-  generateUrl(
-    publicId: string,
-    options?: { width?: number; height?: number; crop?: string },
-  ): string {
-    return cloudinary.url(publicId, options);
-  }
+	generateUrl(
+		publicId: string,
+		options?: { width?: number; height?: number; crop?: string },
+	): string {
+		return cloudinary.url(publicId, options);
+	}
 
-  async listByMetadata(
-    metadataKey: string,
-    metadataValue: string,
-    folder: string,
-  ): Promise<any[]> {
-    try {
-      console.log(metadataKey, metadataValue);
-      const expr = `context.${metadataKey}=${metadataValue}`;
+	async listByMetadata(
+		metadataKey: string,
+		metadataValue: string,
+		folder: string,
+	): Promise<any[]> {
+		try {
+			// console.log(metadataKey, metadataValue);
+			const expr = `context.${metadataKey}=${metadataValue}`;
 
-      const exp = `folder:"${folder}" AND ${expr}`;
+			const exp = `folder:"${folder}" AND ${expr}`;
 
-      const res = await cloudinary.search
-        .expression(exp)
-        .with_field("context")
-        .max_results(100)
-        .execute();
+			const res = await cloudinary.search
+				.expression(exp)
+				.with_field("context")
+				.max_results(100)
+				.execute();
 
-      return res.resources.map((res) => ({
-        ...res,
-        optimized_url: this.getOptimizedUrl(res),
-      }));
-    } catch (err: any) {
-      console.error("Error fetching metadata ", err.message);
-      return [];
-    }
-  }
+			return res.resources.map((res) => ({
+				...res,
+				optimized_url: this.getOptimizedUrl(res),
+			}));
+		} catch (err: any) {
+			console.error("Error fetching metadata ", err.message);
+			return [];
+		}
+	}
 
-  async uploadMedia(
-    source: File | Buffer | ArrayBuffer | Uint8Array | string,
-    options: UploadOptions = {},
-  ) {
-    const {
-      folder,
-      public_id,
-      tags,
-      allowedMimeTypes,
-      context,
-      forceResourceType,
-      maxSizeBytes,
-    } = options;
+	async uploadMedia(
+		source: File | Buffer | ArrayBuffer | Uint8Array | string,
+		options: UploadOptions = {},
+	) {
+		const {
+			folder,
+			public_id,
+			tags,
+			allowedMimeTypes,
+			context,
+			forceResourceType,
+			maxSizeBytes,
+		} = options;
 
-    const toBuffer = async (
-      src: typeof source,
-    ): Promise<{
-      buffer?: Buffer;
-      detectedMime?: string | null;
-      originalName?: string | null;
-    }> => {
-      if (typeof src === "string") {
-        return { buffer: undefined };
-      }
+		const toBuffer = async (
+			src: typeof source,
+		): Promise<{
+			buffer?: Buffer;
+			detectedMime?: string | null;
+			originalName?: string | null;
+		}> => {
+			if (typeof src === "string") {
+				return { buffer: undefined };
+			}
 
-      if (Buffer.isBuffer(src)) {
-        const detected = await fileTypeFromBuffer(src);
-        return { buffer: src, detectedMime: detected?.mime ?? null };
-      }
+			if (Buffer.isBuffer(src)) {
+				const detected = await fileTypeFromBuffer(src);
+				return { buffer: src, detectedMime: detected?.mime ?? null };
+			}
 
-      if (typeof (src as any)?.arrayBuffer === "function") {
-        const arr = await (src as any).arrayBuffer();
-        const buf = Buffer.from(arr);
-        const detected = await fileTypeFromBuffer(buf);
-        const name = (src as any)?.name ?? null;
-        return {
-          buffer: buf,
-          detectedMime: detected?.mime ?? null,
-          originalName: name,
-        };
-      }
+			if (typeof (src as any)?.arrayBuffer === "function") {
+				const arr = await (src as any).arrayBuffer();
+				const buf = Buffer.from(arr);
+				const detected = await fileTypeFromBuffer(buf);
+				const name = (src as any)?.name ?? null;
+				return {
+					buffer: buf,
+					detectedMime: detected?.mime ?? null,
+					originalName: name,
+				};
+			}
 
-      if (src instanceof ArrayBuffer) {
-        const buf = Buffer.from(new Uint8Array(src));
-        const detected = await fileTypeFromBuffer(buf);
-        return { buffer: buf, detectedMime: detected?.mime ?? null };
-      }
+			if (src instanceof ArrayBuffer) {
+				const buf = Buffer.from(new Uint8Array(src));
+				const detected = await fileTypeFromBuffer(buf);
+				return { buffer: buf, detectedMime: detected?.mime ?? null };
+			}
 
-      if (src instanceof Uint8Array) {
-        const buf = Buffer.from(src);
-        const detected = await fileTypeFromBuffer(buf);
-        return { buffer: buf, detectedMime: detected?.mime ?? null };
-      }
+			if (src instanceof Uint8Array) {
+				const buf = Buffer.from(src);
+				const detected = await fileTypeFromBuffer(buf);
+				return { buffer: buf, detectedMime: detected?.mime ?? null };
+			}
 
-      return { buffer: undefined };
-    };
+			return { buffer: undefined };
+		};
 
-    const resource_type = forceResourceType ?? "auto";
+		const resource_type = forceResourceType ?? "auto";
 
-    const uploadOpts: Record<string, any> = {
-      resource_type,
-      folder,
-    };
+		const uploadOpts: Record<string, any> = {
+			resource_type,
+			folder,
+		};
 
-    if (public_id) uploadOpts.public_id = public_id;
-    if (tags) uploadOpts.tags = tags;
-    if (context) uploadOpts.context = context;
+		if (public_id) uploadOpts.public_id = public_id;
+		if (tags) uploadOpts.tags = tags;
+		if (context) uploadOpts.context = context;
 
-    const { buffer, detectedMime, originalName } = await toBuffer(source);
+		const { buffer, detectedMime, originalName } = await toBuffer(source);
 
-    if (!buffer || buffer.length === 0) {
-      throw new Error(
-        `Empty file: Cannot upload an empty file. Source type: ${typeof source}`,
-      );
-    }
+		if (!buffer || buffer.length === 0) {
+			throw new Error(
+				`Empty file: Cannot upload an empty file. Source type: ${typeof source}`,
+			);
+		}
 
-    if (
-      typeof maxSizeBytes === "number" &&
-      buffer &&
-      buffer.length > maxSizeBytes
-    ) {
-      throw new Error(
-        `File too large: ${buffer.length} bytes (max ${maxSizeBytes})`,
-      );
-    }
+		if (
+			typeof maxSizeBytes === "number" &&
+			buffer &&
+			buffer.length > maxSizeBytes
+		) {
+			throw new Error(
+				`File too large: ${buffer.length} bytes (max ${maxSizeBytes})`,
+			);
+		}
 
-    if (
-      allowedMimeTypes &&
-      detectedMime &&
-      !allowedMimeTypes.includes(detectedMime)
-    ) {
-      throw new Error(`MIME type not allowed: ${detectedMime}`);
-    }
+		if (
+			allowedMimeTypes &&
+			detectedMime &&
+			!allowedMimeTypes.includes(detectedMime)
+		) {
+			throw new Error(`MIME type not allowed: ${detectedMime}`);
+		}
 
-    let result: UploadApiResponse;
+		let result: UploadApiResponse;
 
-    try {
-      if (buffer) {
-        result = await new Promise((resolve, reject) => {
-          const uploader = cloudinary.uploader.upload_stream(
-            uploadOpts,
-            (err, res) => {
-              if (err) return reject(err);
-              resolve(res as UploadApiResponse);
-            },
-          );
-          streamifier.createReadStream(buffer).pipe(uploader);
-        });
-      } else {
-        throw new Error(
-          "Unsupported source type: cannot convert to buffer or upload a string URL",
-        );
-      }
-    } catch (err: any) {
-      const message = err?.message ?? String(err);
-      throw new Error(`Cloudinary upload failed: ${message}`);
-    }
+		try {
+			if (buffer) {
+				result = await new Promise((resolve, reject) => {
+					const uploader = cloudinary.uploader.upload_stream(
+						uploadOpts,
+						(err, res) => {
+							if (err) return reject(err);
+							resolve(res as UploadApiResponse);
+						},
+					);
+					streamifier.createReadStream(buffer).pipe(uploader);
+				});
+			} else {
+				throw new Error(
+					"Unsupported source type: cannot convert to buffer or upload a string URL",
+				);
+			}
+		} catch (err: any) {
+			const message = err?.message ?? String(err);
+			throw new Error(`Cloudinary upload failed: ${message}`);
+		}
 
-    const out: UploadFileResult = {
-      secure_url: result.secure_url,
-      url: result.url,
-      public_id: result.public_id,
-      resource_type: result.resource_type,
-      bytes: result.bytes,
-      mime_type: detectedMime ?? (result.format ? `${result.format}` : null),
-      original_filename: result.original_filename ?? originalName ?? null,
-      raw: result,
-      optimized_url: this.getOptimizedUrl(result),
-    };
-    return out;
-  }
+		const out: UploadFileResult = {
+			secure_url: result.secure_url,
+			url: result.url,
+			public_id: result.public_id,
+			resource_type: result.resource_type,
+			bytes: result.bytes,
+			mime_type: detectedMime ?? (result.format ? `${result.format}` : null),
+			original_filename: result.original_filename ?? originalName ?? null,
+			raw: result,
+			optimized_url: this.getOptimizedUrl(result),
+		};
+		return out;
+	}
 }

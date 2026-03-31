@@ -50,7 +50,7 @@ export default function usePay({ onSuccess, onError }: UsePayProps = {}) {
             }
 
             // console.log("PAYMENT PAYLOAD USERS: ", users);
-            console.log("userId --> ", users);
+            // console.log("userId --> ", users);
             const options = {
                 key: razorpayKey,
                 amount: order.amount,
@@ -98,7 +98,7 @@ export default function usePay({ onSuccess, onError }: UsePayProps = {}) {
                 },
                 modal: {
                     ondismiss: function () {
-                        console.log("Payment modal was closed by user");
+                        // console.log("Payment modal was closed by user");
                         setIsProcessing(false);
                     },
                 },

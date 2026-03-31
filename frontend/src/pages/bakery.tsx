@@ -29,33 +29,16 @@ export default function Bakery() {
 
 	useEffect(() => {
 		if (data) {
-			console.log(data.data);
+			// console.log(data.data);
 			setBakeryHero(data.data.hero);
 			setBakeryItems(data.data.groupedItems);
 			setBakeryGallery(data.data.gallery);
 		}
 	}, [data]);
 
-	const imageSources = useMemo(
-		() => [
-			...bakeryHero.map((image) => image.url),
-			...Object.values(bakeryItems).flatMap((items) =>
-				items.map((item) =>
-					Array.isArray(item.url) ? item.url[0] : item.url,
-				),
-			),
-			...bakeryGallery.map((image) => image.url),
-			"/patties.webp",
-			"/pastries.webp",
-			"/birthday-cakes.webp",
-			"/eggless-cakes.webp",
-			"/bento-cakes.webp",
-			"/muffins.webp",
-			"/sweets.webp",
-			"/cakes.webp",
-			"/cookies.webp",
-		],
-		[bakeryHero, bakeryItems, bakeryGallery],
+	const criticalImageSources = useMemo(
+		() => [...bakeryHero.map((image) => image.url)],
+		[bakeryHero],
 	);
 
 	if (error) {
@@ -70,12 +53,12 @@ export default function Bakery() {
 		<div className="outfit">
 			<Preloader
 				isLoading={isLoading}
-				imageSources={imageSources}
+				imageSources={criticalImageSources}
 				pageKey="bakery"
 			/>
 			<div className="mx-auto px-4 lg:mr-0">
 				<Hero
-					heightClasses="h-[45vh] lg:h-[90vh]"
+					heightClasses="h-[45vh] lg:h-[95vh]"
 					title={
 						<div className="text-center ">
 							Fresh from the oven, <br /> straight to your hearts
