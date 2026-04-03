@@ -6,5 +6,7 @@ export type CardImagesType = {
     room_number: string | undefined;
     desc: string | undefined;
     price: string | undefined;
+    onSale?: boolean;
+    saleValue?: number | null;
     onAction?: () => void | Promise<void> | undefined;
 };

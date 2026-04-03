@@ -90,6 +90,8 @@ export const adminHotelRoomReservation = pgTable(
         typeOfRoom: text("type_of_room").notNull(),
         occupancy: integer("occupancy").notNull(),
         price: integer("price").notNull(),
+        onSale: boolean("on_sale").default(false).notNull(),
+        saleValue: integer("sale_value"),
         roomImage: text("room-image").notNull(),
         totalRooms: text("total_rooms").default("1").notNull(),
     },

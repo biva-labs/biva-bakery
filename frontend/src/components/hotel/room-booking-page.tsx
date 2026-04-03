@@ -30,6 +30,10 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
 	const url = cardData?.url;
 	const price = cardData?.price ?? "0";
 	const room_type = cardData?.room_type ?? "";
+	const onSale = cardData?.onSale ?? false;
+	const saleValue = cardData?.saleValue ?? null;
+
+	const effectivePrice = onSale && saleValue != null ? saleValue : parseInt(price);
 
 	const images = useMemo(
 		() => (Array.isArray(url) ? url : url ? [url] : []),
@@ -41,7 +45,7 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
 		if (isPending || isProcessing) return "Processing...";
 
 		const guests = parseInt(data.total_people);
-		const priceInt = parseInt(price);
+		const priceInt = effectivePrice;
 		const rooms = parseInt(data.total_rooms);
 		const days = parseInt(data.total_days);
 
@@ -56,7 +60,7 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
 		data.total_people,
 		data.total_rooms,
 		data.total_days,
-		price,
+		effectivePrice,
 	]);
 
 	const handleBookAndPay = useCallback(() => {
@@ -178,6 +182,20 @@ export const RoomBookingPage = memo(function RoomBookingPage() {
 				<Form type={room_type} />
 
 				<Separator />
+
+				{onSale && saleValue != null && (
+					<div className="flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
+						<span className="text-lg text-gray-400 line-through">
+							₹{price}
+						</span>
+						<span className="text-2xl font-bold text-green-700">
+							₹{saleValue}
+						</span>
+						<span className="text-sm font-semibold bg-red-100 text-red-700 px-3 py-1 rounded-full">
+							ON SALE
+						</span>
+					</div>
+				)}
 
 				<Button
 					onClick={handleBookAndPay}

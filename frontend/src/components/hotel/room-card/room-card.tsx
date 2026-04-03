@@ -16,6 +16,8 @@ export default function RoomCard({
 	title,
 	desc,
 	price,
+	onSale,
+	saleValue,
 }: CardImagesType) {
 	const [index, setIndex] = useState(0);
 	const [showFullDesc, setShowFullDesc] = useState(false);
@@ -87,11 +89,27 @@ export default function RoomCard({
 							</button>
 						)}
 					</div>
-					{price && (
-						<div className="text-sm font-semibold text-[#002a3a] mt-2">
-							₹{price}
-						</div>
-					)}
+				{price && (
+					<div className="mt-2 flex items-center gap-2 flex-wrap">
+						{onSale && saleValue != null ? (
+							<>
+								<span className="text-sm text-gray-400 line-through">
+									₹{price}
+								</span>
+								<span className="text-lg font-bold text-green-700">
+									₹{saleValue}
+								</span>
+								<span className="text-xs font-semibold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
+									SALE
+								</span>
+							</>
+						) : (
+							<div className="text-sm font-semibold text-[#002a3a]">
+								₹{price}
+							</div>
+						)}
+					</div>
+				)}
 				</div>
 			</CardContent>
 

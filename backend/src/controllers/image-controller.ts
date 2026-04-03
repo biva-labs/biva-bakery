@@ -4,6 +4,9 @@ import {
 	type UploadFileResult,
 } from "../utils/cloudinary-service.ts";
 import type { Blob } from "buffer";
+import { db } from "../db/index.ts";
+import { adminHotelRoomReservation } from "../db/schema.ts";
+import { inArray } from "drizzle-orm";
 
 const MAX_BYTES = 5 * 1024 * 1024;
 
@@ -32,6 +35,8 @@ type GroupedRooms = {
 	price: string;
 	room_id: string | undefined;
 	room_type: string | undefined;
+	onSale?: boolean;
+	saleValue?: number | null;
 };
 
 type HotelHero = {
@@ -120,6 +125,32 @@ export const getImage = async (c: Context) => {
 				position: itm.context?.position,
 			}));
 
+			const roomTypes = rooms
+				.map((r) => r.room_type)
+				.filter((t): t is string => !!t);
+
+			let saleData: Record<string, { onSale: boolean; saleValue: number | null }> = {};
+			if (roomTypes.length > 0) {
+				const dbRooms = await db
+					.select({
+						typeOfRoom: adminHotelRoomReservation.typeOfRoom,
+						onSale: adminHotelRoomReservation.onSale,
+						saleValue: adminHotelRoomReservation.saleValue,
+					})
+					.from(adminHotelRoomReservation)
+					.where(inArray(adminHotelRoomReservation.typeOfRoom, roomTypes));
+
+				saleData = Object.fromEntries(
+					dbRooms.map((r) => [r.typeOfRoom, { onSale: r.onSale, saleValue: r.saleValue }])
+				);
+			}
+
+			const roomsWithSale = rooms.map((r) => ({
+				...r,
+				onSale: r.room_type ? saleData[r.room_type]?.onSale ?? false : false,
+				saleValue: r.room_type ? saleData[r.room_type]?.saleValue ?? null : null,
+			}));
+
 			return c.json({
 				data: {
 					hero: hero,
@@ -140,7 +171,7 @@ export const getImage = async (c: Context) => {
 						url: img.optimized_url,
 						position: img.context?.position,
 					})),
-					rooms: rooms,
+					rooms: roomsWithSale,
 					banquet: banquet,
 				},
 			});

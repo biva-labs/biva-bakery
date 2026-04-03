@@ -93,7 +93,11 @@ export const reserveHotelRoom = async (c: Context) => {
     const room_type = (body["type"] as string) ?? "";
 
     const room_price = await db
-        .select({ price: adminHotelRoomReservation.price })
+        .select({
+            price: adminHotelRoomReservation.price,
+            onSale: adminHotelRoomReservation.onSale,
+            saleValue: adminHotelRoomReservation.saleValue,
+        })
         .from(adminHotelRoomReservation)
         .where(eq(adminHotelRoomReservation.typeOfRoom, room_type))
         .limit(1);
@@ -102,8 +106,13 @@ export const reserveHotelRoom = async (c: Context) => {
         return c.json({ error: "Room type not found" }, 404);
     }
 
+    const effectivePrice =
+        room_price[0].onSale && room_price[0].saleValue != null
+            ? room_price[0].saleValue
+            : room_price[0].price;
+
     const total_amt =
-        room_price[0].price * Number(total_rooms) * Number(total_days);
+        effectivePrice * Number(total_rooms) * Number(total_days);
 
     const [newReservation] = await db
         .insert(hotelRoomReservation)
