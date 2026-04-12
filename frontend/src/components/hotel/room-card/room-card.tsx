@@ -58,7 +58,7 @@ export default function RoomCard({
 					))}
 			</div>
 
-			<CardContent className="flex-1 flex flex-col justify-between p-4 pb-16 sm:pb-14">
+			<CardContent className="flex-1 flex flex-col justify-between p-4">
 				<div className="flex-1">
 					<CardTitle className="text-base sm:text-lg font-semibold mb-2 line-clamp-2">
 						{title
@@ -89,44 +89,47 @@ export default function RoomCard({
 							</button>
 						)}
 					</div>
-				{price && (
-					<div className="mt-2 flex items-center gap-2 flex-wrap">
-						{onSale && saleValue != null ? (
-							<>
-								<span className="text-sm text-gray-400 line-through">
+				</div>
+
+				<div className="mt-3 flex items-end justify-between gap-3">
+					{price && (
+						<div className="min-h-10 flex flex-col justify-end">
+							{onSale && saleValue != null ? (
+								<>
+									<div className="flex items-center gap-2">
+										<span className="text-sm text-gray-400 line-through">
+											₹{price}
+										</span>
+										<span className="text-xs font-semibold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
+											SALE
+										</span>
+									</div>
+									<div className="text-lg font-bold text-green-700 text-right">
+										₹{saleValue}
+									</div>
+								</>
+							) : (
+								<div className="text-sm font-semibold text-[#002a3a]">
 									₹{price}
-								</span>
-								<span className="text-lg font-bold text-green-700">
-									₹{saleValue}
-								</span>
-								<span className="text-xs font-semibold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
-									SALE
-								</span>
-							</>
-						) : (
-							<div className="text-sm font-semibold text-[#002a3a]">
-								₹{price}
-							</div>
-						)}
-					</div>
-				)}
+								</div>
+							)}
+						</div>
+					)}
+
+					<Button
+						onClick={() => navigate(`/booking/${title}`)}
+						variant="default"
+						size="sm"
+						className="rounded-full px-4 py-2 nexa bg-[#002a3a]"
+					>
+						Book
+					</Button>
 				</div>
 			</CardContent>
 
-			<div className="absolute sm:bottom-12 bottom-15 right-3   sm:right-4">
-				<Button
-					onClick={() => navigate(`/booking/${title}`)}
-					variant="default"
-					size="sm"
-					className="rounded-full px-4 py-2 nexa bg-[#002a3a]"
-				>
-					Book
-				</Button>
-
-				{/*{title && (
-                    <RoomBookingPage url={url} type={title} price={price} />
-                )}*/}
-			</div>
+			{/*{title && (
+                <RoomBookingPage url={url} type={title} price={price} />
+            )}*/}
 		</Card>
 	);
 }

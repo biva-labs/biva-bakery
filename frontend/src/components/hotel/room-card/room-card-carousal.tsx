@@ -43,7 +43,15 @@ export default function RoomCardCarousel({ rooms }: RoomCardCarouselProps) {
                             const room = roomTypes[roomType];
                             if (!room) return null;
 
-                            const { desc, price, url, public_id, room_number } =
+                            const {
+                                desc,
+                                price,
+                                url,
+                                public_id,
+                                room_number,
+                                onSale,
+                                saleValue,
+                            } =
                                 room;
 
                             return (
@@ -62,6 +70,8 @@ export default function RoomCardCarousel({ rooms }: RoomCardCarouselProps) {
                                             }
                                             desc={desc}
                                             price={price}
+                                            onSale={onSale}
+                                            saleValue={saleValue}
                                         />
                                     </div>
                                 </CarouselItem>
