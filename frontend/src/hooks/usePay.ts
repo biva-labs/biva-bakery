@@ -73,6 +73,8 @@ export default function usePay({ onSuccess, onError }: UsePayProps = {}) {
                                     paymentResponse.razorpay_order_id,
                                 razorpay_signature:
                                     paymentResponse.razorpay_signature,
+                                users,
+                                type: eventType,
                             },
                         );
 

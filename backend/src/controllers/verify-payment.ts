@@ -1,12 +1,18 @@
 import { createHmac } from "crypto";
 import { Hono } from "hono";
+import { updateEventAfterPayment } from "../db/index.ts";
 
 const app = new Hono();
 
 app.post("/", async (c) => {
 	try {
-		const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-			await c.req.json();
+		const {
+			razorpay_order_id,
+			razorpay_payment_id,
+			razorpay_signature,
+			users,
+			type,
+		} = await c.req.json();
 		const body = `${razorpay_order_id}|${razorpay_payment_id}`;
 		const secret = process.env.RAZORPAY_SECRET!;
 
@@ -15,7 +21,10 @@ app.post("/", async (c) => {
 			.digest("hex");
 
 		if (expectedSignature === razorpay_signature) {
-			// console.log('Payment verified successfully for order:', razorpay_order_id);
+			if (type === "events" && Array.isArray(users) && users.length > 0) {
+				await updateEventAfterPayment(users);
+			}
+
 			return c.json({
 				status: "success",
 				message: "Payment verified successfully",

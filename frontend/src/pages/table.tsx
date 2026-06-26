@@ -197,20 +197,17 @@ export default function Table() {
                             {isPending || isProcessing
                                 ? "Processing..."
                                 : (() => {
-                                      const rawGuests = parseInt(
-                                          data.number_of_guest,
-                                      );
+                                    const rawGuests = parseInt(
+                                        data.number_of_guest,
+                                    ) || 0;
 
-                                      // If no guest selected, null/undefined/NaN/0 → default to 1
-                                      const guests =
-                                          rawGuests && rawGuests > 0
-                                              ? rawGuests
-                                              : 1;
+                                    // +1 for the booker
+                                    const totalPeople = rawGuests + 1;
 
-                                      const price = parseInt(
-                                          eventData.price || "0",
-                                      );
-                                      const total = guests * price;
+                                    const price = parseInt(
+                                        eventData.price || "0",
+                                    );
+                                    const total = totalPeople * price;
 
                                       return isNaN(total) || price === 0
                                           ? "Pay Now"

@@ -435,6 +435,7 @@ const Announcements: React.FC<{ onBannerChange: (has: boolean) => void }> = ({
 			try {
 				const res = await axios.get(
 					"https://biva-bakery-backend.onrender.com/announcements",
+					// "http://localhost:/announcements",
 				);
 				// console.log("Fetched announcements:", res.data);
 

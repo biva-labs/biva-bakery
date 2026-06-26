@@ -2,7 +2,7 @@ import "dotenv/config";
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import { foodCourtEventTable, foodCourtTable } from "./schema.ts";
-import { eq, and } from "drizzle-orm";
+import { eq, and, inArray } from "drizzle-orm";
 import {
 	adminHotelRoomReservation,
 	hotelRoomReservation,
@@ -36,13 +36,11 @@ export const insertEvent = async (
 			.insert(foodCourtEventTable)
 			.values(data)
 			.returning();
-		// console.log("----------");
-		// console.log("insterted", inserted);
-		// console.log("---------------");
 		return inserted;
 	} catch (error) {
+		const message = error instanceof Error ? error.message : "Unknown error";
 		console.error("Error inserting event:", error);
-		throw new Error("Failed to book the event.");
+		throw new Error(`Failed to book the event: ${message}`);
 	}
 };
 
@@ -82,6 +80,56 @@ export const updateAfterPayment = async (userId: string) => {
 	} catch (error) {
 		console.error("Error inserting event:", error);
 		throw new Error("Failed to book the event.");
+	}
+};
+
+export const updateEventAfterPayment = async (userIds: number[]) => {
+	try {
+		const res = await db
+			.update(foodCourtEventTable)
+			.set({ paid: true })
+			.where(inArray(foodCourtEventTable.id, userIds))
+			.returning();
+
+		return res;
+	} catch (error) {
+		console.error("Error updating event payment:", error);
+		throw new Error("Failed to update payment status.");
+	}
+};
+
+export const checkEventData = async (email: string) => {
+	try {
+		const result = await db
+			.select()
+			.from(foodCourtEventTable)
+			.where(eq(foodCourtEventTable.email, email));
+
+		if (result.length > 0) {
+			return result;
+		}
+		return false;
+	} catch (err: any) {
+		console.error("Database error:", err);
+		throw err;
+	}
+};
+
+export const checkEventDataByPhone = async (phone_number: string) => {
+	try {
+		const result = await db
+			.select()
+			.from(foodCourtEventTable)
+			.where(eq(foodCourtEventTable.phone_number, phone_number))
+			.limit(1);
+
+		if (result.length > 0) {
+			return result;
+		}
+		return false;
+	} catch (err: any) {
+		console.error("Database error:", err);
+		throw err;
 	}
 };
 

@@ -1,7 +1,7 @@
 import type { Context } from "hono";
 import type { UploadFileResult } from "../utils/cloudinary-service.ts";
 import { uploadImage } from "./image-controller.ts";
-import { insertEvent } from "../db/index.ts";
+import { insertEvent, checkEventData, checkEventDataByPhone } from "../db/index.ts";
 import { db } from "../db/index.ts";
 import { adminEventTable } from "../../drizzle/schema.ts";
 import { eq } from "drizzle-orm";
@@ -18,6 +18,29 @@ interface eventFormData {
 	total_amount: number;
 }
 
+async function uploadWithRetry(
+    file: File,
+    folder: string,
+    maxRetries = 2,
+): Promise<UploadFileResult> {
+    let lastError: Error;
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            return await uploadImage(file, folder);
+        } catch (error) {
+            lastError = error instanceof Error ? error : new Error(String(error));
+            if (attempt < maxRetries) {
+                console.warn(
+                    `Upload attempt ${attempt + 1} failed, retrying...`,
+                    lastError.message,
+                );
+                await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
+            }
+        }
+    }
+    throw lastError!;
+}
+
 export const eventFormData = async (c: Context) => {
 	try {
 		const body = await c.req.parseBody();
@@ -32,6 +55,45 @@ export const eventFormData = async (c: Context) => {
 			.limit(1);
 
 		const ticket_price: number = ticket_price_from_db[0]?.ticket_price;
+
+		const email = body["email"] as string;
+		const phone_number = body["phone_number"] as string;
+
+		const existingBooking = await checkEventData(email);
+		if (existingBooking) {
+			const unpaid = existingBooking.filter((b: any) => !b.paid);
+			if (unpaid.length > 0) {
+				const total_amount = ticket_price * unpaid.length;
+				return c.json(
+					{
+						message: "You have a pending payment. Please complete it.",
+						data: {
+							insertedData: unpaid,
+							total_amount,
+						},
+					},
+					200,
+				);
+			}
+			return c.json(
+				{
+					error:
+						"You have already booked this event. Each user can book only once.",
+				},
+				409,
+			);
+		}
+
+		const existingByPhone = await checkEventDataByPhone(phone_number);
+		if (existingByPhone) {
+			return c.json(
+				{
+					error:
+						"This phone number is already associated with a booking.",
+				},
+				409,
+			);
+		}
 
 		const guests = JSON.parse(body["guest"] as string);
 		const guestImages = body["guest_images[]"];
@@ -70,7 +132,7 @@ export const eventFormData = async (c: Context) => {
 		try {
 			// Upload all documents
 			const uploadPromises = documents.map((doc) =>
-				uploadImage(doc, "officialDocumentImageForVisitors"),
+				uploadWithRetry(doc, "officialDocumentImageForVisitors"),
 			);
 			const uploadResults: UploadFileResult[] =
 				await Promise.all(uploadPromises);
@@ -143,8 +205,9 @@ export const eventFormData = async (c: Context) => {
 				201,
 			);
 		} catch (error) {
+			const message = error instanceof Error ? error.message : "Image upload failed";
 			console.error("Image upload failed:", error);
-			return c.json({ error: "Image upload failed" }, 500);
+			return c.json({ error: message }, 500);
 		}
 	} catch (error) {
 		console.error("Error processing form:", error);
