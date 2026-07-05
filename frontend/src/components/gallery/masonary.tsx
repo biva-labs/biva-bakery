@@ -20,16 +20,18 @@ export default function GalleryMasonry({ allImages }: GalleryMasonryProps) {
     if (allImages.length === 0) return;
 
     const containerHeight = containerRef.current?.offsetHeight || 800;
-    const rowHeight = 200;
-    const rowsNeeded = Math.ceil(containerHeight / rowHeight) + 2;
+    const avgImageHeight = 200;
+    const targetHeightPerColumn = containerHeight * 2;
+    const imagesPerColumnNeeded = Math.ceil(targetHeightPerColumn / avgImageHeight);
+    const totalImagesNeeded = imagesPerColumnNeeded * columnCount;
+    const repeatCount = Math.max(2, Math.ceil(totalImagesNeeded / allImages.length));
 
-    const repeatCount = Math.ceil(rowsNeeded / allImages.length);
     const duplicated: Image[] = [];
     for (let i = 0; i < repeatCount; i++) {
       duplicated.push(...allImages);
     }
     setLoopImages(duplicated);
-  }, [allImages]);
+  }, [allImages, columnCount]);
 
   useEffect(() => {
     const handleResize = () => {
