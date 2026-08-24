@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { instance } from "@/utils/axios";
-import axios from "axios";
 import type { AnnouncementData } from "@/components/announcement-templates";
 
 interface AnnouncementResponse extends AnnouncementData {
@@ -13,10 +12,7 @@ export function useAnnouncements() {
 		queryKey: ["announcements"],
 		queryFn: async (): Promise<AnnouncementResponse[]> => {
 			try {
-				const response = await axios.get(
-					// "http://localhost:4000/announcements",
-					"https://biva-bakery-backend.onrender.com/announcements",
-				);
+				const response = await instance.get("/announcements");
 
 				// console.log("RESPONSE", response);
 

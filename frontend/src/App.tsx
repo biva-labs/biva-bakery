@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Toaster } from "@/components/ui/sonner";
-import axios from "axios";
+import { instance } from "@/utils/axios";
 import { X, Bell } from "lucide-react";
 
 import Main from "./layout/main";
@@ -433,10 +433,7 @@ const Announcements: React.FC<{ onBannerChange: (has: boolean) => void }> = ({
 	useEffect(() => {
 		const fetchAnnouncements = async () => {
 			try {
-				const res = await axios.get(
-					"https://biva-bakery-backend.onrender.com/announcements",
-					// "http://localhost:/announcements",
-				);
+				const res = await instance.get("/announcements");
 				// console.log("Fetched announcements:", res.data);
 
 				if (res.data?.data && Array.isArray(res.data.data)) {

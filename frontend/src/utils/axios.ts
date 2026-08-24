@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const instance = axios.create({
 	// baseURL: "http://localhost:4000",
-	baseURL: "https://biva-bakery-backend.onrender.com",
+	baseURL:
+		import.meta.env.VITE_API_URL ??
+		"https://biva-bakery-server-production.up.railway.app",
 });
-
-// https://biva-bakery-backend.onrender.com
