@@ -1,13 +1,13 @@
-FROM node:20-alpine
+FROM oven/bun:1-alpine
 
 WORKDIR /app
 
-COPY backend/package.json backend/package-lock.json* backend/bun.lock* ./
-RUN npm ci
+COPY backend/package.json backend/bun.lock ./
+RUN bun install
 
 COPY backend/ .
 
 ENV PORT=4000
 EXPOSE 4000
 
-CMD ["npx", "tsx", "src/index.ts"]
+CMD ["bun", "src/index.ts"]
