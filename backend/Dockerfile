@@ -2,10 +2,10 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package.json package-lock.json* bun.lock* ./
+COPY backend/package.json backend/package-lock.json* backend/bun.lock* ./
 RUN npm ci
 
-COPY . .
+COPY backend/ .
 
 ENV PORT=4000
 EXPOSE 4000
