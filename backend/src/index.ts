@@ -154,15 +154,8 @@ app.post("/foodCourtTable", foodCourtForm);
 app.post("/eventTable", eventFormData);
 app.post("/biva-ai", bivaAiChat);
 
-const port = Number(process.env.PORT) || 4000;
-
-serve(
-  {
-    fetch: app.fetch,
-    port: port,
-    hostname: "0.0.0.0",
-  },
-  (info) => {
-    console.log(`Server is running on port ${info.port}`);
-  }
-);
+serve({
+  fetch: app.fetch,
+  port: Number(process.env.PORT || 3000),
+  hostname: process.env.HOST || "0.0.0.0",
+});
