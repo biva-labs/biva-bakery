@@ -1,4 +1,4 @@
-+import { serve } from "@hono/node-server";
+import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { getImage, uploadImage } from "./controllers/image-controller.ts";
 import { cors } from "hono/cors";
@@ -154,12 +154,15 @@ app.post("/foodCourtTable", foodCourtForm);
 app.post("/eventTable", eventFormData);
 app.post("/biva-ai", bivaAiChat);
 
+const port = Number(process.env.PORT) || 4000;
+
 serve(
-	{
-		fetch: app.fetch,
-		port: process.env.PORT || 4000,
-	},
-	(info) => {
-		console.log(`Server is running on http://localhost:${info.port}`);
-	},
+  {
+    fetch: app.fetch,
+    port: port,
+    hostname: "0.0.0.0",
+  },
+  (info) => {
+    console.log(`Server is running on port ${info.port}`);
+  }
 );
