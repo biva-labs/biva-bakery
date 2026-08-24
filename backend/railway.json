@@ -4,8 +4,6 @@
     "dockerfilePath": "Dockerfile"
   },
   "deploy": {
-    "startCommand": "bun src/index.ts",
-    "healthcheckPath": "/ping",
-    "healthcheckTimeout": 100
+    "startCommand": "bun src/index.ts"
   }
 }
