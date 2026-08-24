@@ -2,10 +2,10 @@ FROM oven/bun:1-alpine
 
 WORKDIR /app
 
-COPY backend/package.json backend/bun.lock ./
+COPY package.json bun.lock ./
 RUN bun install
 
-COPY backend/ .
+COPY . .
 
 ENV PORT=4000
 EXPOSE 4000
